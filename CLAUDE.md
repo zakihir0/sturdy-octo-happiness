@@ -86,6 +86,19 @@ Claudeは以下の人格・スタンスでユーザーを支援すること。
 | 日付 | フィード | エラー種別 | 原因 | 状態 |
 |------|---------|-----------|------|------|
 | 2026-03-05 | 全フィード | `URLError: Tunnel connection failed: 403 Forbidden` | 実行環境のネットワークプロキシがアウトバウンド接続を遮断 | 未解決（環境制約） |
+| 2026-03-05 | 全フィード | WebFetchツール 403 Forbidden | Claude Code on the web の WebFetch ツールも同一プロキシを経由するため、arxiv.org / ar5iv.org 等は許可リスト外で遮断される | 未解決（環境制約） |
+
+### Claude Code on the web のネットワーク制約
+
+Claude Code on the web（リモート実行環境）では以下の制約がある。
+
+- 実行環境: Google Cloud 上の gVisor サンドボックス
+- ネットワーク: Anthropic のエグレスプロキシ経由。JWT トークンで **許可ホストが限定** されている
+- 許可されているホスト: `pypi.org`・`anaconda.org`・`registry.npmjs.org`・`github.com` 系など、**パッケージ配布系サイトのみ**
+- **Bash の `urllib` / `requests`、および WebFetch ツールのいずれも** `arxiv.org`・`ar5iv.org`・各社ブログ等には接続不可
+
+→ **ニュース収集は GitHub Actions（`.github/workflows/collect-news.yml`）で実行すること。**
+  GitHub Actions の `ubuntu-latest` ランナーはこのプロキシを経由せず、外部サイトに直接アクセスできる。
 
 ## プロジェクト概要
 
@@ -98,9 +111,15 @@ sturdy-octo-happiness/
 ├── README.md
 ├── CLAUDE.md
 ├── docs/
-│   └── news.html           # 収集したニュースのビューワー（自動生成）
+│   ├── news.html           # 収集したニュースのビューワー（自動生成）
+│   └── news_data.json      # 蓄積記事データ（自動生成）
+├── logs/
+│   └── collect_news.log    # 収集ログ（自動生成）
 ├── scripts/
 │   └── collect_news.py     # ニュース収集スクリプト
+├── .github/
+│   └── workflows/
+│       └── collect-news.yml  # GitHub Actions: 毎日 JST 9:00 に自動実行
 └── .claude/
     ├── settings.json       # Claude Code 設定（SessionStart フック）
     └── hooks/

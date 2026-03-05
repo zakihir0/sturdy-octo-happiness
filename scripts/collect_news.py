@@ -4,6 +4,7 @@ AI/LLM ニュース収集スクリプト
 
 RSSフィードから最新記事を取得し、docs/news_data.json に追記しながら
 docs/news.html を再生成します。失敗内容は logs/collect_news.log に記録します。
+日付別に docs/news/YYYY-MM-DD.jsonl と docs/news/YYYY-MM-DD.md も出力します。
 """
 
 import html
@@ -26,10 +27,12 @@ except ImportError:
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 MAX_TRANSLATE_PER_RUN = 30  # 1回の実行で翻訳する最大件数（コスト抑制）
 
-ROOT      = Path(__file__).parent.parent
-DATA_FILE = ROOT / "docs" / "news_data.json"
-HTML_FILE = ROOT / "docs" / "news.html"
-LOG_FILE  = ROOT / "logs" / "collect_news.log"
+ROOT       = Path(__file__).parent.parent
+DATA_FILE  = ROOT / "docs" / "news_data.json"
+HTML_FILE  = ROOT / "docs" / "news.html"
+INDEX_FILE = ROOT / "docs" / "index.html"
+NEWS_DIR   = ROOT / "docs" / "news"
+LOG_FILE   = ROOT / "logs" / "collect_news.log"
 
 FEEDS = [
     {"category": "論文 - AI全般",    "name": "ArXiv cs.AI",      "url": "https://arxiv.org/rss/cs.AI"},
@@ -50,7 +53,6 @@ MAX_ITEMS_PER_FEED = 10
 # ---------------------------------------------------------------------------
 
 def log(level: str, msg: str) -> None:
-    """ログをコンソールとファイルに同時出力する。"""
     LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     line = f"[{now}] [{level}] {msg}"
@@ -65,7 +67,6 @@ def log(level: str, msg: str) -> None:
 # ---------------------------------------------------------------------------
 
 def fetch_article_text(url: str) -> str:
-    """記事URLからHTMLを取得し、タグを除去したプレーンテキストを返す。失敗時は空文字。"""
     if not url:
         return ""
     try:
@@ -74,13 +75,12 @@ def fetch_article_text(url: str) -> str:
             headers={"User-Agent": "Mozilla/5.0 (compatible; NewsCollector/1.0)"},
         )
         with urllib.request.urlopen(req, timeout=10) as resp:
-            raw = resp.read(200_000)  # 最大200KB
+            raw = resp.read(200_000)
             charset = "utf-8"
             ct = resp.headers.get("Content-Type", "")
             if "charset=" in ct:
                 charset = ct.split("charset=")[-1].split(";")[0].strip()
             body = raw.decode(charset, errors="replace")
-        # <script> / <style> ブロックを除去してからタグを剥がす
         body = re.sub(r"(?s)<(script|style)[^>]*>.*?</\1>", " ", body)
         body = re.sub(r"<[^>]+>", " ", body)
         body = html.unescape(body)
@@ -92,10 +92,8 @@ def fetch_article_text(url: str) -> str:
 
 
 def summarize_in_japanese(title: str, description: str, article_text: str = "") -> str | None:
-    """Claude Haiku で記事全文（または概要）を日本語2〜3文に要約する。失敗時は None を返す。"""
     if not _ANTHROPIC_AVAILABLE or not ANTHROPIC_API_KEY:
         return None
-    # 優先度: 記事全文 > RSS概要 > タイトルのみ
     content = (article_text.strip() or description.strip() or title.strip())
     if not content:
         return None
@@ -125,7 +123,6 @@ def summarize_in_japanese(title: str, description: str, article_text: str = "") 
 # ---------------------------------------------------------------------------
 
 def fetch_feed(feed: dict) -> bytes | None:
-    """RSSフィードを取得する。失敗した場合はログに詳細を記録し None を返す。"""
     url = feed["url"]
     req = urllib.request.Request(
         url,
@@ -162,16 +159,15 @@ def parse_feed(data: bytes, feed: dict) -> list[dict]:
 
     def make_item(title, link, desc, date):
         return {
-            "title":      (title or "").strip(),
-            "link":       (link  or "").strip(),
-            "description":(desc  or "").strip(),
-            "date":       (date  or "").strip(),
-            "source":     source_name,
-            "category":   category,
-            "fetched_at": fetched_at,
+            "title":       (title or "").strip(),
+            "link":        (link  or "").strip(),
+            "description": (desc  or "").strip(),
+            "date":        (date  or "").strip(),
+            "source":      source_name,
+            "category":    category,
+            "fetched_at":  fetched_at,
         }
 
-    # RSS 2.0
     for item in root.findall(".//item")[:MAX_ITEMS_PER_FEED]:
         dc_ns = {"dc": "http://purl.org/dc/elements/1.1/"}
         items.append(make_item(
@@ -181,7 +177,6 @@ def parse_feed(data: bytes, feed: dict) -> list[dict]:
             item.findtext("pubDate") or item.findtext("dc:date", namespaces=dc_ns),
         ))
 
-    # Atom
     if not items:
         for entry in root.findall("atom:entry", ns)[:MAX_ITEMS_PER_FEED]:
             link_el = entry.find("atom:link", ns)
@@ -209,7 +204,6 @@ def load_existing() -> list[dict]:
 
 
 def merge_articles(existing: list[dict], new_items: list[dict]) -> tuple[list[dict], int]:
-    """既存記事と新記事をリンクでdedupeして結合。追加件数も返す。"""
     seen = {a["link"] for a in existing if a.get("link")}
     added = 0
     for item in new_items:
@@ -217,7 +211,6 @@ def merge_articles(existing: list[dict], new_items: list[dict]) -> tuple[list[di
             existing.append(item)
             seen.add(item["link"])
             added += 1
-    # fetched_at 降順でソート
     existing.sort(key=lambda a: a.get("fetched_at", ""), reverse=True)
     return existing, added
 
@@ -228,7 +221,132 @@ def save_data(articles: list[dict]) -> None:
 
 
 # ---------------------------------------------------------------------------
-# HTML generation
+# Daily JSONL + Markdown output
+# ---------------------------------------------------------------------------
+
+def save_daily_files(articles: list[dict], today_str: str) -> None:
+    """今日収集した記事を JSONL と Markdown で docs/news/ に保存する。"""
+    NEWS_DIR.mkdir(parents=True, exist_ok=True)
+
+    today_articles = [a for a in articles if a.get("fetched_at", "")[:10] == today_str]
+    if not today_articles:
+        log("INFO", "今日の新着記事なし — daily files スキップ")
+        return
+
+    # JSONL（1行1記事）
+    jsonl_path = NEWS_DIR / f"{today_str}.jsonl"
+    with jsonl_path.open("w", encoding="utf-8") as f:
+        for a in today_articles:
+            f.write(json.dumps(a, ensure_ascii=False) + "\n")
+    log("INFO", f"JSONL保存: {jsonl_path} ({len(today_articles)} 件)")
+
+    # Markdown
+    md_path = NEWS_DIR / f"{today_str}.md"
+    categories: dict[str, list[dict]] = {}
+    for a in today_articles:
+        categories.setdefault(a.get("category", "その他"), []).append(a)
+
+    with md_path.open("w", encoding="utf-8") as f:
+        f.write(f"# AI/LLM ニュース {today_str}\n\n")
+        f.write(f"収集件数: {len(today_articles)} 件\n\n")
+        for cat, items in categories.items():
+            f.write(f"\n## {cat}\n\n")
+            for item in items:
+                title      = item.get("title", "(no title)")
+                link       = item.get("link", "")
+                summary_ja = item.get("summary_ja", "")
+                date_str   = (item.get("date") or "")[:30]
+                source     = item.get("source", "")
+                f.write(f"### [{title}]({link})\n\n")
+                if date_str:
+                    f.write(f"**日付:** {date_str}  \n")
+                if source:
+                    f.write(f"**ソース:** {source}  \n\n")
+                if summary_ja:
+                    f.write(f"{summary_ja}\n\n")
+                f.write("---\n\n")
+    log("INFO", f"MD保存: {md_path}")
+
+
+# ---------------------------------------------------------------------------
+# Archive index.html
+# ---------------------------------------------------------------------------
+
+def build_index_html(generated_at: str) -> str:
+    """docs/news/ の日付別ファイルを一覧するアーカイブページを生成する。"""
+    NEWS_DIR.mkdir(parents=True, exist_ok=True)
+
+    dates = sorted(
+        set(f.stem for f in NEWS_DIR.glob("*.md")) |
+        set(f.stem for f in NEWS_DIR.glob("*.jsonl")),
+        reverse=True,
+    )
+
+    rows = ""
+    for d in dates:
+        md_link    = f'<a href="news/{d}.md">Markdown</a>'    if (NEWS_DIR / f"{d}.md").exists()    else "—"
+        jsonl_link = f'<a href="news/{d}.jsonl">JSONL</a>'    if (NEWS_DIR / f"{d}.jsonl").exists() else "—"
+        rows += f"<tr><td>{d}</td><td>{md_link}</td><td>{jsonl_link}</td></tr>\n"
+
+    table = (
+        f"<table><thead><tr><th>日付</th><th>Markdown</th><th>JSONL</th></tr></thead>"
+        f"<tbody>{rows}</tbody></table>"
+        if rows else "<p class='empty'>まだ記録がありません。</p>"
+    )
+
+    return f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI/LLM ニュース アーカイブ</title>
+  <style>
+    *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+           background: #0f1117; color: #e2e8f0; min-height: 100vh; }}
+    header {{ background: linear-gradient(135deg, #1a1f2e 0%, #16213e 100%);
+              padding: 2rem; border-bottom: 1px solid #2d3748; }}
+    header h1 {{ font-size: 1.8rem; font-weight: 700; color: #a78bfa; }}
+    header p  {{ color: #94a3b8; margin-top: .4rem; font-size: .85rem; }}
+    .cta {{ display: inline-block; margin-top: 1rem; padding: .5rem 1.2rem;
+            background: #7c3aed; color: #fff; border-radius: 6px; text-decoration: none;
+            font-size: .9rem; transition: background .2s; }}
+    .cta:hover {{ background: #6d28d9; }}
+    main {{ max-width: 760px; margin: 2.5rem auto; padding: 0 1rem; }}
+    h2   {{ font-size: 1.15rem; color: #a78bfa; border-left: 3px solid #7c3aed;
+            padding-left: .75rem; margin-bottom: 1.25rem; }}
+    table {{ width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: .9rem; }}
+    th, td {{ padding: .65rem 1rem; text-align: left; border-bottom: 1px solid #2d3748; }}
+    th {{ background: #1a1f2e; color: #94a3b8; font-weight: 600; }}
+    tr:hover td {{ background: #1a1f2e; }}
+    td a {{ color: #7dd3fc; text-decoration: none; margin-right: .6rem; }}
+    td a:hover {{ text-decoration: underline; }}
+    .empty {{ color: #64748b; padding: 1rem 0; }}
+    footer {{ text-align: center; padding: 2rem; color: #475569; font-size: .78rem;
+              border-top: 1px solid #2d3748; margin-top: 3rem; }}
+    code {{ background: #2d3748; padding: .1rem .4rem; border-radius: 4px; color: #7dd3fc; }}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AI/LLM ニュース アーカイブ</h1>
+    <p>最終更新: {html.escape(generated_at)}&nbsp;|&nbsp;毎日 JST 10:00 自動更新</p>
+    <a href="news.html" class="cta">最新ダッシュボードを見る &rarr;</a>
+  </header>
+  <main>
+    <h2>日付別アーカイブ</h2>
+    {table}
+  </main>
+  <footer>
+    Powered by Claude API + GitHub Actions&nbsp;|&nbsp;
+    データ形式: <code>docs/news/YYYY-MM-DD.jsonl</code> &nbsp;/&nbsp; <code>docs/news/YYYY-MM-DD.md</code>
+  </footer>
+</body>
+</html>"""
+
+
+# ---------------------------------------------------------------------------
+# HTML generation (dashboard)
 # ---------------------------------------------------------------------------
 
 def strip_tags(text: str) -> str:
@@ -240,12 +358,10 @@ def strip_tags(text: str) -> str:
 def build_html(articles: list[dict], generated_at: str, run_stats: dict) -> str:
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
-    # カテゴリ別に振り分け（fetched_at 降順は既にソート済み）
     categories: dict[str, list[dict]] = {}
     for a in articles:
         categories.setdefault(a.get("category", "その他"), []).append(a)
 
-    # --- stats bar ---
     success = run_stats.get("success", 0)
     failure = run_stats.get("failure", 0)
     added   = run_stats.get("added", 0)
@@ -258,13 +374,11 @@ def build_html(articles: list[dict], generated_at: str, run_stats: dict) -> str:
         f'<span class="stat tot">合計 {total} 件蓄積</span>'
     )
 
-    # --- nav ---
     nav = "\n".join(
         f'<a href="#cat-{i}">{html.escape(cat)} <small>({len(items)})</small></a>'
         for i, (cat, items) in enumerate(categories.items())
     )
 
-    # --- sections ---
     sections = ""
     if not articles:
         sections = """<section><div class="empty">
@@ -321,6 +435,9 @@ def build_html(articles: list[dict], generated_at: str, run_stats: dict) -> str:
               padding: 2rem; border-bottom: 1px solid #2d3748; }}
     header h1 {{ font-size: 1.8rem; font-weight: 700; color: #a78bfa; }}
     header p  {{ color: #94a3b8; margin-top: .4rem; font-size: .85rem; }}
+    .archive-link {{ display: inline-block; margin-top: .8rem; color: #7dd3fc;
+                     font-size: .85rem; text-decoration: none; }}
+    .archive-link:hover {{ text-decoration: underline; }}
     .stats {{ display: flex; flex-wrap: wrap; gap: .6rem; padding: .8rem 2rem;
               background: #12151f; border-bottom: 1px solid #2d3748; font-size: .8rem; }}
     .stat      {{ padding: .25rem .65rem; border-radius: 999px; }}
@@ -370,6 +487,7 @@ def build_html(articles: list[dict], generated_at: str, run_stats: dict) -> str:
   <header>
     <h1>AI/LLM ニュースダッシュボード</h1>
     <p>最終更新: {html.escape(generated_at)} &nbsp;|&nbsp; ArXiv / GAFA企業ブログ / Kaggle などから自動収集・蓄積</p>
+    <a href="index.html" class="archive-link">← アーカイブ一覧へ</a>
   </header>
   <div class="stats">{stats_html}</div>
   <nav>{nav}</nav>
@@ -411,7 +529,7 @@ def main() -> None:
 
     merged, added = merge_articles(existing, all_new)
 
-    # 日本語要約：summary_ja が未設定の記事を最大 MAX_TRANSLATE_PER_RUN 件処理
+    # 日本語要約
     if _ANTHROPIC_AVAILABLE and ANTHROPIC_API_KEY:
         to_translate = [a for a in merged if not a.get("summary_ja")][:MAX_TRANSLATE_PER_RUN]
         if to_translate:
@@ -437,6 +555,11 @@ def main() -> None:
     save_data(merged)
     log("INFO", f"保存完了: 合計 {len(merged)} 件 (今回追加 +{added} 件)")
 
+    # 日付別 JSONL + Markdown
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    save_daily_files(merged, today_str)
+
+    # ダッシュボード HTML
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     run_stats = {
         "success": success_count,
@@ -447,8 +570,13 @@ def main() -> None:
     html_content = build_html(merged, generated_at, run_stats)
     HTML_FILE.parent.mkdir(parents=True, exist_ok=True)
     HTML_FILE.write_text(html_content, encoding="utf-8")
-
     log("INFO", f"HTML生成: {HTML_FILE} ({HTML_FILE.stat().st_size // 1024} KB)")
+
+    # アーカイブ index.html
+    index_content = build_index_html(generated_at)
+    INDEX_FILE.write_text(index_content, encoding="utf-8")
+    log("INFO", f"インデックスHTML生成: {INDEX_FILE} ({INDEX_FILE.stat().st_size // 1024} KB)")
+
     log("INFO", f"=== 収集終了: 成功 {success_count} / 失敗 {failure_count} フィード ===\n")
 
 

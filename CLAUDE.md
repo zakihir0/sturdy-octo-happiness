@@ -16,8 +16,6 @@
 
 ### Claudeへの行動指針
 
-Claudeは以下の人格・スタンスでユーザーを支援すること。
-
 1. **情報収集アシスタントとして**
    - ArXiv・Google DeepMind・OpenAI・Meta AI・Anthropicなどの最新論文・ブログを積極的に参照・要約する
    - AIエージェント（LangChain / LangGraph / AutoGen / CrewAI等）の動向を把握し、関連情報を提供する
@@ -33,149 +31,136 @@ Claudeは以下の人格・スタンスでユーザーを支援すること。
    - 論文・ソースへの参照を積極的に示す
    - 実装例やコードスニペットを積極的に提供する
 
-## ニュース収集ルール
+---
+
+## ニュース収集の要件
 
 ### 収集対象ソース
 
-| カテゴリ | ソース | RSSフィード |
-|----------|--------|------------|
-| 論文（AI全般） | ArXiv cs.AI | `https://arxiv.org/rss/cs.AI` |
-| 論文（機械学習） | ArXiv cs.LG | `https://arxiv.org/rss/cs.LG` |
-| 論文（計算・言語） | ArXiv cs.CL | `https://arxiv.org/rss/cs.CL` |
-| 企業ブログ | Google DeepMind | `https://deepmind.google/blog/rss.xml` |
+| カテゴリ | ソース名 | RSS URL |
+|----------|---------|---------|
+| 論文 - AI全般 | ArXiv cs.AI | `https://arxiv.org/rss/cs.AI` |
+| 論文 - 機械学習 | ArXiv cs.LG | `https://arxiv.org/rss/cs.LG` |
+| 論文 - 言語処理 | ArXiv cs.CL | `https://arxiv.org/rss/cs.CL` |
 | 企業ブログ | Anthropic | `https://www.anthropic.com/rss.xml` |
 | 企業ブログ | Meta AI | `https://ai.meta.com/blog/rss/` |
+| 企業ブログ | Google DeepMind | `https://deepmind.google/blog/rss.xml` |
 | AI全般ニュース | TechCrunch AI | `https://techcrunch.com/category/artificial-intelligence/feed/` |
-| コンペ | Kaggle Blog | `https://medium.com/feed/kaggle-blog` |
+| コンペティション | Kaggle Blog | `https://medium.com/feed/kaggle-blog` |
 
-### 収集・更新ルール
+### 収集・処理ルール
 
-1. **実行方法**: `python scripts/collect_news.py` で収集し `docs/news.html` を生成する
-2. **収集件数**: 各フィードから最大10件、合計80件程度
-3. **出力形式**: カテゴリ別に分類したスタンドアロンHTMLページ
-4. **更新タイミング**: ユーザーから「ニュースを更新して」と依頼があったとき
-5. **要約**: 各記事のタイトル・日付・リンク・概要（summary）を表示する
+| 項目 | 仕様 |
+|------|------|
+| 収集件数 | 各フィード最大10件 |
+| 重複排除 | 記事URLで判定し、既存データに未収録のもののみ追加 |
+| 日本語要約 | Claude Haiku (`claude-haiku-4-5-20251001`) で2〜3文（150字以内）に要約 |
+| 要約上限 | 1実行あたり最大30件（コスト抑制） |
+| 記事全文取得 | 要約前に記事URLへアクセスし本文（最大4000字）を取得、失敗時はRSS概要で代替 |
+| 実行タイミング | GitHub Actions で毎日 JST 10:00（UTC 01:00）自動実行 |
 
-### Claudeへの収集時の指示
+### 出力ファイル仕様
 
-- `python scripts/collect_news.py` を実行して `docs/news.html` を生成する
-- 生成後、注目すべき論文・ニュースを3〜5件ピックアップして日本語で要約を提供する
-- ArXivの論文はアブストラクトをもとに1〜2文で研究内容を説明する
+| ファイル | 内容 | 更新方式 |
+|----------|------|---------|
+| `docs/news_data.json` | 全記事の累積データ（JSON配列） | 追記（重複なし） |
+| `docs/news/YYYY-MM-DD.jsonl` | 当日収集分（1行1記事のJSONL） | 毎日新規作成 |
+| `docs/news/YYYY-MM-DD.md` | 当日収集分（カテゴリ別Markdown） | 毎日新規作成 |
+| `docs/news.html` | 全記事ダッシュボード（自動生成HTML） | 毎回上書き |
+| `docs/index.html` | 日付別アーカイブ一覧（自動生成HTML） | 毎回上書き |
+| `logs/collect_news.log` | 収集ログ（成功・失敗・要約結果） | 追記 |
 
-### 失敗原因の記録ルール
+### JSONL 1レコードのフィールド定義
 
-収集実行後、`logs/collect_news.log` に失敗が記録されていた場合、Claudeは以下の手順で対応すること。
+```json
+{
+  "title":       "記事タイトル（英語原文）",
+  "link":        "記事URL",
+  "description": "RSS概要テキスト",
+  "date":        "pubDate（RSS記載の公開日）",
+  "source":      "ソース名（例: ArXiv cs.AI）",
+  "category":    "カテゴリ名（例: 論文 - AI全般）",
+  "fetched_at":  "収集日時（ISO 8601 UTC）",
+  "summary_ja":  "Claude による日本語要約（取得できた場合のみ）"
+}
+```
 
-1. **ログを確認する**
-   - `logs/collect_news.log` の最新実行ブロック（`=== 収集開始 ===` から `=== 収集終了 ===` まで）を読む
-   - `[WARN]` / `[ERROR]` 行を抽出して失敗フィードと原因を把握する
+### Web 公開
 
-2. **原因を分類して CLAUDE.md に記録する**
-   - 下記「既知の失敗パターン」テーブルを更新する
-   - 新しいエラー種別が出たら行を追加する
-   - 解決済みになったら「状態」を `解決済み` に変更する
+| URL | 内容 |
+|-----|------|
+| `https://zakihir0.github.io/sturdy-octo-happiness/` | アーカイブ一覧（index.html） |
+| `https://zakihir0.github.io/sturdy-octo-happiness/news.html` | 全記事ダッシュボード |
+| `https://zakihir0.github.io/sturdy-octo-happiness/news/YYYY-MM-DD.md` | 日付別Markdown |
+| `https://zakihir0.github.io/sturdy-octo-happiness/news/YYYY-MM-DD.jsonl` | 日付別JSONL |
 
-3. **対処方針を提案する**
-   - ネットワーク制限: 環境の制約として記録し、ローカル実行を案内する
-   - RSS URL変更: `scripts/collect_news.py` の `FEEDS` リストを修正する
-   - タイムアウト: `timeout=15` を延ばすか、フィードURLを代替に差し替える
-   - XML解析エラー: フィードのエンコーディングや構造を調査して `parse_feed` を修正する
+---
+
+## 実行方法
+
+### GitHub Actions（通常運用）
+
+```
+GitHub Actions タブ → "Collect AI News" → Run workflow
+```
+
+> **注意**: Claude Code on the web の実行環境（gVisor サンドボックス）は外部ネットワークへのアクセスが制限されており、`arxiv.org` 等には接続できない。ニュース収集は必ず GitHub Actions で実行すること。
+
+### 必要な Secrets
+
+| Secret名 | 用途 |
+|----------|------|
+| `ANTHROPIC_API_KEY` | Claude Haiku による日本語要約 |
+| `CLAUDE_CODE_OAUTH_TOKEN` | `@claude` メンション・PR自動レビュー連携 |
+
+---
+
+## 障害対応
+
+### ログ確認手順
+
+収集失敗時は `logs/collect_news.log` の最新ブロック（`=== 収集開始 ===` 〜 `=== 収集終了 ===`）を確認し、`[WARN]` / `[ERROR]` 行から原因を特定する。
 
 ### 既知の失敗パターン
 
 | 日付 | フィード | エラー種別 | 原因 | 状態 |
 |------|---------|-----------|------|------|
-| 2026-03-05 | 全フィード | `URLError: Tunnel connection failed: 403 Forbidden` | 実行環境のネットワークプロキシがアウトバウンド接続を遮断 | 未解決（環境制約） |
-| 2026-03-05 | 全フィード | WebFetchツール 403 Forbidden | Claude Code on the web の WebFetch ツールも同一プロキシを経由するため、arxiv.org / ar5iv.org 等は許可リスト外で遮断される | 未解決（環境制約） |
+| 2026-03-05 | 全フィード | `URLError: Tunnel connection failed: 403 Forbidden` | Claude Code on the web のプロキシがアウトバウンドを遮断 | 未解決（環境制約） |
 
-### Claude Code on the web のネットワーク制約
+### 対処方針
 
-Claude Code on the web（リモート実行環境）では以下の制約がある。
+| エラー種別 | 対処 |
+|-----------|------|
+| ネットワーク制限（403等） | GitHub Actions で実行する（ローカル・web環境では不可） |
+| RSS URL変更 | `scripts/collect_news.py` の `FEEDS` リストを更新する |
+| タイムアウト | `fetch_feed()` の `timeout=15` を延ばすか、フィードURLを代替に変更する |
+| XML解析エラー | フィードのエンコーディング・構造を調査し `parse_feed()` を修正する |
+| 日本語要約失敗 | `ANTHROPIC_API_KEY` の設定を確認する |
 
-- 実行環境: Google Cloud 上の gVisor サンドボックス
-- ネットワーク: Anthropic のエグレスプロキシ経由。JWT トークンで **許可ホストが限定** されている
-- 許可されているホスト: `pypi.org`・`anaconda.org`・`registry.npmjs.org`・`github.com` 系など、**パッケージ配布系サイトのみ**
-- **Bash の `urllib` / `requests`、および WebFetch ツールのいずれも** `arxiv.org`・`ar5iv.org`・各社ブログ等には接続不可
-
-→ **ニュース収集は GitHub Actions（`.github/workflows/collect-news.yml`）で実行すること。**
-  GitHub Actions の `ubuntu-latest` ランナーはこのプロキシを経由せず、外部サイトに直接アクセスできる。
-
-## ArXiv 論文要約フロー
-
-ユーザーが「ArXivの要約をして」と依頼した場合、以下の手順で対応する。
-
-### 手順
-
-1. **GitHub Actions で記事取得**（ネットワーク制約のため Actions 必須）
-   - Actions タブ →「ArXiv cs.AI 記事取得」→ `Run workflow`
-   - 取得件数を指定可能（デフォルト: 2件）
-   - 完了すると `docs/arxiv-raw-YYYY-MM-DD.json` がコミットされる
-
-2. **Claude Code で要約**（Actions 完了後）
-   - `git pull` で最新を取得
-   - `docs/arxiv-raw-YYYY-MM-DD.json` を Read ツールで読む
-   - Claude Code が記事テキストを直接読んで日本語要約を生成
-   - `docs/arxiv-summary-YYYY-MM-DD.md` に記録・コミット
-
-### 要約フォーマット（md）
-
-```markdown
-# ArXiv cs.AI 要約 YYYY-MM-DD
-
-## 1. {タイトル}
-> **一言**: {50字以内のキャッチコピー}
-**リンク**: {URL}
-
-### 概要
-{研究の背景・目的 2〜3文}
-
-### 手法
-{提案手法 2〜3文}
-
-### 成果
-{実験結果・貢献 2〜3文}
-```
-
-## プロジェクト概要
-
-**sturdy-octo-happiness** はLLM開発・AIコンペティション参加のための作業リポジトリです。
+---
 
 ## リポジトリ構造
 
 ```
 sturdy-octo-happiness/
+├── CLAUDE.md                         # このファイル
 ├── README.md
-├── CLAUDE.md
-├── docs/
-│   ├── news.html           # 収集したニュースのビューワー（自動生成）
-│   └── news_data.json      # 蓄積記事データ（自動生成）
-├── logs/
-│   └── collect_news.log    # 収集ログ（自動生成）
-├── scripts/
-│   └── collect_news.py     # ニュース収集スクリプト
+├── .claude/
+│   └── settings.json                 # Claude Code 設定
 ├── .github/
 │   └── workflows/
-│       └── collect-news.yml  # GitHub Actions: 毎日 JST 9:00 に自動実行
-└── .claude/
-    ├── settings.json       # Claude Code 設定（SessionStart フック）
-    └── hooks/
-        └── session-start.sh  # セッション開始時に実行されるフック
+│       ├── collect-news.yml          # ニュース収集（毎日 JST 10:00）
+│       ├── claude.yml                # @claude メンション連携
+│       └── claude-code-review.yml   # PR 自動コードレビュー
+├── scripts/
+│   └── collect_news.py               # ニュース収集・要約・HTML生成スクリプト
+├── docs/                             # GitHub Pages 公開ディレクトリ
+│   ├── index.html                    # アーカイブ一覧（自動生成）
+│   ├── news.html                     # 全記事ダッシュボード（自動生成）
+│   ├── news_data.json                # 全記事累積データ（自動生成）
+│   └── news/
+│       ├── YYYY-MM-DD.jsonl          # 日付別 JSONL（自動生成）
+│       └── YYYY-MM-DD.md             # 日付別 Markdown（自動生成）
+└── logs/
+    └── collect_news.log              # 収集ログ（自動生成）
 ```
-
-## 開発環境セットアップ
-
-現在、このプロジェクトに外部依存関係はありません。
-
-## Claude Code フック
-
-### SessionStart フック
-
-`.claude/hooks/session-start.sh` がセッション開始時に自動実行されます。
-
-- リモート環境（Claude Code on the web）でのみ動作します
-- 依存関係が追加された場合はこのスクリプトを更新してください
-
-## ブランチ戦略
-
-- `main` / `master`: 本番ブランチ
-- `claude/*`: Claude Code による自動作業ブランチ

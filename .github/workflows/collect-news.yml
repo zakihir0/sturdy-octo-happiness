@@ -15,14 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Python dependencies
-        run: pip install anthropic
-
       # プロンプトファイルを読み込んで出力変数に格納（多行対応）
       - name: Read prompt file
         id: read_prompt
@@ -33,7 +25,7 @@ jobs:
             echo 'PROMPT_EOF'
           } >> $GITHUB_OUTPUT
 
-      # Step 1: Claude Code がRSS取得・要約・JSONL/MD/JSON保存を実行
+      # Claude Code がRSS取得・要約・JSONL/MD/news_data.json保存を実行
       - name: Collect and summarize news with Claude Code
         uses: anthropics/claude-code-action@v1
         with:
@@ -41,16 +33,12 @@ jobs:
           claude_args: "--allowedTools Read,Write,WebFetch"
           prompt: ${{ steps.read_prompt.outputs.prompt }}
 
-      # Step 2: Pythonスクリプトで news.html / index.html を再生成
-      - name: Generate HTML
-        run: python scripts/collect_news.py
-
-      # Step 3: 変更をコミット・プッシュ
+      # データファイルのみコミット（HTML生成は generate-html.yml が担当）
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/ logs/
+          git add docs/news/ docs/news_data.json logs/
           git diff --cached --quiet && echo "変更なし" || (
-            git commit -m "chore: update AI news $(date -u '+%Y-%m-%d')" && git push
+            git commit -m "chore: collect AI news $(date -u '+%Y-%m-%d')" && git push
           )

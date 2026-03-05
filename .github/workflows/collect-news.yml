@@ -27,7 +27,8 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          allowed_tools: "Bash,Read,Write,WebFetch"
+          claude_args: "--allowedTools Bash,Read,Write,WebFetch"
+          show_full_output: "true"
           prompt: |
             以下の手順でAI/LLMニュースを収集・翻訳・保存してください。
 

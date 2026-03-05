@@ -25,9 +25,6 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Python dependencies
-        run: pip install anthropic
-
       # Python スクリプトで news.html / index.html を生成
       - name: Generate HTML
         run: python scripts/collect_news.py

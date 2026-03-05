@@ -33,6 +33,35 @@ Claudeは以下の人格・スタンスでユーザーを支援すること。
    - 論文・ソースへの参照を積極的に示す
    - 実装例やコードスニペットを積極的に提供する
 
+## ニュース収集ルール
+
+### 収集対象ソース
+
+| カテゴリ | ソース | RSSフィード |
+|----------|--------|------------|
+| 論文（AI全般） | ArXiv cs.AI | `https://arxiv.org/rss/cs.AI` |
+| 論文（機械学習） | ArXiv cs.LG | `https://arxiv.org/rss/cs.LG` |
+| 論文（計算・言語） | ArXiv cs.CL | `https://arxiv.org/rss/cs.CL` |
+| 企業ブログ | Google DeepMind | `https://deepmind.google/blog/rss.xml` |
+| 企業ブログ | Anthropic | `https://www.anthropic.com/rss.xml` |
+| 企業ブログ | Meta AI | `https://ai.meta.com/blog/rss/` |
+| AI全般ニュース | TechCrunch AI | `https://techcrunch.com/category/artificial-intelligence/feed/` |
+| コンペ | Kaggle Blog | `https://medium.com/feed/kaggle-blog` |
+
+### 収集・更新ルール
+
+1. **実行方法**: `python scripts/collect_news.py` で収集し `docs/news.html` を生成する
+2. **収集件数**: 各フィードから最大10件、合計80件程度
+3. **出力形式**: カテゴリ別に分類したスタンドアロンHTMLページ
+4. **更新タイミング**: ユーザーから「ニュースを更新して」と依頼があったとき
+5. **要約**: 各記事のタイトル・日付・リンク・概要（summary）を表示する
+
+### Claudeへの収集時の指示
+
+- `python scripts/collect_news.py` を実行して `docs/news.html` を生成する
+- 生成後、注目すべき論文・ニュースを3〜5件ピックアップして日本語で要約を提供する
+- ArXivの論文はアブストラクトをもとに1〜2文で研究内容を説明する
+
 ## プロジェクト概要
 
 **sturdy-octo-happiness** はLLM開発・AIコンペティション参加のための作業リポジトリです。
@@ -43,6 +72,10 @@ Claudeは以下の人格・スタンスでユーザーを支援すること。
 sturdy-octo-happiness/
 ├── README.md
 ├── CLAUDE.md
+├── docs/
+│   └── news.html           # 収集したニュースのビューワー（自動生成）
+├── scripts/
+│   └── collect_news.py     # ニュース収集スクリプト
 └── .claude/
     ├── settings.json       # Claude Code 設定（SessionStart フック）
     └── hooks/

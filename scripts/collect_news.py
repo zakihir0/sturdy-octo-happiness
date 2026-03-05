@@ -1,0 +1,353 @@
+#!/usr/bin/env python3
+"""
+AI/LLM ニュース収集スクリプト
+
+RSSフィードから最新記事を取得し、docs/news_data.json に追記しながら
+docs/news.html を再生成します。失敗内容は logs/collect_news.log に記録します。
+"""
+
+import html
+import json
+import re
+import sys
+import traceback
+import urllib.request
+import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT      = Path(__file__).parent.parent
+DATA_FILE = ROOT / "docs" / "news_data.json"
+HTML_FILE = ROOT / "docs" / "news.html"
+LOG_FILE  = ROOT / "logs" / "collect_news.log"
+
+FEEDS = [
+    {"category": "論文 - AI全般",    "name": "ArXiv cs.AI",      "url": "https://arxiv.org/rss/cs.AI"},
+    {"category": "論文 - 機械学習",  "name": "ArXiv cs.LG",      "url": "https://arxiv.org/rss/cs.LG"},
+    {"category": "論文 - 言語処理",  "name": "ArXiv cs.CL",      "url": "https://arxiv.org/rss/cs.CL"},
+    {"category": "企業ブログ",       "name": "Anthropic",         "url": "https://www.anthropic.com/rss.xml"},
+    {"category": "企業ブログ",       "name": "Meta AI",           "url": "https://ai.meta.com/blog/rss/"},
+    {"category": "企業ブログ",       "name": "Google DeepMind",   "url": "https://deepmind.google/blog/rss.xml"},
+    {"category": "AI全般ニュース",   "name": "TechCrunch AI",     "url": "https://techcrunch.com/category/artificial-intelligence/feed/"},
+    {"category": "コンペティション", "name": "Kaggle Blog",       "url": "https://medium.com/feed/kaggle-blog"},
+]
+
+MAX_ITEMS_PER_FEED = 10
+
+
+# ---------------------------------------------------------------------------
+# Logging
+# ---------------------------------------------------------------------------
+
+def log(level: str, msg: str) -> None:
+    """ログをコンソールとファイルに同時出力する。"""
+    LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    line = f"[{now}] [{level}] {msg}"
+    stream = sys.stderr if level in ("WARN", "ERROR") else sys.stdout
+    print(line, file=stream)
+    with LOG_FILE.open("a", encoding="utf-8") as f:
+        f.write(line + "\n")
+
+
+# ---------------------------------------------------------------------------
+# Fetch
+# ---------------------------------------------------------------------------
+
+def fetch_feed(feed: dict) -> bytes | None:
+    """RSSフィードを取得する。失敗した場合はログに詳細を記録し None を返す。"""
+    url = feed["url"]
+    req = urllib.request.Request(
+        url,
+        headers={"User-Agent": "Mozilla/5.0 (compatible; NewsCollector/1.0)"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = resp.read()
+            log("INFO", f"OK   {feed['name']} ({len(data):,} bytes) <- {url}")
+            return data
+    except Exception as e:
+        reason = traceback.format_exception_only(type(e), e)[-1].strip()
+        log("WARN", f"FAIL {feed['name']} <- {url} | 原因: {reason}")
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Parse
+# ---------------------------------------------------------------------------
+
+def parse_feed(data: bytes, feed: dict) -> list[dict]:
+    source_name = feed["name"]
+    category    = feed["category"]
+    items: list[dict] = []
+
+    try:
+        root = ET.fromstring(data)
+    except ET.ParseError as e:
+        log("WARN", f"XML解析エラー ({source_name}): {e}")
+        return items
+
+    ns = {"atom": "http://www.w3.org/2005/Atom"}
+    fetched_at = datetime.now(timezone.utc).isoformat()
+
+    def make_item(title, link, desc, date):
+        return {
+            "title":      (title or "").strip(),
+            "link":       (link  or "").strip(),
+            "description":(desc  or "").strip(),
+            "date":       (date  or "").strip(),
+            "source":     source_name,
+            "category":   category,
+            "fetched_at": fetched_at,
+        }
+
+    # RSS 2.0
+    for item in root.findall(".//item")[:MAX_ITEMS_PER_FEED]:
+        dc_ns = {"dc": "http://purl.org/dc/elements/1.1/"}
+        items.append(make_item(
+            item.findtext("title"),
+            item.findtext("link"),
+            item.findtext("description") or item.findtext("summary"),
+            item.findtext("pubDate") or item.findtext("dc:date", namespaces=dc_ns),
+        ))
+
+    # Atom
+    if not items:
+        for entry in root.findall("atom:entry", ns)[:MAX_ITEMS_PER_FEED]:
+            link_el = entry.find("atom:link", ns)
+            items.append(make_item(
+                entry.findtext("atom:title",   namespaces=ns),
+                link_el.get("href") if link_el is not None else "",
+                entry.findtext("atom:summary", namespaces=ns) or entry.findtext("atom:content", namespaces=ns),
+                entry.findtext("atom:updated", namespaces=ns) or entry.findtext("atom:published", namespaces=ns),
+            ))
+
+    return items
+
+
+# ---------------------------------------------------------------------------
+# Persistent storage (JSON)
+# ---------------------------------------------------------------------------
+
+def load_existing() -> list[dict]:
+    if DATA_FILE.exists():
+        try:
+            return json.loads(DATA_FILE.read_text(encoding="utf-8"))
+        except Exception as e:
+            log("WARN", f"既存データの読み込み失敗: {e} — 空データで開始します")
+    return []
+
+
+def merge_articles(existing: list[dict], new_items: list[dict]) -> tuple[list[dict], int]:
+    """既存記事と新記事をリンクでdedupeして結合。追加件数も返す。"""
+    seen = {a["link"] for a in existing if a.get("link")}
+    added = 0
+    for item in new_items:
+        if item["link"] and item["link"] not in seen:
+            existing.append(item)
+            seen.add(item["link"])
+            added += 1
+    # fetched_at 降順でソート
+    existing.sort(key=lambda a: a.get("fetched_at", ""), reverse=True)
+    return existing, added
+
+
+def save_data(articles: list[dict]) -> None:
+    DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
+    DATA_FILE.write_text(json.dumps(articles, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+# ---------------------------------------------------------------------------
+# HTML generation
+# ---------------------------------------------------------------------------
+
+def strip_tags(text: str) -> str:
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = html.unescape(text)
+    return " ".join(text.split())[:300]
+
+
+def build_html(articles: list[dict], generated_at: str, run_stats: dict) -> str:
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    # カテゴリ別に振り分け（fetched_at 降順は既にソート済み）
+    categories: dict[str, list[dict]] = {}
+    for a in articles:
+        categories.setdefault(a.get("category", "その他"), []).append(a)
+
+    # --- stats bar ---
+    success = run_stats.get("success", 0)
+    failure = run_stats.get("failure", 0)
+    added   = run_stats.get("added", 0)
+    total   = run_stats.get("total", len(articles))
+
+    stats_html = (
+        f'<span class="stat ok">✓ 取得成功 {success} フィード</span>'
+        f'<span class="stat ng">✗ 取得失敗 {failure} フィード</span>'
+        f'<span class="stat add">+ 今回追加 {added} 件</span>'
+        f'<span class="stat tot">合計 {total} 件蓄積</span>'
+    )
+
+    # --- nav ---
+    nav = "\n".join(
+        f'<a href="#cat-{i}">{html.escape(cat)} <small>({len(items)})</small></a>'
+        for i, (cat, items) in enumerate(categories.items())
+    )
+
+    # --- sections ---
+    sections = ""
+    if not articles:
+        sections = """<section><div class="empty">
+          <p style="font-size:2rem">📡</p>
+          <p>ニュースがまだ蓄積されていません。</p>
+          <p><code>python scripts/collect_news.py</code> を再実行してください。</p>
+        </div></section>"""
+    else:
+        for i, (cat, items) in enumerate(categories.items()):
+            cards = ""
+            for item in items:
+                title      = html.escape(item.get("title") or "(no title)")
+                link       = html.escape(item.get("link", ""))
+                desc       = html.escape(strip_tags(item.get("description", "")))
+                date       = html.escape((item.get("date") or "")[:30])
+                source     = html.escape(item.get("source", ""))
+                fetched_at = item.get("fetched_at", "")[:10]
+                is_new     = fetched_at == today
+                new_badge  = '<span class="badge-new">NEW</span>' if is_new else ""
+                cards += f"""
+              <article class="card{' card-new' if is_new else ''}">
+                <div class="card-meta">
+                  <span class="source">{source}</span>
+                  <span class="date">{date}</span>
+                </div>
+                <h3>{new_badge}<a href="{link}" target="_blank" rel="noopener">{title}</a></h3>
+                <p class="desc">{desc}</p>
+                <div class="fetched">収集日: {fetched_at}</div>
+              </article>"""
+            sections += f"""
+          <section id="cat-{i}">
+            <h2>{html.escape(cat)} <span class="count">{len(items)}件</span></h2>
+            <div class="grid">{cards}
+            </div>
+          </section>"""
+
+    return f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI/LLM ニュースダッシュボード</title>
+  <style>
+    *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+           background: #0f1117; color: #e2e8f0; min-height: 100vh; }}
+    header {{ background: linear-gradient(135deg, #1a1f2e 0%, #16213e 100%);
+              padding: 2rem; border-bottom: 1px solid #2d3748; }}
+    header h1 {{ font-size: 1.8rem; font-weight: 700; color: #a78bfa; }}
+    header p  {{ color: #94a3b8; margin-top: .4rem; font-size: .85rem; }}
+    .stats {{ display: flex; flex-wrap: wrap; gap: .6rem; padding: .8rem 2rem;
+              background: #12151f; border-bottom: 1px solid #2d3748; font-size: .8rem; }}
+    .stat      {{ padding: .25rem .65rem; border-radius: 999px; }}
+    .stat.ok   {{ background: #14532d; color: #86efac; }}
+    .stat.ng   {{ background: #450a0a; color: #fca5a5; }}
+    .stat.add  {{ background: #1e3a5f; color: #7dd3fc; }}
+    .stat.tot  {{ background: #2d2d3a; color: #94a3b8; }}
+    nav {{ display: flex; flex-wrap: wrap; gap: .5rem; padding: .9rem 2rem;
+           background: #1a1f2e; border-bottom: 1px solid #2d3748;
+           position: sticky; top: 0; z-index: 10; }}
+    nav a {{ color: #7dd3fc; text-decoration: none; font-size: .8rem; padding: .3rem .7rem;
+             border-radius: 999px; border: 1px solid #2d3748; transition: background .2s; }}
+    nav a:hover {{ background: #2d3748; }}
+    nav a small {{ color: #64748b; }}
+    main {{ max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }}
+    section {{ margin-bottom: 3rem; }}
+    section h2 {{ font-size: 1.15rem; color: #a78bfa; border-left: 3px solid #7c3aed;
+                  padding-left: .75rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: .6rem; }}
+    .count {{ font-size: .75rem; color: #64748b; font-weight: 400; }}
+    .grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }}
+    .card {{ background: #1a1f2e; border: 1px solid #2d3748; border-radius: 10px;
+             padding: 1.1rem; transition: border-color .2s, transform .2s; }}
+    .card:hover {{ border-color: #7c3aed; transform: translateY(-2px); }}
+    .card-new {{ border-color: #1d4ed8 !important; }}
+    .card-meta {{ display: flex; justify-content: space-between; font-size: .73rem;
+                  color: #64748b; margin-bottom: .45rem; }}
+    .source {{ color: #7dd3fc; font-weight: 600; }}
+    .badge-new {{ background: #1d4ed8; color: #fff; font-size: .65rem; font-weight: 700;
+                  padding: .1rem .4rem; border-radius: 4px; margin-right: .4rem;
+                  vertical-align: middle; }}
+    .card h3 {{ font-size: .93rem; line-height: 1.45; margin-bottom: .5rem; }}
+    .card h3 a {{ color: #e2e8f0; text-decoration: none; }}
+    .card h3 a:hover {{ color: #a78bfa; }}
+    .desc {{ font-size: .81rem; color: #94a3b8; line-height: 1.55; margin-bottom: .5rem; }}
+    .fetched {{ font-size: .7rem; color: #475569; text-align: right; }}
+    .empty {{ text-align: center; padding: 4rem 1rem; color: #64748b; }}
+    .empty p {{ margin-bottom: .6rem; }}
+    code {{ background: #2d3748; padding: .1rem .4rem; border-radius: 4px; color: #7dd3fc; }}
+    footer {{ text-align: center; padding: 2rem; color: #475569; font-size: .78rem;
+              border-top: 1px solid #2d3748; margin-top: 2rem; }}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AI/LLM ニュースダッシュボード</h1>
+    <p>最終更新: {html.escape(generated_at)} &nbsp;|&nbsp; ArXiv / GAFA企業ブログ / Kaggle などから自動収集・蓄積</p>
+  </header>
+  <div class="stats">{stats_html}</div>
+  <nav>{nav}</nav>
+  <main>{sections}
+  </main>
+  <footer>
+    Generated by <code>scripts/collect_news.py</code> &mdash; sturdy-octo-happiness &nbsp;|&nbsp;
+    データ: <code>docs/news_data.json</code> &nbsp;|&nbsp; ログ: <code>logs/collect_news.log</code>
+  </footer>
+</body>
+</html>"""
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    run_start = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    log("INFO", f"=== 収集開始 {run_start} ===")
+
+    existing = load_existing()
+    log("INFO", f"既存記事: {len(existing)} 件")
+
+    all_new: list[dict] = []
+    success_count = 0
+    failure_count = 0
+
+    for feed in FEEDS:
+        log("INFO", f"取得中: {feed['name']} ({feed['url']})")
+        data = fetch_feed(feed)
+        if data is None:
+            failure_count += 1
+            continue
+        items = parse_feed(data, feed)
+        all_new.extend(items)
+        success_count += 1
+        log("INFO", f"  -> {len(items)} 件パース完了")
+
+    merged, added = merge_articles(existing, all_new)
+    save_data(merged)
+    log("INFO", f"保存完了: 合計 {len(merged)} 件 (今回追加 +{added} 件)")
+
+    generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    run_stats = {
+        "success": success_count,
+        "failure": failure_count,
+        "added":   added,
+        "total":   len(merged),
+    }
+    html_content = build_html(merged, generated_at, run_stats)
+    HTML_FILE.parent.mkdir(parents=True, exist_ok=True)
+    HTML_FILE.write_text(html_content, encoding="utf-8")
+
+    log("INFO", f"HTML生成: {HTML_FILE} ({HTML_FILE.stat().st_size // 1024} KB)")
+    log("INFO", f"=== 収集終了: 成功 {success_count} / 失敗 {failure_count} フィード ===\n")
+
+
+if __name__ == "__main__":
+    main()

@@ -193,6 +193,30 @@ def load_existing() -> list[dict]:
     return []
 
 
+def load_all_from_jsonl() -> list[dict]:
+    """docs/news/*.jsonl 内の全記事を読み込み、URLで重複排除して返す。"""
+    articles: list[dict] = []
+    seen: set[str] = set()
+    for path in sorted(NEWS_DIR.glob("*.jsonl"), reverse=True):
+        try:
+            with path.open(encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    a = json.loads(line)
+                    link = a.get("link", "")
+                    if link and link in seen:
+                        continue
+                    if link:
+                        seen.add(link)
+                    articles.append(a)
+        except Exception as e:
+            log("WARN", f"JSONL読み込み失敗 {path}: {e}")
+    articles.sort(key=lambda a: a.get("fetched_at", ""), reverse=True)
+    return articles
+
+
 def merge_articles(existing: list[dict], new_items: list[dict]) -> tuple[list[dict], int]:
     seen = {a["link"] for a in existing if a.get("link")}
     added = 0
@@ -495,7 +519,7 @@ def build_html(articles: list[dict], generated_at: str, run_stats: dict) -> str:
   <div class="stats">{stats_html}</div>
   <nav>{nav}</nav>
   <main>{sections}</main>
-  <footer>Powered by Claude Code + GitHub Actions &nbsp;|&nbsp; データ: <code>docs/news_data.json</code></footer>
+  <footer>Powered by Claude Code + GitHub Actions &nbsp;|&nbsp; データ: <code>docs/news/YYYY-MM-DD.jsonl</code></footer>
 </body>
 </html>"""
 
@@ -547,8 +571,11 @@ def main() -> None:
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     run_stats = {"success": success_count, "failure": failure_count, "added": added, "total": len(merged)}
 
+    all_articles = load_all_from_jsonl()
+    log("INFO", f"全JSONL統合: {len(all_articles)} 件")
+
     HTML_FILE.parent.mkdir(parents=True, exist_ok=True)
-    HTML_FILE.write_text(build_html(merged, generated_at, run_stats), encoding="utf-8")
+    HTML_FILE.write_text(build_html(all_articles, generated_at, run_stats), encoding="utf-8")
     log("INFO", f"news.html 生成: {HTML_FILE.stat().st_size // 1024} KB")
 
     INDEX_FILE.write_text(build_index_html(generated_at), encoding="utf-8")

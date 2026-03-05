@@ -61,26 +61,56 @@ def log(level: str, msg: str) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Japanese summarization via Claude API
+# Article full-text fetch & Japanese summarization via Claude API
 # ---------------------------------------------------------------------------
 
-def summarize_in_japanese(title: str, description: str) -> str | None:
-    """Claude Haiku でタイトル＋概要を日本語1〜2文に要約する。失敗時は None を返す。"""
+def fetch_article_text(url: str) -> str:
+    """記事URLからHTMLを取得し、タグを除去したプレーンテキストを返す。失敗時は空文字。"""
+    if not url:
+        return ""
+    try:
+        req = urllib.request.Request(
+            url,
+            headers={"User-Agent": "Mozilla/5.0 (compatible; NewsCollector/1.0)"},
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            raw = resp.read(200_000)  # 最大200KB
+            charset = "utf-8"
+            ct = resp.headers.get("Content-Type", "")
+            if "charset=" in ct:
+                charset = ct.split("charset=")[-1].split(";")[0].strip()
+            body = raw.decode(charset, errors="replace")
+        # <script> / <style> ブロックを除去してからタグを剥がす
+        body = re.sub(r"(?s)<(script|style)[^>]*>.*?</\1>", " ", body)
+        body = re.sub(r"<[^>]+>", " ", body)
+        body = html.unescape(body)
+        return " ".join(body.split())[:4000]
+    except Exception as e:
+        reason = traceback.format_exception_only(type(e), e)[-1].strip()
+        log("WARN", f"記事取得失敗 {url[:80]} | {reason}")
+        return ""
+
+
+def summarize_in_japanese(title: str, description: str, article_text: str = "") -> str | None:
+    """Claude Haiku で記事全文（または概要）を日本語2〜3文に要約する。失敗時は None を返す。"""
     if not _ANTHROPIC_AVAILABLE or not ANTHROPIC_API_KEY:
         return None
-    text = description.strip() or title.strip()
-    if not text:
+    # 優先度: 記事全文 > RSS概要 > タイトルのみ
+    content = (article_text.strip() or description.strip() or title.strip())
+    if not content:
         return None
+    source_label = "記事本文" if article_text.strip() else "概要"
     try:
         client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
         prompt = (
-            "以下のAI/機械学習に関する記事タイトルと概要を、日本語で1〜2文（100字以内）に要約してください。"
-            "専門用語はそのまま使い、研究内容や発表の要点を簡潔に伝えてください。\n\n"
-            f"タイトル: {title}\n概要: {text[:600]}"
+            f"以下のAI/機械学習に関する記事のタイトルと{source_label}を読み、"
+            "日本語で2〜3文（150字以内）に要約してください。"
+            "専門用語はそのまま使い、研究内容・手法・成果の要点を簡潔に伝えてください。\n\n"
+            f"タイトル: {title}\n{source_label}: {content[:3000]}"
         )
         message = client.messages.create(
             model="claude-haiku-4-5-20251001",
-            max_tokens=200,
+            max_tokens=300,
             messages=[{"role": "user", "content": prompt}],
         )
         return message.content[0].text.strip()
@@ -385,9 +415,14 @@ def main() -> None:
     if _ANTHROPIC_AVAILABLE and ANTHROPIC_API_KEY:
         to_translate = [a for a in merged if not a.get("summary_ja")][:MAX_TRANSLATE_PER_RUN]
         if to_translate:
-            log("INFO", f"日本語要約: {len(to_translate)} 件を処理します")
+            log("INFO", f"日本語要約: {len(to_translate)} 件を処理します（記事全文取得あり）")
         for a in to_translate:
-            summary_ja = summarize_in_japanese(a.get("title", ""), a.get("description", ""))
+            article_text = fetch_article_text(a.get("link", ""))
+            summary_ja = summarize_in_japanese(
+                a.get("title", ""),
+                a.get("description", ""),
+                article_text,
+            )
             if summary_ja:
                 a["summary_ja"] = summary_ja
         translated = sum(1 for a in to_translate if a.get("summary_ja"))

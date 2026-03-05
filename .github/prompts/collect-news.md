@@ -73,12 +73,6 @@ WebFetch が失敗した場合は RSS の概要テキストで代替する。
 - fetched_at: 収集日時（ISO 8601 UTC形式）
 - summary_ja: 日本語要約
 
-### docs/news/YYYY-MM-DD.md
-
-カテゴリ別に整理したMarkdown形式で保存する。
-冒頭に「# AI/LLM ニュース YYYY-MM-DD」「収集件数: N 件」を記載し、
-カテゴリ見出し・記事タイトル（リンク）・日付・ソース・日本語要約・区切り線の順で記述する。
-
 ## 5. ログの記録
 
 `logs/collect_news.log` に今回の収集結果を追記する。記載内容：

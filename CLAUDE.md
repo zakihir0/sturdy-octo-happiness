@@ -52,11 +52,11 @@
 
 | 項目 | 仕様 |
 |------|------|
+| 収集主体 | **Claude Code** が WebFetch ツールで各ソースに直接アクセスし、内容を読み取る |
 | 収集件数 | 各フィード最大10件 |
-| 重複排除 | 記事URLで判定し、既存データに未収録のもののみ追加 |
-| 日本語要約 | Claude Haiku (`claude-haiku-4-5-20251001`) で2〜3文（150字以内）に要約 |
-| 要約上限 | 1実行あたり最大30件（コスト抑制） |
-| 記事全文取得 | 要約前に記事URLへアクセスし本文（最大4000字）を取得、失敗時はRSS概要で代替 |
+| 重複排除 | 記事URLで判定し、`docs/news_data.json` に未収録のもののみ追加 |
+| 日本語翻訳・要約 | Claude Code が記事内容を読んで日本語で2〜3文に要約する（外部API不使用） |
+| ファイル書き込み | Claude Code の Write ツールで JSONL・MD・JSON を直接書き込む |
 | 実行タイミング | GitHub Actions で毎日 JST 10:00（UTC 01:00）自動実行 |
 
 ### 出力ファイル仕様
@@ -68,7 +68,7 @@
 | `docs/news/YYYY-MM-DD.md` | 当日収集分（カテゴリ別Markdown） | 毎日新規作成 |
 | `docs/news.html` | 全記事ダッシュボード（自動生成HTML） | 毎回上書き |
 | `docs/index.html` | 日付別アーカイブ一覧（自動生成HTML） | 毎回上書き |
-| `logs/collect_news.log` | 収集ログ（成功・失敗・要約結果） | 追記 |
+| `logs/collect_news.log` | 収集ログ（成功・失敗・処理結果） | 追記 |
 
 ### JSONL 1レコードのフィールド定義
 
@@ -81,7 +81,7 @@
   "source":      "ソース名（例: ArXiv cs.AI）",
   "category":    "カテゴリ名（例: 論文 - AI全般）",
   "fetched_at":  "収集日時（ISO 8601 UTC）",
-  "summary_ja":  "Claude による日本語要約（取得できた場合のみ）"
+  "summary_ja":  "Claude Code による日本語要約"
 }
 ```
 
@@ -104,14 +104,17 @@
 GitHub Actions タブ → "Collect AI News" → Run workflow
 ```
 
-> **注意**: Claude Code on the web の実行環境（gVisor サンドボックス）は外部ネットワークへのアクセスが制限されており、`arxiv.org` 等には接続できない。ニュース収集は必ず GitHub Actions で実行すること。
+`collect-news.yml` が `anthropics/claude-code-action` を呼び出し、Claude Code が以下を自律的に実行する：
+1. 各ソースの RSS フィードを WebFetch で取得
+2. 新着記事を読み取り、日本語で翻訳・要約
+3. JSONL・MD・JSON ファイルを Write ツールで保存
+4. 変更をコミット・プッシュ
 
 ### 必要な Secrets
 
 | Secret名 | 用途 |
 |----------|------|
-| `ANTHROPIC_API_KEY` | Claude Haiku による日本語要約 |
-| `CLAUDE_CODE_OAUTH_TOKEN` | `@claude` メンション・PR自動レビュー連携 |
+| `CLAUDE_CODE_OAUTH_TOKEN` | Claude Code の実行・`@claude` メンション・PR自動レビュー |
 
 ---
 
@@ -125,17 +128,15 @@ GitHub Actions タブ → "Collect AI News" → Run workflow
 
 | 日付 | フィード | エラー種別 | 原因 | 状態 |
 |------|---------|-----------|------|------|
-| 2026-03-05 | 全フィード | `URLError: Tunnel connection failed: 403 Forbidden` | Claude Code on the web のプロキシがアウトバウンドを遮断 | 未解決（環境制約） |
+| 2026-03-05 | 全フィード | `URLError: 403 Forbidden` | Claude Code on the web のプロキシがアウトバウンドを遮断 | 未解決（GitHub Actions で実行すること） |
 
 ### 対処方針
 
 | エラー種別 | 対処 |
 |-----------|------|
 | ネットワーク制限（403等） | GitHub Actions で実行する（ローカル・web環境では不可） |
-| RSS URL変更 | `scripts/collect_news.py` の `FEEDS` リストを更新する |
-| タイムアウト | `fetch_feed()` の `timeout=15` を延ばすか、フィードURLを代替に変更する |
-| XML解析エラー | フィードのエンコーディング・構造を調査し `parse_feed()` を修正する |
-| 日本語要約失敗 | `ANTHROPIC_API_KEY` の設定を確認する |
+| RSS URL変更 | `collect-news.yml` のプロンプト内 URL リストを更新する |
+| WebFetch タイムアウト | フィードURLを代替に変更するか、対象ソースを一時除外する |
 
 ---
 
@@ -153,7 +154,7 @@ sturdy-octo-happiness/
 │       ├── claude.yml                # @claude メンション連携
 │       └── claude-code-review.yml   # PR 自動コードレビュー
 ├── scripts/
-│   └── collect_news.py               # ニュース収集・要約・HTML生成スクリプト
+│   └── collect_news.py               # HTML生成ヘルパースクリプト
 ├── docs/                             # GitHub Pages 公開ディレクトリ
 │   ├── index.html                    # アーカイブ一覧（自動生成）
 │   ├── news.html                     # 全記事ダッシュボード（自動生成）

@@ -40,22 +40,16 @@
 | カテゴリ | ソース名 | RSS URL |
 |----------|---------|---------|
 | 論文 - AI全般 | ArXiv cs.AI | `https://arxiv.org/rss/cs.AI` |
-| 論文 - 機械学習 | ArXiv cs.LG | `https://arxiv.org/rss/cs.LG` |
-| 論文 - 言語処理 | ArXiv cs.CL | `https://arxiv.org/rss/cs.CL` |
-| 企業ブログ | Anthropic | `https://www.anthropic.com/rss.xml` |
-| 企業ブログ | Meta AI | `https://ai.meta.com/blog/rss/` |
 | 企業ブログ | Google DeepMind | `https://deepmind.google/blog/rss.xml` |
-| AI全般ニュース | TechCrunch AI | `https://techcrunch.com/category/artificial-intelligence/feed/` |
-| コンペティション | Kaggle Blog | `https://medium.com/feed/kaggle-blog` |
 
 ### 収集・処理ルール
 
 | 項目 | 仕様 |
 |------|------|
 | 収集主体 | **Claude Code** が WebFetch ツールで各ソースに直接アクセスし、内容を読み取る |
-| 収集件数 | 各フィード最大10件 |
+| 収集件数 | 各フィード最大5件 |
 | 重複排除 | 記事URLで判定し、`docs/news_data.json` に未収録のもののみ追加 |
-| 日本語翻訳・要約 | Claude Code が記事内容を読んで日本語で2〜3文に要約する（外部API不使用） |
+| 日本語翻訳・要約 | Claude Code が記事内容を読んで日本語で8~10文に正確な事実で要約する（外部API不使用） |
 | ファイル書き込み | Claude Code の Write ツールで JSONL・MD・JSON を直接書き込む |
 | 実行タイミング | GitHub Actions で毎日 JST 10:00（UTC 01:00）自動実行 |
 
@@ -65,7 +59,6 @@
 |----------|------|---------|
 | `docs/news_data.json` | 全記事の累積データ（JSON配列） | 追記（重複なし） |
 | `docs/news/YYYY-MM-DD.jsonl` | 当日収集分（1行1記事のJSONL） | 毎日新規作成 |
-| `docs/news/YYYY-MM-DD.md` | 当日収集分（カテゴリ別Markdown） | 毎日新規作成 |
 | `docs/news.html` | 全記事ダッシュボード（自動生成HTML） | 毎回上書き |
 | `docs/index.html` | 日付別アーカイブ一覧（自動生成HTML） | 毎回上書き |
 | `logs/collect_news.log` | 収集ログ（成功・失敗・処理結果） | 追記 |
@@ -91,7 +84,6 @@
 |-----|------|
 | `https://zakihir0.github.io/sturdy-octo-happiness/` | アーカイブ一覧（index.html） |
 | `https://zakihir0.github.io/sturdy-octo-happiness/news.html` | 全記事ダッシュボード |
-| `https://zakihir0.github.io/sturdy-octo-happiness/news/YYYY-MM-DD.md` | 日付別Markdown |
 | `https://zakihir0.github.io/sturdy-octo-happiness/news/YYYY-MM-DD.jsonl` | 日付別JSONL |
 
 ---
@@ -160,8 +152,7 @@ sturdy-octo-happiness/
 │   ├── news.html                     # 全記事ダッシュボード（自動生成）
 │   ├── news_data.json                # 全記事累積データ（自動生成）
 │   └── news/
-│       ├── YYYY-MM-DD.jsonl          # 日付別 JSONL（自動生成）
-│       └── YYYY-MM-DD.md             # 日付別 Markdown（自動生成）
+│       └── YYYY-MM-DD.jsonl          # 日付別 JSONL（自動生成）
 └── logs/
     └── collect_news.log              # 収集ログ（自動生成）
 ```

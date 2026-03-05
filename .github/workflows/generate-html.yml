@@ -1,0 +1,43 @@
+name: Generate HTML
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Collect AI News"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    # collect-news が失敗した場合はスキップ（workflow_run 経由のみ）
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # workflow_run 経由では最新コミットを取得するため pull が必要
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install anthropic
+
+      # Python スクリプトで news.html / index.html を生成
+      - name: Generate HTML
+        run: python scripts/collect_news.py
+
+      # HTML ファイルをコミット
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/news.html docs/index.html logs/
+          git diff --cached --quiet && echo "変更なし" || (
+            git commit -m "chore: regenerate HTML $(date -u '+%Y-%m-%d')" && git push
+          )

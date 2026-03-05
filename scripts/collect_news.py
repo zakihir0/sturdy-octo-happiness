@@ -8,6 +8,7 @@ docs/news.html を再生成します。失敗内容は logs/collect_news.log に
 
 import html
 import json
+import os
 import re
 import sys
 import traceback
@@ -15,6 +16,15 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
+
+try:
+    import anthropic
+    _ANTHROPIC_AVAILABLE = True
+except ImportError:
+    _ANTHROPIC_AVAILABLE = False
+
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+MAX_TRANSLATE_PER_RUN = 30  # 1回の実行で翻訳する最大件数（コスト抑制）
 
 ROOT      = Path(__file__).parent.parent
 DATA_FILE = ROOT / "docs" / "news_data.json"
@@ -48,6 +58,36 @@ def log(level: str, msg: str) -> None:
     print(line, file=stream)
     with LOG_FILE.open("a", encoding="utf-8") as f:
         f.write(line + "\n")
+
+
+# ---------------------------------------------------------------------------
+# Japanese summarization via Claude API
+# ---------------------------------------------------------------------------
+
+def summarize_in_japanese(title: str, description: str) -> str | None:
+    """Claude Haiku でタイトル＋概要を日本語1〜2文に要約する。失敗時は None を返す。"""
+    if not _ANTHROPIC_AVAILABLE or not ANTHROPIC_API_KEY:
+        return None
+    text = description.strip() or title.strip()
+    if not text:
+        return None
+    try:
+        client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+        prompt = (
+            "以下のAI/機械学習に関する記事タイトルと概要を、日本語で1〜2文（100字以内）に要約してください。"
+            "専門用語はそのまま使い、研究内容や発表の要点を簡潔に伝えてください。\n\n"
+            f"タイトル: {title}\n概要: {text[:600]}"
+        )
+        message = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=200,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        return message.content[0].text.strip()
+    except Exception as e:
+        reason = traceback.format_exception_only(type(e), e)[-1].strip()
+        log("WARN", f"日本語要約失敗: {reason}")
+        return None
 
 
 # ---------------------------------------------------------------------------
@@ -209,11 +249,17 @@ def build_html(articles: list[dict], generated_at: str, run_stats: dict) -> str:
                 title      = html.escape(item.get("title") or "(no title)")
                 link       = html.escape(item.get("link", ""))
                 desc       = html.escape(strip_tags(item.get("description", "")))
+                summary_ja = html.escape(item.get("summary_ja", ""))
                 date       = html.escape((item.get("date") or "")[:30])
                 source     = html.escape(item.get("source", ""))
                 fetched_at = item.get("fetched_at", "")[:10]
                 is_new     = fetched_at == today
                 new_badge  = '<span class="badge-new">NEW</span>' if is_new else ""
+                summary_block = (
+                    f'<p class="summary-ja">{summary_ja}</p>'
+                    if summary_ja else
+                    f'<p class="desc">{desc}</p>'
+                )
                 cards += f"""
               <article class="card{' card-new' if is_new else ''}">
                 <div class="card-meta">
@@ -221,7 +267,7 @@ def build_html(articles: list[dict], generated_at: str, run_stats: dict) -> str:
                   <span class="date">{date}</span>
                 </div>
                 <h3>{new_badge}<a href="{link}" target="_blank" rel="noopener">{title}</a></h3>
-                <p class="desc">{desc}</p>
+                {summary_block}
                 <div class="fetched">収集日: {fetched_at}</div>
               </article>"""
             sections += f"""
@@ -279,6 +325,9 @@ def build_html(articles: list[dict], generated_at: str, run_stats: dict) -> str:
     .card h3 a {{ color: #e2e8f0; text-decoration: none; }}
     .card h3 a:hover {{ color: #a78bfa; }}
     .desc {{ font-size: .81rem; color: #94a3b8; line-height: 1.55; margin-bottom: .5rem; }}
+    .summary-ja {{ font-size: .84rem; color: #c4b5fd; line-height: 1.6; margin-bottom: .5rem;
+                   background: #1e1b3a; border-left: 2px solid #7c3aed; padding: .35rem .6rem;
+                   border-radius: 0 6px 6px 0; }}
     .fetched {{ font-size: .7rem; color: #475569; text-align: right; }}
     .empty {{ text-align: center; padding: 4rem 1rem; color: #64748b; }}
     .empty p {{ margin-bottom: .6rem; }}
@@ -331,6 +380,25 @@ def main() -> None:
         log("INFO", f"  -> {len(items)} 件パース完了")
 
     merged, added = merge_articles(existing, all_new)
+
+    # 日本語要約：summary_ja が未設定の記事を最大 MAX_TRANSLATE_PER_RUN 件処理
+    if _ANTHROPIC_AVAILABLE and ANTHROPIC_API_KEY:
+        to_translate = [a for a in merged if not a.get("summary_ja")][:MAX_TRANSLATE_PER_RUN]
+        if to_translate:
+            log("INFO", f"日本語要約: {len(to_translate)} 件を処理します")
+        for a in to_translate:
+            summary_ja = summarize_in_japanese(a.get("title", ""), a.get("description", ""))
+            if summary_ja:
+                a["summary_ja"] = summary_ja
+        translated = sum(1 for a in to_translate if a.get("summary_ja"))
+        if to_translate:
+            log("INFO", f"日本語要約完了: {translated}/{len(to_translate)} 件")
+    else:
+        if not _ANTHROPIC_AVAILABLE:
+            log("INFO", "anthropic パッケージ未インストール — 日本語要約をスキップ")
+        elif not ANTHROPIC_API_KEY:
+            log("INFO", "ANTHROPIC_API_KEY 未設定 — 日本語要約をスキップ")
+
     save_data(merged)
     log("INFO", f"保存完了: 合計 {len(merged)} 件 (今回追加 +{added} 件)")
 

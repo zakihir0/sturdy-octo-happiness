@@ -23,13 +23,23 @@ jobs:
       - name: Install Python dependencies
         run: pip install anthropic
 
+      # プロンプトファイルを読み込んで出力変数に格納（多行対応）
+      - name: Read prompt file
+        id: read_prompt
+        run: |
+          {
+            echo 'prompt<<PROMPT_EOF'
+            cat .github/prompts/collect-news.md
+            echo 'PROMPT_EOF'
+          } >> $GITHUB_OUTPUT
+
       # Step 1: Claude Code がRSS取得・要約・JSONL/MD/JSON保存を実行
       - name: Collect and summarize news with Claude Code
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_args: "--allowedTools Read,Write,WebFetch"
-          prompt_file: .github/prompts/collect-news.md
+          prompt: ${{ steps.read_prompt.outputs.prompt }}
 
       # Step 2: Pythonスクリプトで news.html / index.html を再生成
       - name: Generate HTML

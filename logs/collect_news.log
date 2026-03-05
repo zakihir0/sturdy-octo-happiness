@@ -1,0 +1,22 @@
+[2026-03-05 11:21:30 UTC] [INFO] === 収集開始 2026-03-05 11:21:30 UTC ===
+[2026-03-05 11:21:30 UTC] [INFO] 既存記事: 0 件
+[2026-03-05 11:21:30 UTC] [INFO] 取得中: ArXiv cs.AI (https://arxiv.org/rss/cs.AI)
+[2026-03-05 11:21:30 UTC] [WARN] FAIL ArXiv cs.AI <- https://arxiv.org/rss/cs.AI | 原因: urllib.error.URLError: <urlopen error Tunnel connection failed: 403 Forbidden>
+[2026-03-05 11:21:30 UTC] [INFO] 取得中: ArXiv cs.LG (https://arxiv.org/rss/cs.LG)
+[2026-03-05 11:21:30 UTC] [WARN] FAIL ArXiv cs.LG <- https://arxiv.org/rss/cs.LG | 原因: urllib.error.URLError: <urlopen error Tunnel connection failed: 403 Forbidden>
+[2026-03-05 11:21:30 UTC] [INFO] 取得中: ArXiv cs.CL (https://arxiv.org/rss/cs.CL)
+[2026-03-05 11:21:30 UTC] [WARN] FAIL ArXiv cs.CL <- https://arxiv.org/rss/cs.CL | 原因: urllib.error.URLError: <urlopen error Tunnel connection failed: 403 Forbidden>
+[2026-03-05 11:21:30 UTC] [INFO] 取得中: Anthropic (https://www.anthropic.com/rss.xml)
+[2026-03-05 11:21:30 UTC] [WARN] FAIL Anthropic <- https://www.anthropic.com/rss.xml | 原因: urllib.error.URLError: <urlopen error Tunnel connection failed: 403 Forbidden>
+[2026-03-05 11:21:30 UTC] [INFO] 取得中: Meta AI (https://ai.meta.com/blog/rss/)
+[2026-03-05 11:21:30 UTC] [WARN] FAIL Meta AI <- https://ai.meta.com/blog/rss/ | 原因: urllib.error.URLError: <urlopen error Tunnel connection failed: 403 Forbidden>
+[2026-03-05 11:21:30 UTC] [INFO] 取得中: Google DeepMind (https://deepmind.google/blog/rss.xml)
+[2026-03-05 11:21:30 UTC] [WARN] FAIL Google DeepMind <- https://deepmind.google/blog/rss.xml | 原因: urllib.error.URLError: <urlopen error Tunnel connection failed: 403 Forbidden>
+[2026-03-05 11:21:30 UTC] [INFO] 取得中: TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/feed/)
+[2026-03-05 11:21:30 UTC] [WARN] FAIL TechCrunch AI <- https://techcrunch.com/category/artificial-intelligence/feed/ | 原因: urllib.error.URLError: <urlopen error Tunnel connection failed: 403 Forbidden>
+[2026-03-05 11:21:30 UTC] [INFO] 取得中: Kaggle Blog (https://medium.com/feed/kaggle-blog)
+[2026-03-05 11:21:30 UTC] [WARN] FAIL Kaggle Blog <- https://medium.com/feed/kaggle-blog | 原因: urllib.error.URLError: <urlopen error Tunnel connection failed: 403 Forbidden>
+[2026-03-05 11:21:30 UTC] [INFO] 保存完了: 合計 0 件 (今回追加 +0 件)
+[2026-03-05 11:21:30 UTC] [INFO] HTML生成: /home/user/sturdy-octo-happiness/docs/news.html (4 KB)
+[2026-03-05 11:21:30 UTC] [INFO] === 収集終了: 成功 0 / 失敗 8 フィード ===
+

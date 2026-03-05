@@ -1,13 +1,18 @@
-name: ArXiv cs.AI 最新要約
+name: ArXiv cs.AI 記事取得
 
 on:
   workflow_dispatch:
+    inputs:
+      count:
+        description: '取得件数'
+        required: false
+        default: '2'
 
 permissions:
   contents: write
 
 jobs:
-  summarize:
+  fetch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,19 +22,14 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
-        run: pip install anthropic
-
-      - name: Fetch & summarize ArXiv cs.AI RSS
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python scripts/summarize_arxiv.py
+      - name: Fetch ArXiv articles
+        run: python scripts/fetch_arxiv.py ${{ github.event.inputs.count }}
 
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/arxiv-summary-*.md
+          git add docs/arxiv-raw-*.json
           git diff --cached --quiet && echo "No changes to commit" && exit 0
-          git commit -m "docs: ArXiv cs.AI 要約 $(date -u '+%Y-%m-%d')"
+          git commit -m "feat: ArXiv cs.AI raw data $(date -u '+%Y-%m-%d')"
           git push

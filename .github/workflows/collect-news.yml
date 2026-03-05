@@ -1,6 +1,8 @@
 name: Collect AI News
 
 on:
+  schedule:
+    - cron: '0 1 * * *'  # 毎日 JST 10:00 (UTC 01:00)
   workflow_dispatch:
 
 permissions:
@@ -18,7 +20,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install anthropic
+        run: pip install anthropic feedparser
 
       - name: Run news collector
         env:
@@ -33,3 +35,4 @@ jobs:
           git diff --cached --quiet && echo "No changes to commit" && exit 0
           git commit -m "chore: update AI news $(date -u '+%Y-%m-%d')"
           git push
+

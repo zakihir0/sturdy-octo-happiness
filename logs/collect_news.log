@@ -105,3 +105,52 @@
 [2026-03-05 12:22:06 UTC] [INFO] HTML生成: /home/runner/work/sturdy-octo-happiness/sturdy-octo-happiness/docs/news.html (53 KB)
 [2026-03-05 12:22:06 UTC] [INFO] === 収集終了: 成功 6 / 失敗 2 フィード ===
 
+[2026-03-05 15:09:52 UTC] [INFO] === 収集開始 2026-03-05 15:09:52 UTC ===
+[2026-03-05 15:09:52 UTC] [INFO] 既存記事: 62 件
+[2026-03-05 15:09:52 UTC] [INFO] 取得中: ArXiv cs.AI (https://arxiv.org/rss/cs.AI)
+[2026-03-05 15:09:52 UTC] [INFO] OK   ArXiv cs.AI (724,942 bytes) <- https://arxiv.org/rss/cs.AI
+[2026-03-05 15:09:52 UTC] [INFO]   -> 10 件パース完了
+[2026-03-05 15:09:52 UTC] [INFO] 取得中: ArXiv cs.LG (https://arxiv.org/rss/cs.LG)
+[2026-03-05 15:09:53 UTC] [INFO] OK   ArXiv cs.LG (621,899 bytes) <- https://arxiv.org/rss/cs.LG
+[2026-03-05 15:09:53 UTC] [INFO]   -> 10 件パース完了
+[2026-03-05 15:09:53 UTC] [INFO] 取得中: ArXiv cs.CL (https://arxiv.org/rss/cs.CL)
+[2026-03-05 15:09:53 UTC] [INFO] OK   ArXiv cs.CL (341,011 bytes) <- https://arxiv.org/rss/cs.CL
+[2026-03-05 15:09:53 UTC] [INFO]   -> 10 件パース完了
+[2026-03-05 15:09:53 UTC] [INFO] 取得中: Anthropic (https://www.anthropic.com/rss.xml)
+[2026-03-05 15:09:55 UTC] [WARN] FAIL Anthropic <- https://www.anthropic.com/rss.xml | 原因: urllib.error.HTTPError: HTTP Error 404: Not Found
+[2026-03-05 15:09:55 UTC] [INFO] 取得中: Meta AI (https://ai.meta.com/blog/rss/)
+[2026-03-05 15:09:56 UTC] [WARN] FAIL Meta AI <- https://ai.meta.com/blog/rss/ | 原因: urllib.error.HTTPError: HTTP Error 404: Not Found
+[2026-03-05 15:09:56 UTC] [INFO] 取得中: Google DeepMind (https://deepmind.google/blog/rss.xml)
+[2026-03-05 15:09:56 UTC] [INFO] OK   Google DeepMind (84,238 bytes) <- https://deepmind.google/blog/rss.xml
+[2026-03-05 15:09:56 UTC] [INFO]   -> 10 件パース完了
+[2026-03-05 15:09:56 UTC] [INFO] 取得中: TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/feed/)
+[2026-03-05 15:09:56 UTC] [INFO] OK   TechCrunch AI (18,093 bytes) <- https://techcrunch.com/category/artificial-intelligence/feed/
+[2026-03-05 15:09:56 UTC] [INFO]   -> 10 件パース完了
+[2026-03-05 15:09:56 UTC] [INFO] 取得中: Kaggle Blog (https://medium.com/feed/kaggle-blog)
+[2026-03-05 15:09:56 UTC] [INFO] OK   Kaggle Blog (104,112 bytes) <- https://medium.com/feed/kaggle-blog
+[2026-03-05 15:09:56 UTC] [INFO]   -> 10 件パース完了
+[2026-03-05 15:09:56 UTC] [INFO] ANTHROPIC_API_KEY 未設定 — 日本語要約をスキップ
+[2026-03-05 15:09:56 UTC] [INFO] 保存完了: 合計 62 件 (今回追加 +0 件)
+[2026-03-05 15:09:56 UTC] [INFO] JSONL保存: /home/runner/work/sturdy-octo-happiness/sturdy-octo-happiness/docs/news/2026-03-05.jsonl (62 件)
+[2026-03-05 15:09:56 UTC] [INFO] MD保存: /home/runner/work/sturdy-octo-happiness/sturdy-octo-happiness/docs/news/2026-03-05.md
+[2026-03-05 15:09:56 UTC] [INFO] HTML生成: /home/runner/work/sturdy-octo-happiness/sturdy-octo-happiness/docs/news.html (60 KB)
+[2026-03-05 15:09:56 UTC] [INFO] インデックスHTML生成: /home/runner/work/sturdy-octo-happiness/sturdy-octo-happiness/docs/index.html (2 KB)
+[2026-03-05 15:09:56 UTC] [INFO] === 収集終了: 成功 6 / 失敗 2 フィード ===
+
+[2026-03-05 15:10:00 UTC] [INFO] === 収集開始 2026-03-05 15:10:00 UTC (Claude Code 手動実行) ===
+[2026-03-05 15:10:00 UTC] [INFO] 既存記事: 60 件 (summary_ja なし)
+[2026-03-05 15:10:00 UTC] [INFO] OK   ArXiv cs.AI (WebFetch) -> 10 件取得
+[2026-03-05 15:10:00 UTC] [INFO] OK   ArXiv cs.LG (WebFetch) -> 10 件取得
+[2026-03-05 15:10:00 UTC] [INFO] OK   ArXiv cs.CL (WebFetch) -> 10 件取得
+[2026-03-05 15:10:00 UTC] [WARN] FAIL Anthropic <- HTTP Error 404
+[2026-03-05 15:10:00 UTC] [WARN] FAIL Meta AI <- HTTP Error 404
+[2026-03-05 15:10:00 UTC] [INFO] OK   Google DeepMind (WebFetch) -> 10 件取得 (全て重複)
+[2026-03-05 15:10:00 UTC] [INFO] OK   TechCrunch AI (WebFetch) -> 10 件取得 (2件新着)
+[2026-03-05 15:10:00 UTC] [INFO] OK   Kaggle Blog (WebFetch) -> 10 件取得 (全て重複)
+[2026-03-05 15:10:00 UTC] [INFO] 日本語要約: 62 件 (既存60件 + 新着2件) に summary_ja を付与
+[2026-03-05 15:10:00 UTC] [INFO] 保存完了: 合計 62 件 (今回追加 +2 件)
+[2026-03-05 15:10:00 UTC] [INFO] JSONL保存: docs/news/2026-03-05.jsonl (62 件)
+[2026-03-05 15:10:00 UTC] [INFO] MD保存: docs/news/2026-03-05.md
+[2026-03-05 15:10:00 UTC] [INFO] HTML再生成: docs/news.html / docs/index.html
+[2026-03-05 15:10:00 UTC] [INFO] === 収集終了: 成功 6 / 失敗 2 フィード ===
+

@@ -1,12 +1,33 @@
 [
   {
+    "title": "How 1,000+ customer calls shaped a breakout enterprise AI startup",
+    "link": "https://techcrunch.com/2026/03/05/how-1000-customer-calls-shaped-a-breakout-enterprise-ai-startup/",
+    "description": "David Park discusses how his team at Narada AI is iterating, fundraising, and scaling through customer engagement.",
+    "date": "Thu, 05 Mar 2026 13:15:00 +0000",
+    "source": "TechCrunch AI",
+    "category": "AI全般ニュース",
+    "fetched_at": "2026-03-05T15:09:35.742430+00:00",
+    "summary_ja": "企業向けAIスタートアップNarada AIのCEO David Park氏が、1,000件以上の顧客電話を通じた製品反復・資金調達・スケーリングの方法論を語るインタビュー。顧客との直接対話を重視するアプローチがプロダクトマーケットフィット達成の鍵であったと解説している。"
+  },
+  {
+    "title": "Lio raises $30M from Andreessen Horowitz and others to automate enterprise procurement",
+    "link": "https://techcrunch.com/2026/03/05/lio-ai-series-a-a16z-30m-raise-automate-enterprise-procurement/",
+    "description": "AI procurement startup Lio announced a $30 million Series A funding round led by Andreessen Horowitz.",
+    "date": "Thu, 05 Mar 2026 13:00:00 +0000",
+    "source": "TechCrunch AI",
+    "category": "AI全般ニュース",
+    "fetched_at": "2026-03-05T15:09:35.742430+00:00",
+    "summary_ja": "AI購買自動化スタートアップLioがAndreessen Horowitz主導でシリーズA3,000万ドルの資金調達を完了した。同社は企業の調達・購買プロセス全体をAIで自動化しコスト削減と業務効率化を実現するソリューションを提供している。"
+  },
+  {
     "title": "I trained a model. What is next?",
     "link": "https://medium.com/kaggle-blog/i-trained-a-model-what-is-next-d1ba1c560e26?source=rss----4b0982ce16a3---4",
     "description": "",
     "date": "Wed, 09 Sep 2020 19:26:01 GMT",
     "source": "Kaggle Blog",
     "category": "コンペティション",
-    "fetched_at": "2026-03-05T11:57:52.245158+00:00"
+    "fetched_at": "2026-03-05T11:57:52.245158+00:00",
+    "summary_ja": "Kaggle GrandmasterのVladimir Iglovikov氏がMLコンペティション後にコードを最大活用するための方法を解説。コードの公開・ドキュメント化・ライブラリ化・知識共有などの実践的な次のステップを詳説している。"
   },
   {
     "title": "Recruit Ponpare is Japan’s leading joint coupon site, offering huge discounts on everything from…",
@@ -15,7 +36,8 @@
     "date": "Mon, 10 Aug 2020 19:57:46 GMT",
     "source": "Kaggle Blog",
     "category": "コンペティション",
-    "fetched_at": "2026-03-05T11:57:52.245158+00:00"
+    "fetched_at": "2026-03-05T11:57:52.245158+00:00",
+    "summary_ja": "リクルートポンパレ・クーポン使用予測コンペで2位を獲得したHalla Yang氏の受賞者インタビュー。時系列データ処理の専門知識を活用して1,191名の競合を上回った手法を紹介している。"
   },
   {
     "title": "When his hobbies went on hiatus, this Kaggler made fighting COVID-19 with data his mission | A…",
@@ -24,7 +46,8 @@
     "date": "Wed, 29 Jul 2020 19:36:32 GMT",
     "source": "Kaggle Blog",
     "category": "コンペティション",
-    "fetched_at": "2026-03-05T11:57:52.245158+00:00"
+    "fetched_at": "2026-03-05T11:57:52.245158+00:00",
+    "summary_ja": "KagglerのDavid Mezzettiが趣味の停止を機にCOVID-19データ分析に取り組んだ経緯を紹介。文埋め込み検索インデックスとカスタムBERT QAモデルを組み合わせたCORD-19の優勝解法を詳説している。"
   },
   {
     "title": "Gaining a sense of control over the COVID-19 pandemic | A Winner’s Interview with Daniel Wolffram",
@@ -33,7 +56,8 @@
     "date": "Thu, 23 Jul 2020 15:11:33 GMT",
     "source": "Kaggle Blog",
     "category": "コンペティション",
-    "fetched_at": "2026-03-05T11:57:52.245158+00:00"
+    "fetched_at": "2026-03-05T11:57:52.245158+00:00",
+    "summary_ja": "複数のCOVID-19チャレンジで優勝したDaniel Wolffram氏のインタビュー。医療文献のLDA（潜在ディリクレ配分法）トピックモデリングを活用した独自手法について語っている。"
   },
   {
     "title": "Top Marks for Student Kaggler in Bengali.AI | A Winner’s Interview with Linsho Kaku",
@@ -42,7 +66,8 @@
     "date": "Tue, 21 Apr 2020 16:31:32 GMT",
     "source": "Kaggle Blog",
     "category": "コンペティション",
-    "fetched_at": "2026-03-05T11:57:52.245158+00:00"
+    "fetched_at": "2026-03-05T11:57:52.245158+00:00",
+    "summary_ja": "ベンガル語AI手書きグレメム分類コンペで1位を獲得した学生Kaggler Linsho Kaku氏のインタビュー。CycleGANを用いたスタイル変換でfew-shot学習を改善した手法を解説している。"
   },
   {
     "title": "Yuanchen He on finishing third in the Melbourne University competition",
@@ -51,7 +76,8 @@
     "date": "Mon, 20 Apr 2020 17:19:21 GMT",
     "source": "Kaggle Blog",
     "category": "コンペティション",
-    "fetched_at": "2026-03-05T11:57:52.245158+00:00"
+    "fetched_at": "2026-03-05T11:57:52.245158+00:00",
+    "summary_ja": "メルボルン大学コンペで3位を獲得したYuanchen He氏の手法を紹介。アンサンブル手法と時間的特徴エンジニアリングを用いて助成金申請予測の概念ドリフトに対応した戦略を解説している。"
   },
   {
     "title": "Quan Sun on finishing in second place in Predict Grant Applications",
@@ -60,7 +86,8 @@
     "date": "Mon, 20 Apr 2020 17:18:21 GMT",
     "source": "Kaggle Blog",
     "category": "コンペティション",
-    "fetched_at": "2026-03-05T11:57:52.245158+00:00"
+    "fetched_at": "2026-03-05T11:57:52.245158+00:00",
+    "summary_ja": "助成金申請予測コンペで2位を獲得したQuan Sun氏の手法を紹介。アンサンブル選択とローテーションフォレストアルゴリズム、助成金メタデータからの徹底した特徴エンジニアリングを組み合わせたアプローチを詳説している。"
   },
   {
     "title": "Jeremy Howard on winning the Predict Grant Applications Competition",
@@ -69,7 +96,8 @@
     "date": "Mon, 20 Apr 2020 17:16:21 GMT",
     "source": "Kaggle Blog",
     "category": "コンペティション",
-    "fetched_at": "2026-03-05T11:57:52.245158+00:00"
+    "fetched_at": "2026-03-05T11:57:52.245158+00:00",
+    "summary_ja": "助成金申請予測コンペ優勝者Jeremy Howard氏の戦略を紹介。探索的分析・欠損値特徴エンジニアリング・汎化ランダムフォレストアルゴリズムを重視したアプローチについて解説している。"
   },
   {
     "title": "Max Lin on finishing second in the R Challenge",
@@ -78,7 +106,8 @@
     "date": "Mon, 20 Apr 2020 17:13:57 GMT",
     "source": "Kaggle Blog",
     "category": "コンペティション",
-    "fetched_at": "2026-03-05T11:57:52.245158+00:00"
+    "fetched_at": "2026-03-05T11:57:52.245158+00:00",
+    "summary_ja": "RチャレンジでRパッケージ推薦システムの2位を獲得したMax Lin氏の手法を紹介。協調フィルタリング・LDAトピック・タスクビュー特徴をアンサンブル学習と組み合わせた手法を解説している。"
   },
   {
     "title": "Marcin Pionnier on finishing 5th in the RTA competition",
@@ -87,7 +116,8 @@
     "date": "Mon, 20 Apr 2020 17:12:42 GMT",
     "source": "Kaggle Blog",
     "category": "コンペティション",
-    "fetched_at": "2026-03-05T11:57:52.245158+00:00"
+    "fetched_at": "2026-03-05T11:57:52.245158+00:00",
+    "summary_ja": "RTA競争で5位のMarcin Pionnier氏による交通量予測アプローチを紹介。610個の個別線形回帰モデルとロジスティック変換差分・飽和特徴を組み合わせた独自手法を解説している。"
   },
   {
     "title": "Jensen Huang says Nvidia is pulling back from OpenAI and Anthropic, but his explanation raises more questions than it answers",
@@ -96,7 +126,8 @@
     "date": "Thu, 05 Mar 2026 01:08:28 +0000",
     "source": "TechCrunch AI",
     "category": "AI全般ニュース",
-    "fetched_at": "2026-03-05T11:57:52.042253+00:00"
+    "fetched_at": "2026-03-05T11:57:52.042253+00:00",
+    "summary_ja": "NvidiaのJensen Huang CEOがOpenAIやAnthropicへの投資が同社の最後になる可能性を示唆したと報告。説明が完全ではなく、背景にある意図について多くの疑問を残す発言であったと分析している。"
   },
   {
     "title": "Anthropic CEO Dario Amodei calls OpenAI’s messaging around military deal ‘straight up lies,’ report says",
@@ -105,7 +136,8 @@
     "date": "Wed, 04 Mar 2026 22:40:05 +0000",
     "source": "TechCrunch AI",
     "category": "AI全般ニュース",
-    "fetched_at": "2026-03-05T11:57:52.042253+00:00"
+    "fetched_at": "2026-03-05T11:57:52.042253+00:00",
+    "summary_ja": "AnthropicのCEO Dario Amodei氏がAIセーフティ上の懸念から米国国防総省との契約を終了した経緯を語る記事。軍事取引を巡るOpenAIのメッセージングを「真っ赤な嘘」と称したと報告している。"
   },
   {
     "title": "Apple Music to add Transparency Tags to distinguish AI music, says report",
@@ -114,7 +146,8 @@
     "date": "Wed, 04 Mar 2026 21:43:58 +0000",
     "source": "TechCrunch AI",
     "category": "AI全般ニュース",
-    "fetched_at": "2026-03-05T11:57:52.042253+00:00"
+    "fetched_at": "2026-03-05T11:57:52.042253+00:00",
+    "summary_ja": "Apple MusicがAI生成音楽を区別するための透明性タグを導入する予定と報告。タグ付けはレーベルや配信者のオプトインが必要なため、実効性に疑問が残ると指摘している。"
   },
   {
     "title": "Google Search rolls out Gemini’s Canvas in AI Mode to all US users",
@@ -123,7 +156,8 @@
     "date": "Wed, 04 Mar 2026 18:50:58 +0000",
     "source": "TechCrunch AI",
     "category": "AI全般ニュース",
-    "fetched_at": "2026-03-05T11:57:52.042253+00:00"
+    "fetched_at": "2026-03-05T11:57:52.042253+00:00",
+    "summary_ja": "GeminiのCanvas機能がGoogle SearchのAIモードで米国ユーザー全員に展開。英語での計画・プロジェクト・アプリ作成などに活用できる機能として米国ユーザー向けに一般公開された。"
   },
   {
     "title": "Decagon completes first tender offer at $4.5B valuation",
@@ -132,7 +166,8 @@
     "date": "Wed, 04 Mar 2026 18:32:53 +0000",
     "source": "TechCrunch AI",
     "category": "AI全般ニュース",
-    "fetched_at": "2026-03-05T11:57:52.042253+00:00"
+    "fetched_at": "2026-03-05T11:57:52.042253+00:00",
+    "summary_ja": "AIカスタマーサポートスタートアップDecagonが45億ドルのバリュエーションで初の公開入札を完了。急成長中の若い企業が従業員への流動性提供を目的とした二次売却を実施した最新事例として紹介している。"
   },
   {
     "title": "The US military is still using Claude — but defense-tech clients are fleeing",
@@ -141,7 +176,8 @@
     "date": "Wed, 04 Mar 2026 17:20:01 +0000",
     "source": "TechCrunch AI",
     "category": "AI全般ニュース",
-    "fetched_at": "2026-03-05T11:57:52.042253+00:00"
+    "fetched_at": "2026-03-05T11:57:52.042253+00:00",
+    "summary_ja": "米軍がAnthropicのClaudeを各種標的設定決定に引き続き活用していると報じる記事。一方で商業的な防衛技術クライアントはClaudeの利用を見直しつつある業界動向を分析している。"
   },
   {
     "title": "Father sues Google, claiming Gemini chatbot drove son into fatal delusion",
@@ -150,7 +186,8 @@
     "date": "Wed, 04 Mar 2026 14:58:36 +0000",
     "source": "TechCrunch AI",
     "category": "AI全般ニュース",
-    "fetched_at": "2026-03-05T11:57:52.042253+00:00"
+    "fetched_at": "2026-03-05T11:57:52.042253+00:00",
+    "summary_ja": "GoogleのGeminiチャットボットが息子の妄想を強化し死に至る行動を誘導したとしてGoogleを訴えた父親の訴訟について報告。AIチャットボットの安全性に関する重大な法的問題を提起している。"
   },
   {
     "title": "One startup’s pitch to provide more reliable AI answers: Crowdsource the chatbots",
@@ -159,7 +196,8 @@
     "date": "Wed, 04 Mar 2026 14:00:00 +0000",
     "source": "TechCrunch AI",
     "category": "AI全般ニュース",
-    "fetched_at": "2026-03-05T11:57:52.042253+00:00"
+    "fetched_at": "2026-03-05T11:57:52.042253+00:00",
+    "summary_ja": "ChatGPT・Gemini・Claudeなど最大10以上のAIモデルの回答を同時表示するCollectivIQのアプローチを紹介。AIチャットボットの信頼性向上に向けたクラウドソーシング型の新たなアプローチを解説している。"
   },
   {
     "title": "Who needs data centers in space when they can float offshore?",
@@ -168,7 +206,8 @@
     "date": "Wed, 04 Mar 2026 12:00:00 +0000",
     "source": "TechCrunch AI",
     "category": "AI全般ニュース",
-    "fetched_at": "2026-03-05T11:57:52.042253+00:00"
+    "fetched_at": "2026-03-05T11:57:52.042253+00:00",
+    "summary_ja": "洋上風力タービン下に小型データセンターを設置するAikidoの革新的取り組みを紹介。宇宙データセンターに代わるオフショア洋上データセンターというアプローチについて詳説している。"
   },
   {
     "title": "Why AI startups are selling the same equity at two different prices",
@@ -177,7 +216,8 @@
     "date": "Wed, 04 Mar 2026 00:31:25 +0000",
     "source": "TechCrunch AI",
     "category": "AI全般ニュース",
-    "fetched_at": "2026-03-05T11:57:52.042253+00:00"
+    "fetched_at": "2026-03-05T11:57:52.042253+00:00",
+    "summary_ja": "一部のAIスタートアップが同一株式を異なる価格で売却しユニコーン評価を創出するバリュエーション手法について解説。AIスタートアップにおける新たな資金調達戦略の実態と問題点を分析している。"
   },
   {
     "title": "Gemini 3.1 Flash-Lite: Built for intelligence at scale",
@@ -186,7 +226,8 @@
     "date": "Tue, 03 Mar 2026 16:35:55 +0000",
     "source": "Google DeepMind",
     "category": "企業ブログ",
-    "fetched_at": "2026-03-05T11:57:52.003670+00:00"
+    "fetched_at": "2026-03-05T11:57:52.003670+00:00",
+    "summary_ja": "Google DeepMindが最速・最もコスト効率的なGemini 3シリーズモデル「Gemini 3.1 Flash-Lite」を発表。大規模インテリジェンス向けに最適化されており、スピードとコスト効率のバランスを重視した設計となっている。"
   },
   {
     "title": "Nano Banana 2: Combining Pro capabilities with lightning-fast speed",
@@ -195,7 +236,8 @@
     "date": "Thu, 26 Feb 2026 16:01:50 +0000",
     "source": "Google DeepMind",
     "category": "企業ブログ",
-    "fetched_at": "2026-03-05T11:57:52.003670+00:00"
+    "fetched_at": "2026-03-05T11:57:52.003670+00:00",
+    "summary_ja": "最新画像生成モデル「Nano Banana 2」を発表。高度な世界知識・本番対応スペック・被写体一貫性を持ち、Flashの速度でProクラスの能力を提供する画像生成モデルの詳細を紹介している。"
   },
   {
     "title": "Gemini 3.1 Pro: A smarter model for your most complex tasks",
@@ -204,7 +246,8 @@
     "date": "Thu, 19 Feb 2026 16:06:14 +0000",
     "source": "Google DeepMind",
     "category": "企業ブログ",
-    "fetched_at": "2026-03-05T11:57:52.003670+00:00"
+    "fetched_at": "2026-03-05T11:57:52.003670+00:00",
+    "summary_ja": "複雑なタスク向けに設計されたGemini 3.1 Proを発表。単純な回答では不十分な複雑な作業で優れたパフォーマンスを発揮するよう設計されており、前バージョンからの大幅な改善点を紹介している。"
   },
   {
     "title": "A new way to express yourself: Gemini can now create music",
@@ -213,7 +256,8 @@
     "date": "Wed, 18 Feb 2026 16:01:38 +0000",
     "source": "Google DeepMind",
     "category": "企業ブログ",
-    "fetched_at": "2026-03-05T11:57:52.003670+00:00"
+    "fetched_at": "2026-03-05T11:57:52.003670+00:00",
+    "summary_ja": "GeminiアプリがLyria 3音楽生成モデルを統合し、テキストや画像から30秒の音楽トラックを生成可能になった。誰でも簡単に音楽制作が可能になる新機能について解説している。"
   },
   {
     "title": "Accelerating discovery in India through AI-powered science and education",
@@ -222,7 +266,8 @@
     "date": "Tue, 17 Feb 2026 13:42:20 +0000",
     "source": "Google DeepMind",
     "category": "企業ブログ",
-    "fetched_at": "2026-03-05T11:57:52.003670+00:00"
+    "fetched_at": "2026-03-05T11:57:52.003670+00:00",
+    "summary_ja": "Google DeepMindがインドにAI for Scienceと教育の国家パートナーシップ構想を展開する取り組みを紹介。科学・教育分野でのAI活用加速に向けた戦略的パートナーシップについて報告している。"
   },
   {
     "title": "Gemini 3 Deep Think: Advancing science, research and engineering",
@@ -231,7 +276,8 @@
     "date": "Thu, 12 Feb 2026 16:15:09 +0000",
     "source": "Google DeepMind",
     "category": "企業ブログ",
-    "fetched_at": "2026-03-05T11:57:52.003670+00:00"
+    "fetched_at": "2026-03-05T11:57:52.003670+00:00",
+    "summary_ja": "科学・研究・工学の課題解決に特化したGemini 3 Deep Thinkの最新アップデートを紹介。現代の科学・研究・工学課題を解く最も専門化された推論モードへの改善内容を詳説している。"
   },
   {
     "title": "Accelerating Mathematical and Scientific Discovery with Gemini Deep Think",
@@ -240,7 +286,8 @@
     "date": "Mon, 09 Feb 2026 16:12:06 +0000",
     "source": "Google DeepMind",
     "category": "企業ブログ",
-    "fetched_at": "2026-03-05T11:57:52.003670+00:00"
+    "fetched_at": "2026-03-05T11:57:52.003670+00:00",
+    "summary_ja": "様々な分野でのGemini Deep Thinkの影響力の増大を示す研究論文群を紹介。数学・科学的発見の加速におけるDeep Thinkの活躍事例を複数の研究論文から検証している。"
   },
   {
     "title": "Project Genie: Experimenting with infinite, interactive worlds",
@@ -249,7 +296,8 @@
     "date": "Thu, 29 Jan 2026 17:01:05 +0000",
     "source": "Google DeepMind",
     "category": "企業ブログ",
-    "fetched_at": "2026-03-05T11:57:52.003670+00:00"
+    "fetched_at": "2026-03-05T11:57:52.003670+00:00",
+    "summary_ja": "Google AI Ultraサブスクライバー向けに公開された実験的研究プロトタイプ「Project Genie」を紹介。テキストから無限に広がるインタラクティブな世界を創造・探索できる機能について解説している。"
   },
   {
     "title": "D4RT: Teaching AI to see the world in four dimensions",
@@ -258,7 +306,8 @@
     "date": "Fri, 16 Jan 2026 10:39:00 +0000",
     "source": "Google DeepMind",
     "category": "企業ブログ",
-    "fetched_at": "2026-03-05T11:57:52.003670+00:00"
+    "fetched_at": "2026-03-05T11:57:52.003670+00:00",
+    "summary_ja": "4次元（3D+時間）の統合的・効率的な再構成とトラッキングシステム「D4RT」を発表。従来手法より最大300倍高速な4D再構成・トラッキングの技術的詳細を紹介している。"
   },
   {
     "title": "Veo 3.1 Ingredients to Video: More consistency, creativity and control",
@@ -267,7 +316,8 @@
     "date": "Tue, 13 Jan 2026 17:00:18 +0000",
     "source": "Google DeepMind",
     "category": "企業ブログ",
-    "fetched_at": "2026-03-05T11:57:52.003670+00:00"
+    "fetched_at": "2026-03-05T11:57:52.003670+00:00",
+    "summary_ja": "動画生成モデル「Veo 3.1」のアップデートを紹介。一貫性・創造性・制御性の向上を実現し、縦型動画生成にも対応した自然で動的なクリップ生成機能について解説している。"
   },
   {
     "title": "AriadneMem: Threading the Maze of Lifelong Memory for LLM Agents",
@@ -276,7 +326,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.CL",
     "category": "論文 - 言語処理",
-    "fetched_at": "2026-03-05T11:57:49.401543+00:00"
+    "fetched_at": "2026-03-05T11:57:49.401543+00:00",
+    "summary_ja": "LLMエージェントの長期記憶管理課題を解決する「AriadneMem」を提案。エントロピー対応フィルタリングと競合解決を備えた2フェーズパイプラインにより、マルチホップタスクで15.2%の性能向上を達成している。"
   },
   {
     "title": "One Bias After Another: Mechanistic Reward Shaping and Persistent Biases in Language Reward Models",
@@ -285,7 +336,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.CL",
     "category": "論文 - 言語処理",
-    "fetched_at": "2026-03-05T11:57:49.401543+00:00"
+    "fetched_at": "2026-03-05T11:57:49.401543+00:00",
+    "summary_ja": "言語報酬モデルにおける長さ・迎合性・過信などのバイアスを分析した論文。機械論的報酬整形を提案し、品質劣化なしに低複雑性バイアスを軽減する手法を示している。"
   },
   {
     "title": "From Conflict to Consensus: Boosting Medical Reasoning via Multi-Round Agentic RAG",
@@ -294,7 +346,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.CL",
     "category": "論文 - 言語処理",
-    "fetched_at": "2026-03-05T11:57:49.401543+00:00"
+    "fetched_at": "2026-03-05T11:57:49.401543+00:00",
+    "summary_ja": "医療QA向けマルチエージェントRAGフレームワーク「MA-RAG」を提案。意味的競合検出と反復改善により、バックボーンモデルに対して平均+6.8ポイントの精度向上を達成している。"
   },
   {
     "title": "SE-Search: Self-Evolving Search Agent via Memory and Dense Reward",
@@ -303,7 +356,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.CL",
     "category": "論文 - 言語処理",
-    "fetched_at": "2026-03-05T11:57:49.401543+00:00"
+    "fetched_at": "2026-03-05T11:57:49.401543+00:00",
+    "summary_ja": "記憶精製・アトミッククエリ訓練・密な報酬を組み合わせた自己進化型RAGエージェント「SE-Search」を提案。マルチホップ質問応答タスクで33.8%の相対的精度向上を実現している。"
   },
   {
     "title": "Fine-Tuning and Evaluating Conversational AI for Agricultural Advisory",
@@ -312,7 +366,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.CL",
     "category": "論文 - 言語処理",
-    "fetched_at": "2026-03-05T11:57:49.401543+00:00"
+    "fetched_at": "2026-03-05T11:57:49.401543+00:00",
+    "summary_ja": "農業指導向け会話型AIのためのハイブリッドLLMアーキテクチャを提案。専門家監修の知識と事実検索・会話配信の分離設計にDG-EVAL評価フレームワークを組み合わせて農業相談AIの品質向上を実現している。"
   },
   {
     "title": "Language Model Goal Selection Differs from Humans' in an Open-Ended Task",
@@ -321,7 +376,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.CL",
     "category": "論文 - 言語処理",
-    "fetched_at": "2026-03-05T11:57:49.401543+00:00"
+    "fetched_at": "2026-03-05T11:57:49.401543+00:00",
+    "summary_ja": "オープンエンドタスクにおけるLLMと人間の目標選択パターンに大きな乖離があることを示した研究。モデルが報酬ハッキングや低パフォーマンスを示す傾向を明らかにしている。"
   },
   {
     "title": "PlugMem: A Task-Agnostic Plugin Memory Module for LLM Agents",
@@ -330,7 +386,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.CL",
     "category": "論文 - 言語処理",
-    "fetched_at": "2026-03-05T11:57:49.401543+00:00"
+    "fetched_at": "2026-03-05T11:57:49.401543+00:00",
+    "summary_ja": "タスク非依存のプラグイン型メモリモジュール「PlugMem」をLLMエージェントに提案。知識中心のグラフ構造によるエピソード記憶管理により、多様なベンチマークでタスク特化設計を上回る性能を示している。"
   },
   {
     "title": "TTSR: Test-Time Self-Reflection for Continual Reasoning Improvement",
@@ -339,7 +396,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.CL",
     "category": "論文 - 言語処理",
-    "fetched_at": "2026-03-05T11:57:49.401543+00:00"
+    "fetched_at": "2026-03-05T11:57:49.401543+00:00",
+    "summary_ja": "テスト時自己リフレクションフレームワーク「TTSR」を提案。Student-Teacherの交互役割切り替えで失敗を分析し、目標指向の変種問題を合成することで推論能力の継続的改善を実現している。"
   },
   {
     "title": "TATRA: Training-Free Instance-Adaptive Prompting Through Rephrasing and Aggregation",
@@ -348,7 +406,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.CL",
     "category": "論文 - 言語処理",
-    "fetched_at": "2026-03-05T11:57:49.401543+00:00"
+    "fetched_at": "2026-03-05T11:57:49.401543+00:00",
+    "summary_ja": "ラベルデータ不要のデータセットフリープロンプティング手法「TATRA」を提案。インスタンス固有のフューショット例を自動構築し、数学ベンチマークで最先端性能を達成する訓練不要の適応型プロンプティングを実現している。"
   },
   {
     "title": "How LLMs Cite and Why It Matters: A Cross-Model Audit of Reference Fabrication in AI-Assisted Academic Writing and Methods to Detect Phantom Citations",
@@ -357,7 +416,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.CL",
     "category": "論文 - 言語処理",
-    "fetched_at": "2026-03-05T11:57:49.401543+00:00"
+    "fetched_at": "2026-03-05T11:57:49.401543+00:00",
+    "summary_ja": "10モデル・69,557件の引用を対象にしたLLMの引用幻覚に関する包括的監査論文。複数モデルのコンセンサスとプロンプト内繰り返しが効果的な幻覚検出フィルターとして機能することを示している。"
   },
   {
     "title": "Knowledge Graph and Hypergraph Transformers with Repository-Attention and Journey-Based Role Transport",
@@ -366,7 +426,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.LG",
     "category": "論文 - 機械学習",
-    "fetched_at": "2026-03-05T11:57:49.317087+00:00"
+    "fetched_at": "2026-03-05T11:57:49.317087+00:00",
+    "summary_ja": "文と構造化データの共同学習のためのリポジトリアテンション付きKG・ハイパーグラフTransformerアーキテクチャを提案。分離可能な知識表現と言語表現を持つモデルにより構造化データと文章の統合学習を実現している。"
   },
   {
     "title": "AOI: Turning Failed Trajectories into Training Signals for Autonomous Cloud Diagnosis",
@@ -375,7 +436,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.LG",
     "category": "論文 - 機械学習",
-    "fetched_at": "2026-03-05T11:57:49.317087+00:00"
+    "fetched_at": "2026-03-05T11:57:49.317087+00:00",
+    "summary_ja": "クラウド障害診断の自律化に向けた学習可能なマルチエージェントフレームワーク「AOI」を提案。GRPOと失敗軌跡の訓練信号への変換を活用し、AIOpsLabタスクで66.3%の成功率を達成している。"
   },
   {
     "title": "RADAR: Learning to Route with Asymmetry-aware DistAnce Representations",
@@ -384,7 +446,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.LG",
     "category": "論文 - 機械学習",
-    "fetched_at": "2026-03-05T11:57:49.317087+00:00"
+    "fetched_at": "2026-03-05T11:57:49.317087+00:00",
+    "summary_ja": "非対称車両ルーティング問題に対するスケーラブルなニューラルフレームワーク「RADAR」を提案。SVD埋め込みとSinkhorn正規化を用いて汎化性能を向上させた効率的な配送ルート最適化を実現している。"
   },
   {
     "title": "Towards Improved Sentence Representations using Token Graphs",
@@ -393,7 +456,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.LG",
     "category": "論文 - 機械学習",
-    "fetched_at": "2026-03-05T11:57:49.317087+00:00"
+    "fetched_at": "2026-03-05T11:57:49.317087+00:00",
+    "summary_ja": "トークン類似度グラフにグラフニューラルネットワークを適用するGLOTモジュールを提案。学習パラメータが20分の1以下という効率的な実装で、文埋め込みの品質向上を実現している。"
   },
   {
     "title": "Heterogeneous Time Constants Improve Stability in Equilibrium Propagation",
@@ -402,7 +466,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.LG",
     "category": "論文 - 機械学習",
-    "fetched_at": "2026-03-05T11:57:49.317087+00:00"
+    "fetched_at": "2026-03-05T11:57:49.317087+00:00",
+    "summary_ja": "平衡伝播学習においてニューロン固有の時定数を導入する手法を提案。学習安定性を向上させながら競争力のあるタスク性能を維持するヘテロ時定数型学習アルゴリズムを実現している。"
   },
   {
     "title": "A Short Note on a Variant of the Squint Algorithm",
@@ -411,7 +476,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.LG",
     "category": "論文 - 機械学習",
-    "fetched_at": "2026-03-05T11:57:49.317087+00:00"
+    "fetched_at": "2026-03-05T11:57:49.317087+00:00",
+    "summary_ja": "専門家問題向けSquintアルゴリズムの簡易変種を提案した論文。最近のNormalHedgeアルゴリズムと同等の後悔上界を達成する実装がシンプルな変種アルゴリズムを数学的に記述している。"
   },
   {
     "title": "[Re] FairDICE: A Gap Between Theory And Practice",
@@ -420,7 +486,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.LG",
     "category": "論文 - 機械学習",
-    "fetched_at": "2026-03-05T11:57:49.317087+00:00"
+    "fetched_at": "2026-03-05T11:57:49.317087+00:00",
+    "summary_ja": "多目的オフライン強化学習のFairDICEを再現した研究。理論的妥当性は確認されたものの実装に重大な問題が存在し修正が必要であることを示した再現研究の結果を報告している。"
   },
   {
     "title": "Half the Nonlinearity Is Wasted: Measuring and Reallocating the Transformer's MLP Budget",
@@ -429,7 +496,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.LG",
     "category": "論文 - 機械学習",
-    "fetched_at": "2026-03-05T11:57:49.317087+00:00"
+    "fetched_at": "2026-03-05T11:57:49.317087+00:00",
+    "summary_ja": "TransformerのMLP層の非線形性の必要性を複数モデルで調査した論文。計算の25〜56%が線形処理に近いことを示し、文脈的ルーティングによるMLPバジェット再分配の可能性を実証している。"
   },
   {
     "title": "Graph Hopfield Networks: Energy-Based Node Classification with Associative Memory",
@@ -438,7 +506,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.LG",
     "category": "論文 - 機械学習",
-    "fetched_at": "2026-03-05T11:57:49.317087+00:00"
+    "fetched_at": "2026-03-05T11:57:49.317087+00:00",
+    "summary_ja": "連想記憶検索とグラフラプラシアン平滑化を組み合わせたグラフホップフィールドネットワークを提案。マスキング下でのノード分類において最大5パーセントポイントの性能向上を達成している。"
   },
   {
     "title": "Biased Generalization in Diffusion Models",
@@ -447,7 +516,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.LG",
     "category": "論文 - 機械学習",
-    "fetched_at": "2026-03-05T11:57:49.317087+00:00"
+    "fetched_at": "2026-03-05T11:57:49.317087+00:00",
+    "summary_ja": "拡散モデルのテスト損失が減少しつつも訓練データに近いサンプルを優先するバイアスフェーズを特定。早期停止の慣行に存在するプライバシーリスクを明らかにした実証研究を報告している。"
   },
   {
     "title": "Asymmetric Goal Drift in Coding Agents Under Value Conflict",
@@ -456,7 +526,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.AI",
     "category": "論文 - AI全般",
-    "fetched_at": "2026-03-05T11:57:49.164594+00:00"
+    "fetched_at": "2026-03-05T11:57:49.164594+00:00",
+    "summary_ja": "コーディングエージェントが価値観とシステムプロンプトの制約が衝突する際に生じる非対称的な目標ドリフトを研究した論文。GPT-5 mini・Haiku 4.5・Grok Code Fast 1を対象に、環境的プレッシャーによるドリフトパターンを分析している。"
   },
   {
     "title": "Build, Judge, Optimize: A Blueprint for Continuous Improvement of Multi-Agent Consumer Assistants",
@@ -465,7 +536,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.AI",
     "category": "論文 - AI全般",
-    "fetched_at": "2026-03-05T11:57:49.164594+00:00"
+    "fetched_at": "2026-03-05T11:57:49.164594+00:00",
+    "summary_ja": "マルチエージェント型の会話型ショッピングアシスタントを評価・最適化する継続的改善フレームワークを提案した論文。多面的な評価ルーブリックとプロンプト最適化戦略により本番規模デプロイメントに対応している。"
   },
   {
     "title": "Mozi: Governed Autonomy for Drug Discovery LLM Agents",
@@ -474,7 +546,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.AI",
     "category": "論文 - AI全般",
-    "fetched_at": "2026-03-05T11:57:49.164594+00:00"
+    "fetched_at": "2026-03-05T11:57:49.164594+00:00",
+    "summary_ja": "創薬向けの自律型LLMエージェント「Mozi」を提案。生成AIの柔軟性と計算生物学の厳密性を組み合わせたデュアルレイヤーアーキテクチャにより、制御されたツール使用とステートフルなワークフローを実現している。"
   },
   {
     "title": "MAGE: Meta-Reinforcement Learning for Language Agents toward Strategic Exploration and Exploitation",
@@ -483,7 +556,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.AI",
     "category": "論文 - AI全般",
-    "fetched_at": "2026-03-05T11:57:49.164594+00:00"
+    "fetched_at": "2026-03-05T11:57:49.164594+00:00",
+    "summary_ja": "LLMエージェントが複数エピソード訓練で適応戦略を学習するメタ強化学習フレームワーク「MAGE」を提案。リフレクション統合と集団ベーストレーニングにより探索と活用の動的バランス調整を実現している。"
   },
   {
     "title": "AI4S-SDS: A Neuro-Symbolic Solvent Design System via Sparse MCTS and Differentiable Physics Alignment",
@@ -492,7 +566,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.AI",
     "category": "論文 - AI全般",
-    "fetched_at": "2026-03-05T11:57:49.164594+00:00"
+    "fetched_at": "2026-03-05T11:57:49.164594+00:00",
+    "summary_ja": "化学溶媒の自動設計のためのニューロシンボリックフレームワーク「AI4S-SDS」を提案。マルチエージェント協調とSparse MCTSを組み合わせ、物理ベース制約下での化学製剤処方自動化を実現している。"
   },
   {
     "title": "RAGNav: A Retrieval-Augmented Topological Reasoning Framework for Multi-Goal Visual-Language Navigation",
@@ -501,7 +576,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.AI",
     "category": "論文 - AI全般",
-    "fetched_at": "2026-03-05T11:57:49.164594+00:00"
+    "fetched_at": "2026-03-05T11:57:49.164594+00:00",
+    "summary_ja": "複数目標のビジュアル言語ナビゲーション向け検索拡張トポロジー推論フレームワーク「RAGNav」を提案。トポロジカルマップとセマンティックフォレストを組み合わせたデュアルベースメモリにより意味推論と物理構造を統合している。"
   },
   {
     "title": "AgentSelect: Benchmark for Narrative Query-to-Agent Recommendation",
@@ -510,7 +586,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.AI",
     "category": "論文 - AI全般",
-    "fetched_at": "2026-03-05T11:57:49.164594+00:00"
+    "fetched_at": "2026-03-05T11:57:49.164594+00:00",
+    "summary_ja": "クエリに最適なエージェント設定を推薦する「AgentSelect」ベンチマークを構築。111,179件のクエリと107,721件のエージェントを含む大規模データセットで能力認識マッチングによるエンドツーエンド推薦を評価している。"
   },
   {
     "title": "LifeBench: A Benchmark for Long-Horizon Multi-Source Memory",
@@ -519,7 +596,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.AI",
     "category": "論文 - AI全般",
-    "fetched_at": "2026-03-05T11:57:49.164594+00:00"
+    "fetched_at": "2026-03-05T11:57:49.164594+00:00",
+    "summary_ja": "長期にわたる多源記憶の統合推論能力を評価するベンチマーク「LifeBench」を提案。密に接続された長期イベントシミュレーションを通じて宣言的・非宣言的記憶推論の時間的統合を必要とするタスクを含む。"
   },
   {
     "title": "Specification-Driven Generation and Evaluation of Discrete-Event World Models via the DEVS Formalism",
@@ -528,7 +606,8 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.AI",
     "category": "論文 - AI全般",
-    "fetched_at": "2026-03-05T11:57:49.164594+00:00"
+    "fetched_at": "2026-03-05T11:57:49.164594+00:00",
+    "summary_ja": "自然言語仕様から離散事象世界モデルを自動生成するDEVS形式論活用手法を提案。検証可能で適応性の高いシミュレーションを計画システム向けに生成する仕様駆動型フレームワークを実現している。"
   },
   {
     "title": "A Rubric-Supervised Critic from Sparse Real-World Outcomes",
@@ -537,6 +616,7 @@
     "date": "Thu, 05 Mar 2026 00:00:00 -0500",
     "source": "ArXiv cs.AI",
     "category": "論文 - AI全般",
-    "fetched_at": "2026-03-05T11:57:49.164594+00:00"
+    "fetched_at": "2026-03-05T11:57:49.164594+00:00",
+    "summary_ja": "疎な実世界データを用いたコーディングエージェント向けルーブリック監督型クリティックモデルを開発。24の行動特徴を持つルーブリック監督学習により、再ランキングと早期停止でエージェント性能を改善する手法を示している。"
   }
 ]

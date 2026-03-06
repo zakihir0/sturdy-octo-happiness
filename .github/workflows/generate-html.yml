@@ -3,7 +3,7 @@ name: Generate HTML
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["Collect AI News"]
+    workflows: ["Step 2 - Generate Summaries"]
     types: [completed]
 
 permissions:

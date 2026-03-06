@@ -56,24 +56,32 @@ with open('$PENDING_FILE') as f:
                     remaining.append(line)
             except Exception:
                 remaining.append(line)
-print('\n'.join(remaining) if remaining else '（収集記事なし - 全記事処理済み）')
+if remaining:
+    print('\n'.join(remaining))
 ")
-          else
-            PENDING_CONTENT="（収集記事なし - 処理をスキップします）"
           fi
 
-          # テンプレートの {{PENDING_ARTICLES}} プレースホルダーに中間ファイル内容を注入
-          FULL_PROMPT="${PROMPT_TEMPLATE/\{\{PENDING_ARTICLES\}\}/$PENDING_CONTENT}"
-
-          {
-            echo 'prompt<<PROMPT_EOF'
-            printf '%s' "$FULL_PROMPT"
-            echo ''
-            echo 'PROMPT_EOF'
-          } >> $GITHUB_OUTPUT
+          if [ -z "${PENDING_CONTENT:-}" ]; then
+            # 処理対象なし：Claude を呼ばずシェルでログだけ記録してスキップ
+            echo "has_articles=false" >> $GITHUB_OUTPUT
+            mkdir -p logs
+            printf '[%s] [INFO] generate-summaries: 未処理記事なし（スキップ）\n' \
+              "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" >> logs/collect_news.log
+          else
+            echo "has_articles=true" >> $GITHUB_OUTPUT
+            # テンプレートの {{PENDING_ARTICLES}} プレースホルダーに中間ファイル内容を注入
+            FULL_PROMPT="${PROMPT_TEMPLATE/\{\{PENDING_ARTICLES\}\}/$PENDING_CONTENT}"
+            {
+              echo 'prompt<<PROMPT_EOF'
+              printf '%s' "$FULL_PROMPT"
+              echo ''
+              echo 'PROMPT_EOF'
+            } >> $GITHUB_OUTPUT
+          fi
 
       # Claude Code が記事本文取得・日本語要約生成・最終ファイル保存を実行
       - name: Generate summaries with Claude Code
+        if: steps.build_prompt.outputs.has_articles == 'true'
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}

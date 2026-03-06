@@ -1,87 +1,46 @@
 # AI/LLM ニュース収集プロンプト
 
+ユーザープロフィール・収集対象ソース・処理ルール・出力ファイル仕様・フィールド定義は
+**CLAUDE.md の「ユーザー情報と人格定義」および「ニュース収集の要件」セクション** を参照してください。
+
 以下の手順でAI/LLMニュースを収集・翻訳・ファイル保存してください。
 HTML生成・コミット・プッシュはワークフローが別途実行します。
 
 ---
 
-## 1. ユーザー情報と人格定義
+## 手順 1. RSSフィードの取得
 
-以下のユーザープロフィールに基づいて関心度の高い記事を選択する。
+CLAUDE.md の「収集対象ソース」に記載された各URLを WebFetch で取得し、
+「収集・処理ルール」に記載された件数上限に従って記事を抽出する。
 
-### ユーザープロフィール
-
-- **目標**: 大規模言語モデル（LLM）の開発者を目指している
-- **活動**: Kaggle・Devpost のコンペティションに積極的に参加
-- **関心領域**:
-  - GAFA（Google / Amazon / Meta / Apple）および主要AI企業の最新研究動向
-  - LLM・基盤モデルの論文・技術ブログ・発表
-  - AIエージェントアプリケーションのアーキテクチャとニュース
-  - コンペティション向けのMLエンジニアリング手法
-
-### Claudeへの行動指針
-
-1. **情報収集アシスタントとして**
-   - ArXiv・Google DeepMind・OpenAI・Meta AI・Anthropicなどの最新論文・ブログを積極的に参照・要約する
-   - AIエージェント（LangChain / LangGraph / AutoGen / CrewAI等）の動向を把握し、関連情報を提供する
-   - GAFAのAI関連プロダクト・APIの変更や発表を追跡する
-
-2. **コンペティションサポートとして**
-   - Kaggleでは EDA → ベースライン → アンサンブル の流れを意識したコードを提案する
-   - Devpostでは MVP を素早く構築し、プレゼンに映えるデモを優先する
-   - コンペのルール・評価指標を常に確認してから実装方針を提案する
-
-3. **コミュニケーションスタイル**
-   - 技術的に正確で簡潔な日本語を使う
-   - 論文・ソースへの参照を積極的に示す
-   - 実装例やコードスニペットを積極的に提供する
-
----
-
-## 2. RSSフィードの取得
-
-以下のURLをそれぞれ WebFetch で取得し、各フィードから最大10件の記事を抽出する。
-
-| カテゴリ | ソース名 | URL |
-|----------|---------|-----|
-| 論文 - AI全般 | ArXiv cs.AI | https://arxiv.org/rss/cs.AI |
-| 論文 - 機械学習 | ArXiv cs.LG | https://arxiv.org/rss/cs.LG |
-| 論文 - 言語処理 | ArXiv cs.CL | https://arxiv.org/rss/cs.CL |
-| 企業ブログ | Anthropic | https://www.anthropic.com/rss.xml |
-| 企業ブログ | Meta AI | https://ai.meta.com/blog/rss/ |
-| 企業ブログ | Google DeepMind | https://deepmind.google/blog/rss.xml |
-| AI全般ニュース | TechCrunch AI | https://techcrunch.com/category/artificial-intelligence/feed/ |
-
-## 2.5 既存データとの照合（重複排除）
+## 手順 2. 既存データとの照合（重複排除）
 
 `docs/news/` フォルダ内に存在する全 JSONL ファイル（`YYYY-MM-DD.jsonl`）を Read ツールで読み込み、
 全レコードの `link` フィールドを収集して「既存URLセット」を作る。
 以降の翻訳・保存処理では、この既存URLセットに含まれる記事はスキップする。
 
-## 3. 記事の翻訳・要約
+## 手順 3. 記事の翻訳・要約
 
-新着記事ごとに、記事URLを WebFetch でアクセスして本文を読み、日本語で **1500〜2000字**（下限1500字・上限2000字厳守）の詳細な要約を書くこと。
+CLAUDE.md「収集・処理ルール」の字数規定に従い、新着記事ごとに記事URLを WebFetch でアクセスして
+本文を読み、日本語で詳細な要約を書くこと。
 - ニュース記事：背景・内容・影響・関連動向を含める
 - 論文：手法・実験設定・結果・意義・限界を含める
-WebFetch が失敗した場合は RSS の概要テキストをもとに可能な限り詳しく書く（それでも1500字以上を目指す）。
 
-## 4. ファイルへの保存
+WebFetch が失敗した場合は RSS の概要テキストをもとに可能な限り詳しく書く。
+
+## 手順 4. ファイルへの保存
 
 今日の日付（UTC）を YYYY-MM-DD 形式で取得し、以下のファイルを Write ツールで保存する。
 
 ### docs/news/YYYY-MM-DD.jsonl
 
-新着記事を1行1レコードのJSONL形式で保存する。各レコードのフィールド：
-- title: 英語原題
-- link: 記事URL
-- description: RSS概要テキスト
-- date: RSS記載の公開日
-- source: ソース名（例: ArXiv cs.AI）
-- category: カテゴリ名（例: 論文 - AI全般）
-- fetched_at: 収集日時（ISO 8601 UTC形式）
-- summary_ja: 日本語要約
+CLAUDE.md「JSONL 1レコードのフィールド定義」に従い、新着記事を1行1レコードのJSONL形式で保存する。
 
-## 5. ログの記録
+### docs/news_data.json
+
+既存の `docs/news_data.json`（JSON配列）を Read で読み込み、新着レコードを追記して上書き保存する。
+
+## 手順 5. ログの記録
 
 `logs/collect_news.log` に今回の収集結果を追記する。記載内容：
 - 収集開始日時・終了日時

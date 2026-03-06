@@ -40,5 +40,6 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/news/ docs/news_data.json logs/
           git diff --cached --quiet && echo "変更なし" || (
-            git commit -m "chore: collect AI news $(date -u '+%Y-%m-%d')" && git push
+            git commit -m "chore: collect AI news $(date -u '+%Y-%m-%d')" && git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git
+            git push
           )

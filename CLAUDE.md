@@ -40,16 +40,21 @@
 | カテゴリ | ソース名 | RSS URL |
 |----------|---------|---------|
 | 論文 - AI全般 | ArXiv cs.AI | `https://arxiv.org/rss/cs.AI` |
+| 論文 - 機械学習 | ArXiv cs.LG | `https://arxiv.org/rss/cs.LG` |
+| 論文 - 言語処理 | ArXiv cs.CL | `https://arxiv.org/rss/cs.CL` |
+| 企業ブログ | Anthropic | `https://www.anthropic.com/rss.xml` |
+| 企業ブログ | Meta AI | `https://ai.meta.com/blog/rss/` |
 | 企業ブログ | Google DeepMind | `https://deepmind.google/blog/rss.xml` |
+| AI全般ニュース | TechCrunch AI | `https://techcrunch.com/category/artificial-intelligence/feed/` |
 
 ### 収集・処理ルール
 
 | 項目 | 仕様 |
 |------|------|
 | 収集主体 | **Claude Code** が WebFetch ツールで各ソースに直接アクセスし、内容を読み取る |
-| 収集件数 | 各フィード最大5件 |
-| 重複排除 | 記事URLで判定し、`docs/news_data.json` に未収録のもののみ追加 |
-| 日本語翻訳・要約 | Claude Code が記事内容を読んで日本語で8~10文に正確な事実で要約する（外部API不使用） |
+| 収集件数 | 各フィード最大10件 |
+| 重複排除 | 記事URLで判定し、`docs/news/` フォルダ内の既存 JSONL ファイルに未収録のもののみ追加 |
+| 日本語翻訳・要約 | Claude Code が記事内容を読んで日本語で **1500〜2000字**（下限1500字・上限2000字厳守）で要約する。論文は手法・実験・結果・意義を含めること（外部API不使用） |
 | ファイル書き込み | Claude Code の Write ツールで JSONL・MD・JSON を直接書き込む |
 | 実行タイミング | GitHub Actions で毎日 JST 10:00（UTC 01:00）自動実行 |
 

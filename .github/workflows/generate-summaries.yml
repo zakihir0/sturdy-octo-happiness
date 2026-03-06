@@ -27,10 +27,37 @@ jobs:
         run: |
           TODAY=$(date -u '+%Y-%m-%d')
           PENDING_FILE="docs/news/.pending/${TODAY}.jsonl"
+          FINAL_FILE="docs/news/${TODAY}.jsonl"
           PROMPT_TEMPLATE=$(cat .github/prompts/generate-summaries.md)
 
           if [ -f "$PENDING_FILE" ] && [ -s "$PENDING_FILE" ]; then
-            PENDING_CONTENT=$(cat "$PENDING_FILE")
+            # 既処理済みの記事（最終JSONLに存在するlink）を除外し、未処理分のみ注入する
+            # → 途中停止後の再実行でも重複せず、未処理の続きから処理できる
+            PENDING_CONTENT=$(python3 -c "
+import json, os
+processed = set()
+if os.path.exists('$FINAL_FILE'):
+    with open('$FINAL_FILE') as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                try:
+                    processed.add(json.loads(line)['link'])
+                except Exception:
+                    pass
+remaining = []
+with open('$PENDING_FILE') as f:
+    for line in f:
+        line = line.strip()
+        if line:
+            try:
+                art = json.loads(line)
+                if art.get('link') not in processed:
+                    remaining.append(line)
+            except Exception:
+                remaining.append(line)
+print('\n'.join(remaining) if remaining else '（収集記事なし - 全記事処理済み）')
+")
           else
             PENDING_CONTENT="（収集記事なし - 処理をスキップします）"
           fi

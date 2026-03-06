@@ -31,34 +31,9 @@ jobs:
           PROMPT_TEMPLATE=$(cat .github/prompts/generate-summaries.md)
 
           if [ -f "$PENDING_FILE" ] && [ -s "$PENDING_FILE" ]; then
-            # 既処理済みの記事（最終JSONLに存在するlink）を除外し、未処理分のみ注入する
+            # 既処理済みの記事を除外し未処理分のみ抽出（外部スクリプトで処理）
             # → 途中停止後の再実行でも重複せず、未処理の続きから処理できる
-            PENDING_CONTENT=$(python3 -c "
-import json, os
-processed = set()
-if os.path.exists('$FINAL_FILE'):
-    with open('$FINAL_FILE') as f:
-        for line in f:
-            line = line.strip()
-            if line:
-                try:
-                    processed.add(json.loads(line)['link'])
-                except Exception:
-                    pass
-remaining = []
-with open('$PENDING_FILE') as f:
-    for line in f:
-        line = line.strip()
-        if line:
-            try:
-                art = json.loads(line)
-                if art.get('link') not in processed:
-                    remaining.append(line)
-            except Exception:
-                remaining.append(line)
-if remaining:
-    print('\n'.join(remaining))
-")
+            PENDING_CONTENT=$(python3 scripts/filter_pending.py "$PENDING_FILE" "$FINAL_FILE")
           fi
 
           if [ -z "${PENDING_CONTENT:-}" ]; then

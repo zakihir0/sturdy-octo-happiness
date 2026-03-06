@@ -1,4 +1,4 @@
-name: Collect AI News
+name: Step 1 - Collect URLs
 
 on:
   schedule:
@@ -10,7 +10,7 @@ permissions:
   id-token: write
 
 jobs:
-  collect:
+  collect-urls:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,25 +21,26 @@ jobs:
         run: |
           {
             echo 'prompt<<PROMPT_EOF'
-            cat .github/prompts/collect-news.md
+            cat .github/prompts/collect-urls.md
             echo 'PROMPT_EOF'
           } >> $GITHUB_OUTPUT
 
-      # Claude Code がRSS取得・要約・JSONL/MD/news_data.json保存を実行
-      - name: Collect and summarize news with Claude Code
+      # Claude Code が RSS取得・重複排除・中間JSONL保存を実行
+      - name: Collect URLs with Claude Code
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_args: "--allowedTools Read,Write,WebFetch"
           prompt: ${{ steps.read_prompt.outputs.prompt }}
 
-      # データファイルのみコミット（HTML生成は generate-html.yml が担当）
-      - name: Commit and push
+      # 中間ファイルとログをコミット
+      - name: Commit pending URLs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/news/ docs/news_data.json logs/
+          git add docs/news/.pending/ logs/
           git diff --cached --quiet && echo "変更なし" || (
-            git commit -m "chore: collect AI news $(date -u '+%Y-%m-%d')" && git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git
+            git commit -m "chore: collect URLs $(date -u '+%Y-%m-%d')" &&
+            git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git &&
             git push
           )

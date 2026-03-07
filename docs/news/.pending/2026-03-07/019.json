@@ -1,9 +1,0 @@
-{
-  "title": "An Explainable Ensemble Framework for Alzheimer's Disease Prediction Using Structured Clinical and Cognitive Data",
-  "link": "https://arxiv.org/abs/2603.04449",
-  "description": "Develops an explainable ensemble framework using XGBoost, Random Forest, and SHAP analysis for Alzheimer's diagnosis, highlighting MMSE and functional assessment as key predictive features.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.LG",
-  "category": "論文 - 機械学習",
-  "fetched_at": "2026-03-07T01:00:00Z"
-}

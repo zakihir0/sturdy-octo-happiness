@@ -89,7 +89,7 @@ print(json.dumps(files))
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          claude_args: "--allowedTools Read,Write,WebFetch"
+          claude_args: "--allowedTools Read,Write,WebFetch,WebSearch"
           prompt: ${{ steps.build_prompt.outputs.prompt }}
 
       # 処理済み pending ファイルを削除してコミット

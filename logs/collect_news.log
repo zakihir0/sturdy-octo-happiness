@@ -255,3 +255,22 @@
 [2026-03-06 11:30:00 UTC] [INFO] 中間ファイル保存: docs/news/.pending/2026-03-06.jsonl (51 件)
 [2026-03-06 11:30:00 UTC] [INFO] === 収集終了 (Step 1完了): 成功 6 / 失敗 0 フィード (RSS代替WebFetch含む), 新着 51 件 ===
 
+[2026-03-07 02:36:16 UTC] [INFO] === 収集開始 2026-03-07 02:36:16 UTC ===
+[2026-03-07 02:36:16 UTC] [INFO] 既存記事: 0 件
+[2026-03-07 02:36:17 UTC] [INFO] OK   ArXiv cs.AI (736,240 bytes)
+[2026-03-07 02:36:17 UTC] [INFO] OK   ArXiv cs.LG (663,145 bytes)
+[2026-03-07 02:36:17 UTC] [INFO] OK   ArXiv cs.CL (350,779 bytes)
+[2026-03-07 02:36:20 UTC] [WARN] FAIL Anthropic | urllib.error.HTTPError: HTTP Error 404: Not Found
+[2026-03-07 02:36:22 UTC] [WARN] FAIL Meta AI | urllib.error.HTTPError: HTTP Error 404: Not Found
+[2026-03-07 02:36:23 UTC] [INFO] OK   Google DeepMind (84,238 bytes)
+[2026-03-07 02:36:23 UTC] [INFO] OK   TechCrunch AI (20,689 bytes)
+[2026-03-07 02:36:23 UTC] [INFO] OK   Kaggle Blog (104,112 bytes)
+[2026-03-07 02:36:23 UTC] [INFO] ANTHROPIC_API_KEY 未設定 — 要約スキップ（Claude Code が処理済みの想定）
+[2026-03-07 02:36:23 UTC] [INFO] 保存完了: 合計 60 件 (今回追加 +60 件)
+[2026-03-07 02:36:23 UTC] [INFO] JSONL保存: /home/runner/work/sturdy-octo-happiness/sturdy-octo-happiness/docs/news/2026-03-07.jsonl (60 件)
+[2026-03-07 02:36:23 UTC] [INFO] MD保存: /home/runner/work/sturdy-octo-happiness/sturdy-octo-happiness/docs/news/2026-03-07.md
+[2026-03-07 02:36:23 UTC] [INFO] 全JSONL統合: 110 件
+[2026-03-07 02:36:23 UTC] [INFO] news.html 生成: 82 KB
+[2026-03-07 02:36:23 UTC] [INFO] index.html 生成: 101 KB
+[2026-03-07 02:36:23 UTC] [INFO] === 収集終了: 成功 6 / 失敗 2 フィード ===
+

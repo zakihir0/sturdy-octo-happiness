@@ -11,66 +11,100 @@ permissions:
   id-token: write
 
 jobs:
-  generate-summaries:
+  # ---------------------------------------------------------------
+  # list-articles: .pending/ 内のファイルを列挙して matrix を生成する
+  # ---------------------------------------------------------------
+  list-articles:
     runs-on: ubuntu-latest
-    # Step 1 が成功した場合、または手動実行の場合に起動
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    outputs:
+      matrix: ${{ steps.list.outputs.matrix }}
+      has_articles: ${{ steps.list.outputs.has_articles }}
     steps:
       - uses: actions/checkout@v4
         with:
-          # workflow_run 経由では Step 1 のコミット済みファイルを取得するため最新を指定
           ref: main
 
-      # Step 1 の成果物（中間JSONL）を読み込んでプロンプトに注入
-      - name: Load pending articles into prompt
-        id: build_prompt
+      - name: List pending article files
+        id: list
         run: |
           TODAY=$(date -u '+%Y-%m-%d')
-          PENDING_FILE="docs/news/.pending/${TODAY}.jsonl"
-          FINAL_FILE="docs/news/${TODAY}.jsonl"
-          PROMPT_TEMPLATE=$(cat .github/prompts/generate-summaries.md)
+          PENDING_DIR="docs/news/.pending/${TODAY}"
 
-          if [ -f "$PENDING_FILE" ] && [ -s "$PENDING_FILE" ]; then
-            # 既処理済みの記事を除外し未処理分のみ抽出（外部スクリプトで処理）
-            # → 途中停止後の再実行でも重複せず、未処理の続きから処理できる
-            PENDING_CONTENT=$(python3 scripts/filter_pending.py "$PENDING_FILE" "$FINAL_FILE")
-          fi
-
-          if [ -z "${PENDING_CONTENT:-}" ]; then
-            # 処理対象なし：Claude を呼ばずシェルでログだけ記録してスキップ
-            echo "has_articles=false" >> $GITHUB_OUTPUT
+          if [ -d "$PENDING_DIR" ] && ls "$PENDING_DIR"/*.json 2>/dev/null | head -1 | grep -q .; then
+            FILES=$(python3 -c "
+import glob, json
+files = sorted(glob.glob('docs/news/.pending/${TODAY}/*.json'))
+print(json.dumps(files))
+")
+            echo "matrix=$FILES" >> "$GITHUB_OUTPUT"
+            echo "has_articles=true" >> "$GITHUB_OUTPUT"
+            echo "$FILES" | python3 -c "import json,sys; f=json.load(sys.stdin); print(f'{len(f)} 件の未処理記事を検出')"
+          else
+            echo "matrix=[]" >> "$GITHUB_OUTPUT"
+            echo "has_articles=false" >> "$GITHUB_OUTPUT"
+            echo "未処理記事なし（スキップ）"
             mkdir -p logs
             printf '[%s] [INFO] generate-summaries: 未処理記事なし（スキップ）\n' \
               "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" >> logs/collect_news.log
-          else
-            echo "has_articles=true" >> $GITHUB_OUTPUT
-            # テンプレートの {{PENDING_ARTICLES}} プレースホルダーに中間ファイル内容を注入
-            FULL_PROMPT="${PROMPT_TEMPLATE/\{\{PENDING_ARTICLES\}\}/$PENDING_CONTENT}"
-            {
-              echo 'prompt<<PROMPT_EOF'
-              printf '%s' "$FULL_PROMPT"
-              echo ''
-              echo 'PROMPT_EOF'
-            } >> $GITHUB_OUTPUT
           fi
 
+  # ---------------------------------------------------------------
+  # process-article: 記事1件ごとに Claude Code Action を1回起動する
+  #   max-parallel: 1 → 直列処理でgit競合を防ぐ
+  #   fail-fast: false → 1件失敗しても残りの記事は継続処理
+  # ---------------------------------------------------------------
+  process-article:
+    needs: list-articles
+    if: needs.list-articles.outputs.has_articles == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        article_file: ${{ fromJSON(needs.list-articles.outputs.matrix) }}
+      max-parallel: 1
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      # 前のジョブのコミットを取り込む（直列処理でも checkout タイミングがずれる場合のため）
+      - name: Pull latest changes
+        run: git pull origin main
+
+      # テンプレートの {{PENDING_ARTICLES}} を記事JSONで置換してプロンプトを構築する
+      - name: Build prompt for article
+        id: build_prompt
+        run: |
+          FULL_PROMPT=$(python3 scripts/build_prompt.py '${{ matrix.article_file }}')
+          {
+            echo 'prompt<<PROMPT_EOF'
+            printf '%s' "$FULL_PROMPT"
+            echo ''
+            echo 'PROMPT_EOF'
+          } >> "$GITHUB_OUTPUT"
+
       # Claude Code が記事本文取得・日本語要約生成・最終ファイル保存を実行
-      - name: Generate summaries with Claude Code
-        if: steps.build_prompt.outputs.has_articles == 'true'
+      - name: Generate summary with Claude Code
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_args: "--allowedTools Read,Write,WebFetch"
           prompt: ${{ steps.build_prompt.outputs.prompt }}
 
-      # 最終成果物をコミット
-      - name: Commit final outputs
+      # 処理済み pending ファイルを削除してコミット
+      - name: Commit result and remove pending file
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/news/ docs/news_data.json logs/
+          git pull --rebase origin main
+
+          rm -f '${{ matrix.article_file }}'
+
+          ARTICLE_NAME=$(basename '${{ matrix.article_file }}' .json)
+          git add docs/news/ docs/news_data.json logs/ docs/news/.pending/
           git diff --cached --quiet && echo "変更なし" || (
-            git commit -m "chore: generate summaries $(date -u '+%Y-%m-%d')" &&
+            git commit -m "chore: summary ${ARTICLE_NAME} $(date -u '+%Y-%m-%d')" &&
             git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git &&
             git push
           )

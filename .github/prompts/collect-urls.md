@@ -17,13 +17,15 @@ CLAUDE.md の「収集対象ソース」に記載された各URLを WebFetch で
 
 `docs/news/` フォルダ内に存在する全 JSONL ファイル（`YYYY-MM-DD.jsonl`）を Read ツールで読み込み、
 全レコードの `link` フィールドを収集して「既存URLセット」を作る。
-`docs/news/.pending/` 内のファイルも同様に読み込み、既存URLセットに追加する。
+`docs/news/.pending/` 内の全 JSON ファイルも同様に Read で読み込み、既存URLセットに追加する。
 以降の保存処理では、この既存URLセットに含まれる記事はスキップする。
 
 ## 手順 3. 中間ファイルへの保存
 
-今日の日付（UTC）を YYYY-MM-DD 形式で取得し、新着記事を
-`docs/news/.pending/YYYY-MM-DD.jsonl` に1行1レコードのJSONL形式で保存する。
+今日の日付（UTC）を YYYY-MM-DD 形式で取得する。
+新着記事を `docs/news/.pending/YYYY-MM-DD/` ディレクトリ内に、**記事1件＝1ファイル** の形式で保存する。
+ファイル名はゼロ埋め3桁の連番（`001.json`, `002.json`, ...）を使用する。
+各ファイルの内容は1レコード分の通常 JSON 形式（JSONL ではなく改行あり整形 JSON）とする。
 
 保存するフィールド（`summary_ja` は含めない。Step 2 で生成する）:
 - `title`: 記事タイトル（英語原文）

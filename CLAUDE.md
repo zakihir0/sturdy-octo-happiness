@@ -97,15 +97,14 @@
 
 ### GitHub Actions（通常運用）
 
-```
-GitHub Actions タブ → "Collect AI News" → Run workflow
-```
+毎日 JST 10:00 に Step 1 が自動起動し、Step 2 → Step 3 と連鎖実行される。
+手動実行する場合は各ワークフローを順に `Run workflow` する。
 
-`collect-news.yml` が `anthropics/claude-code-action` を呼び出し、Claude Code が以下を自律的に実行する：
-1. 各ソースの RSS フィードを WebFetch で取得
-2. 新着記事を読み取り、日本語で翻訳・要約
-3. JSONL・MD・JSON ファイルを Write ツールで保存
-4. 変更をコミット・プッシュ
+| ステップ | ワークフロー | 内容 |
+|----------|------------|------|
+| Step 1 | `Step 1 - Collect URLs` | RSS取得・重複排除・中間JSON保存 |
+| Step 2 | `Step 2 - Generate Summaries` | 記事本文取得・日本語要約生成・JSONL保存 |
+| Step 3 | `Step 3 - Generate HTML` | JSONL読み込み・HTML再生成 |
 
 ### 必要な Secrets
 
@@ -121,18 +120,12 @@ GitHub Actions タブ → "Collect AI News" → Run workflow
 
 収集失敗時は `logs/collect_news.log` の最新ブロック（`=== 収集開始 ===` 〜 `=== 収集終了 ===`）を確認し、`[WARN]` / `[ERROR]` 行から原因を特定する。
 
-### 既知の失敗パターン
-
-| 日付 | フィード | エラー種別 | 原因 | 状態 |
-|------|---------|-----------|------|------|
-| 2026-03-05 | 全フィード | `URLError: 403 Forbidden` | Claude Code on the web のプロキシがアウトバウンドを遮断 | 未解決（GitHub Actions で実行すること） |
-
 ### 対処方針
 
 | エラー種別 | 対処 |
 |-----------|------|
 | ネットワーク制限（403等） | GitHub Actions で実行する（ローカル・web環境では不可） |
-| RSS URL変更 | `collect-news.yml` のプロンプト内 URL リストを更新する |
+| RSS URL変更 | `.github/prompts/collect-urls.md` の URL リストを更新する |
 | WebFetch タイムアウト | フィードURLを代替に変更するか、対象ソースを一時除外する |
 
 ---
@@ -146,12 +139,19 @@ sturdy-octo-happiness/
 ├── .claude/
 │   └── settings.json                 # Claude Code 設定
 ├── .github/
+│   ├── prompts/
+│   │   ├── collect-urls.md           # Step 1 プロンプト（RSS収集）
+│   │   └── generate-summaries.md     # Step 2 プロンプト（要約生成）
 │   └── workflows/
-│       ├── collect-news.yml          # ニュース収集（毎日 JST 10:00）
+│       ├── collect-urls.yml          # Step 1: RSS収集（毎日 JST 10:00 自動起動）
+│       ├── generate-summaries.yml    # Step 2: 要約生成（Step 1 完了後に連鎖）
+│       ├── generate-html.yml         # Step 3: HTML生成（Step 2 完了後に連鎖）
+│       ├── deploy-pages.yml          # GitHub Pages デプロイ（docs/ 変更時）
 │       ├── claude.yml                # @claude メンション連携
 │       └── claude-code-review.yml   # PR 自動コードレビュー
 ├── scripts/
-│   └── collect_news.py               # HTML生成ヘルパースクリプト
+│   ├── collect_news.py               # Step 3: HTML生成スクリプト
+│   └── build_prompt.py               # Step 2: プロンプト構築スクリプト
 ├── docs/                             # GitHub Pages 公開ディレクトリ
 │   ├── index.html                    # アーカイブ一覧（自動生成）
 │   ├── news.html                     # 全記事ダッシュボード（自動生成）

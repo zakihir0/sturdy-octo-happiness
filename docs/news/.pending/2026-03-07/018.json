@@ -1,0 +1,9 @@
+{
+  "title": "ZorBA: Zeroth-order Federated Fine-tuning of LLMs with Heterogeneous Block Activation",
+  "link": "https://arxiv.org/abs/2603.04436",
+  "description": "Proposes a zeroth-order optimization framework for federated LLM fine-tuning with heterogeneous block allocation, reducing VRAM usage by up to 62.41% compared to baselines.",
+  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.LG",
+  "category": "論文 - 機械学習",
+  "fetched_at": "2026-03-07T01:00:00Z"
+}

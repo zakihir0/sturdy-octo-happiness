@@ -1,0 +1,9 @@
+{
+  "title": "Decorrelating the Future: Joint Frequency Domain Learning for Spatio-temporal Forecasting",
+  "link": "https://arxiv.org/abs/2603.04418",
+  "description": "Proposes FreST Loss, a frequency-enhanced training objective leveraging Joint Fourier Transform to capture complex spatio-temporal dependencies in graph-structured signals, demonstrating consistent improvements across six real-world datasets.",
+  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.LG",
+  "category": "論文 - 機械学習",
+  "fetched_at": "2026-03-07T01:00:00Z"
+}

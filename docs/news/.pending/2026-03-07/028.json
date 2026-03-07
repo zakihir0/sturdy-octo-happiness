@@ -1,0 +1,9 @@
+{
+  "title": "Do Mixed-Vendor Multi-Agent LLMs Improve Clinical Diagnosis?",
+  "link": "https://arxiv.org/abs/2603.04421",
+  "description": "Investigates multi-agent collaboration across different LLM vendors for clinical diagnosis, demonstrating that vendor diversity improves diagnostic accuracy through complementary biases.",
+  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.CL",
+  "category": "論文 - 言語処理",
+  "fetched_at": "2026-03-07T01:00:00Z"
+}

@@ -1,0 +1,9 @@
+{
+  "title": "VSPrefill: Vertical-Slash Sparse Attention with Lightweight Indexing for Long-Context Prefilling",
+  "link": "https://arxiv.org/abs/2603.04460",
+  "description": "Introduces VSPrefill for efficient long-context inference using vertical-slash attention patterns, preserving 98.35% of full attention accuracy while delivering a 4.95x average speedup at 128k context.",
+  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.LG",
+  "category": "論文 - 機械学習",
+  "fetched_at": "2026-03-07T01:00:00Z"
+}

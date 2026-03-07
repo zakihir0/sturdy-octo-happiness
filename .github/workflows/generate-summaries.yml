@@ -32,11 +32,7 @@ jobs:
           PENDING_DIR="docs/news/.pending/${TODAY}"
 
           if [ -d "$PENDING_DIR" ] && ls "$PENDING_DIR"/*.json 2>/dev/null | head -1 | grep -q .; then
-            FILES=$(python3 -c "
-            import glob, json
-            files = sorted(glob.glob('docs/news/.pending/${TODAY}/*.json'))
-            print(json.dumps(files))
-            ")
+            FILES=$(python3 -c "import glob,json; files=sorted(glob.glob('docs/news/.pending/${TODAY}/*.json')); print(json.dumps(files))")
             echo "matrix=$FILES" >> "$GITHUB_OUTPUT"
             echo "has_articles=true" >> "$GITHUB_OUTPUT"
             echo "$FILES" | python3 -c "import json,sys; f=json.load(sys.stdin); print(f'{len(f)} 件の未処理記事を検出')"

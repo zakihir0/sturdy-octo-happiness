@@ -1,0 +1,9 @@
+{
+  "title": "Same Input, Different Scores: A Multi Model Study on the Inconsistency of LLM Judge",
+  "link": "https://arxiv.org/abs/2603.04417",
+  "description": "Systematically evaluates scoring stability across five LLMs used as evaluators, revealing substantial variability and cross-model differences that impact production reliability.",
+  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.CL",
+  "category": "論文 - 言語処理",
+  "fetched_at": "2026-03-07T01:00:00Z"
+}

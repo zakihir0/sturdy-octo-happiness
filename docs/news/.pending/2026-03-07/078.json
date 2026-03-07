@@ -1,0 +1,9 @@
+{
+  "title": "Additive Multi-Step Markov Chains and Curse of Dimensionality in LLMs",
+  "link": "https://arxiv.org/abs/2603.04412",
+  "description": "Explores N-order additive Markov chains as approximations for LLM dynamics with reduced combinatorial complexity, addressing the curse of dimensionality in language model analysis.",
+  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.CL",
+  "category": "論文 - 言語処理",
+  "fetched_at": "2026-03-07T03:20:00Z"
+}

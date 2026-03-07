@@ -49,15 +49,52 @@
 <body>
   <header>
     <h1>AI/LLM ニュース アーカイブ</h1>
-    <p>最終更新: 2026-03-07 13:24 UTC &nbsp;|&nbsp; 毎日 JST 10:00 自動更新</p>
+    <p>最終更新: 2026-03-07 13:40 UTC &nbsp;|&nbsp; 毎日 JST 10:00 自動更新</p>
     <div class="header-links">
       <a href="news.html">全記事ダッシュボード →</a>
     </div>
   </header>
-  <nav class="tabs"><button class="tab-btn active" onclick="showTab('2026-03-06',this)">2026-03-06</button>
+  <nav class="tabs"><button class="tab-btn active" onclick="showTab('2026-03-07',this)">2026-03-07</button>
+<button class="tab-btn " onclick="showTab('2026-03-06',this)">2026-03-06</button>
 <button class="tab-btn " onclick="showTab('2026-03-05',this)">2026-03-05</button>
 </nav>
-  <main><section id="tab-2026-03-06" style="display:block">
+  <main><section id="tab-2026-03-07" style="display:block">
+  <div class="section-header">
+    <span>📅 2026-03-07 &nbsp;·&nbsp; 1件</span>
+    <div><a href="news/2026-03-07.jsonl" class="file-link">JSONL</a></div>
+  </div>
+  <div class="cat-section"><h3 class="cat-title">論文 - AI全般 <span class="count">1件</span></h3><div class="thread"><article class="thread-item thread-item-new">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">ArXiv cs.AI</span>
+      <span class="date">Fri, 06 Mar 2026 00:00:00 -050</span>
+      <span class="badge-new">NEW</span>
+    </div>
+    <h3><a href="https://arxiv.org/abs/2603.04448" target="_blank" rel="noopener">SkillNet: Create, Evaluate, and Connect AI Skills</a></h3>
+    <p class="summary-ja">SkillNetは、AIエージェントがスキルを体系的に蓄積・転用するためのインフラストラクチャを提案した論文である。現代のAIエージェントはツールを柔軟に呼び出して複雑なタスクを実行できる一方、スキルの長期的な蓄積と転用の仕組みが欠如しており、エージェントが同じ問題解決策を何度も独自に発見し直すという非効率が生じている。本研究はこの課題に対し、スキルを「進化する・組み合わせ可能な資産」として定式化し、エージェント間でのスキル共有と再利用を可能にする統合エコシステムを構築することで、AIエージェントの長期的な性能向上を目指す。
+
+【手法・アーキテクチャ】
+
+SkillNetは3つの中核コンポーネントから構成される。第1に統一オントロジー（Unified Ontology）である。多様なソースから収集したスキルを構造化されたフレームワークで整理し、スキル間の関係性（依存関係・類似関係・拡張関係など）を形式的に定義する。これによりエージェントは既存スキルを検索・参照して新たなタスクへ応用できるようになり、ゼロから解法を再発見するコストを大幅に削減できる。
+
+第2に多次元評価（Multi-dimensional Evaluation）である。収集・生成されたスキルを5つの次元で評価する：安全性（Safety）・完全性（Completeness）・実行可能性（Executability）・保守性（Maintainability）・コスト意識（Cost-awareness）。この多角的評価により、低品質スキルや有害なスキルの混入を防ぎ、エコシステム全体の信頼性と実用性を維持する仕組みを持つ。単一指標では見逃されがちなトレードオフを多軸で捉えられる点が技術的な特徴である。
+
+第3に統合エコシステム（Integrated Ecosystem）である。20万件以上のスキルを収録するリポジトリ、インタラクティブなWebプラットフォーム、Pythonツールキットを統合し、研究者・開発者がスキルの作成・検索・評価・接続を行いやすい環境を提供する。skillnet.openkg.cnで公開されており、コミュニティによるスキルの継続的な貢献と利用が想定されている。
+
+【実験設定と結果】
+
+SkillNetの有効性を検証するため、ALFWorld・WebShop・ScienceWorldの3つの代表的なエージェントベンチマーク環境でテストを実施した。ALFWorldは家庭内でのオブジェクト操作タスク、WebShopは電子商取引サイトのナビゲーションと購買行動、ScienceWorldは科学実験のシミュレーションをそれぞれ対象とする、性質の異なるタスクセットである。複数のベースモデルにSkillNetを組み合わせた結果、平均エージェント報酬が40%向上し、タスク達成に要する実行ステップ数が30%削減された。この結果は特定モデルへの依存なく汎用的なスキルインフラとして機能することを示しており、フレームワークの汎化性能の高さを裏付けている。
+
+【意義と限界】
+
+SkillNetが解決しようとする課題はAIエージェント研究における本質的な問題であり、LLMの文脈長の制限や推論セッションをまたいだ記憶の欠如を外部スキルメモリで補う新たなアプローチとして注目される。20万件超のスキルを含むオープンエコシステムとPythonツールキットの公開により、LangChain・AutoGen・CrewAIなど既存のエージェントフレームワークとの連携も視野に入る。一方で限界として、スキルの品質が登録者の記述能力に依存する点、オントロジーのスケールアップに伴う管理コストの増大、5次元評価が全タスクドメインを網羅しきれない可能性が挙げられる。今後はリアルタイムのスキル更新機能や自動スキル生成機能の強化が期待される。</p>
+    <div class="fetched">収集日: 2026-03-07</div>
+  </div>
+</article></div></div>
+
+</section>
+<section id="tab-2026-03-06" style="display:none">
   <div class="section-header">
     <span>📅 2026-03-06 &nbsp;·&nbsp; 10件</span>
     <div><a href="news/2026-03-06.jsonl" class="file-link">JSONL</a></div>

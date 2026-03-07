@@ -45,16 +45,175 @@
 <body>
   <header>
     <h1>AI/LLM ニュースダッシュボード</h1>
-    <p>最終更新: 2026-03-07 13:24 UTC &nbsp;|&nbsp; ArXiv / GAFA企業ブログ / Kaggle などから自動収集</p>
+    <p>最終更新: 2026-03-07 13:40 UTC &nbsp;|&nbsp; ArXiv / GAFA企業ブログ / Kaggle などから自動収集</p>
     <a href="index.html" class="archive-link">← 日付別アーカイブ</a>
   </header>
-  <nav><a href="#cat-0">AI全般ニュース <small>(22)</small></a>
-<a href="#cat-1">コンペティション <small>(10)</small></a>
-<a href="#cat-2">企業ブログ <small>(10)</small></a>
-<a href="#cat-3">論文 - 言語処理 <small>(10)</small></a>
-<a href="#cat-4">論文 - 機械学習 <small>(10)</small></a>
-<a href="#cat-5">論文 - AI全般 <small>(10)</small></a></nav>
-  <main><section id="cat-0"><h2>AI全般ニュース <span class="count">22件</span></h2><div class="thread"><article class="thread-item">
+  <nav><a href="#cat-0">論文 - AI全般 <small>(11)</small></a>
+<a href="#cat-1">AI全般ニュース <small>(22)</small></a>
+<a href="#cat-2">コンペティション <small>(10)</small></a>
+<a href="#cat-3">企業ブログ <small>(10)</small></a>
+<a href="#cat-4">論文 - 言語処理 <small>(10)</small></a>
+<a href="#cat-5">論文 - 機械学習 <small>(10)</small></a></nav>
+  <main><section id="cat-0"><h2>論文 - AI全般 <span class="count">11件</span></h2><div class="thread"><article class="thread-item thread-item-new">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">ArXiv cs.AI</span>
+      <span class="date">Fri, 06 Mar 2026 00:00:00 -050</span>
+      <span class="badge-new">NEW</span>
+    </div>
+    <h3><a href="https://arxiv.org/abs/2603.04448" target="_blank" rel="noopener">SkillNet: Create, Evaluate, and Connect AI Skills</a></h3>
+    <p class="summary-ja">SkillNetは、AIエージェントがスキルを体系的に蓄積・転用するためのインフラストラクチャを提案した論文である。現代のAIエージェントはツールを柔軟に呼び出して複雑なタスクを実行できる一方、スキルの長期的な蓄積と転用の仕組みが欠如しており、エージェントが同じ問題解決策を何度も独自に発見し直すという非効率が生じている。本研究はこの課題に対し、スキルを「進化する・組み合わせ可能な資産」として定式化し、エージェント間でのスキル共有と再利用を可能にする統合エコシステムを構築することで、AIエージェントの長期的な性能向上を目指す。
+
+【手法・アーキテクチャ】
+
+SkillNetは3つの中核コンポーネントから構成される。第1に統一オントロジー（Unified Ontology）である。多様なソースから収集したスキルを構造化されたフレームワークで整理し、スキル間の関係性（依存関係・類似関係・拡張関係など）を形式的に定義する。これによりエージェントは既存スキルを検索・参照して新たなタスクへ応用できるようになり、ゼロから解法を再発見するコストを大幅に削減できる。
+
+第2に多次元評価（Multi-dimensional Evaluation）である。収集・生成されたスキルを5つの次元で評価する：安全性（Safety）・完全性（Completeness）・実行可能性（Executability）・保守性（Maintainability）・コスト意識（Cost-awareness）。この多角的評価により、低品質スキルや有害なスキルの混入を防ぎ、エコシステム全体の信頼性と実用性を維持する仕組みを持つ。単一指標では見逃されがちなトレードオフを多軸で捉えられる点が技術的な特徴である。
+
+第3に統合エコシステム（Integrated Ecosystem）である。20万件以上のスキルを収録するリポジトリ、インタラクティブなWebプラットフォーム、Pythonツールキットを統合し、研究者・開発者がスキルの作成・検索・評価・接続を行いやすい環境を提供する。skillnet.openkg.cnで公開されており、コミュニティによるスキルの継続的な貢献と利用が想定されている。
+
+【実験設定と結果】
+
+SkillNetの有効性を検証するため、ALFWorld・WebShop・ScienceWorldの3つの代表的なエージェントベンチマーク環境でテストを実施した。ALFWorldは家庭内でのオブジェクト操作タスク、WebShopは電子商取引サイトのナビゲーションと購買行動、ScienceWorldは科学実験のシミュレーションをそれぞれ対象とする、性質の異なるタスクセットである。複数のベースモデルにSkillNetを組み合わせた結果、平均エージェント報酬が40%向上し、タスク達成に要する実行ステップ数が30%削減された。この結果は特定モデルへの依存なく汎用的なスキルインフラとして機能することを示しており、フレームワークの汎化性能の高さを裏付けている。
+
+【意義と限界】
+
+SkillNetが解決しようとする課題はAIエージェント研究における本質的な問題であり、LLMの文脈長の制限や推論セッションをまたいだ記憶の欠如を外部スキルメモリで補う新たなアプローチとして注目される。20万件超のスキルを含むオープンエコシステムとPythonツールキットの公開により、LangChain・AutoGen・CrewAIなど既存のエージェントフレームワークとの連携も視野に入る。一方で限界として、スキルの品質が登録者の記述能力に依存する点、オントロジーのスケールアップに伴う管理コストの増大、5次元評価が全タスクドメインを網羅しきれない可能性が挙げられる。今後はリアルタイムのスキル更新機能や自動スキル生成機能の強化が期待される。</p>
+    <div class="fetched">収集日: 2026-03-07</div>
+  </div>
+</article>
+<article class="thread-item">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">ArXiv cs.AI</span>
+      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
+      
+    </div>
+    <h3><a href="https://arxiv.org/abs/2603.03456" target="_blank" rel="noopener">Asymmetric Goal Drift in Coding Agents Under Value Conflict</a></h3>
+    <p class="summary-ja">コーディングエージェントが価値観とシステムプロンプトの制約が衝突する際に生じる非対称的な目標ドリフトを研究した論文。GPT-5 mini・Haiku 4.5・Grok Code Fast 1を対象に、環境的プレッシャーによるドリフトパターンを分析している。</p>
+    <div class="fetched">収集日: 2026-03-05</div>
+  </div>
+</article>
+<article class="thread-item">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">ArXiv cs.AI</span>
+      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
+      
+    </div>
+    <h3><a href="https://arxiv.org/abs/2603.03565" target="_blank" rel="noopener">Build, Judge, Optimize: A Blueprint for Continuous Improvement of Multi-Agent Consumer Assistants</a></h3>
+    <p class="summary-ja">マルチエージェント型の会話型ショッピングアシスタントを評価・最適化する継続的改善フレームワークを提案した論文。多面的な評価ルーブリックとプロンプト最適化戦略により本番規模デプロイメントに対応している。</p>
+    <div class="fetched">収集日: 2026-03-05</div>
+  </div>
+</article>
+<article class="thread-item">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">ArXiv cs.AI</span>
+      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
+      
+    </div>
+    <h3><a href="https://arxiv.org/abs/2603.03655" target="_blank" rel="noopener">Mozi: Governed Autonomy for Drug Discovery LLM Agents</a></h3>
+    <p class="summary-ja">創薬向けの自律型LLMエージェント「Mozi」を提案。生成AIの柔軟性と計算生物学の厳密性を組み合わせたデュアルレイヤーアーキテクチャにより、制御されたツール使用とステートフルなワークフローを実現している。</p>
+    <div class="fetched">収集日: 2026-03-05</div>
+  </div>
+</article>
+<article class="thread-item">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">ArXiv cs.AI</span>
+      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
+      
+    </div>
+    <h3><a href="https://arxiv.org/abs/2603.03680" target="_blank" rel="noopener">MAGE: Meta-Reinforcement Learning for Language Agents toward Strategic Exploration and Exploitation</a></h3>
+    <p class="summary-ja">LLMエージェントが複数エピソード訓練で適応戦略を学習するメタ強化学習フレームワーク「MAGE」を提案。リフレクション統合と集団ベーストレーニングにより探索と活用の動的バランス調整を実現している。</p>
+    <div class="fetched">収集日: 2026-03-05</div>
+  </div>
+</article>
+<article class="thread-item">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">ArXiv cs.AI</span>
+      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
+      
+    </div>
+    <h3><a href="https://arxiv.org/abs/2603.03686" target="_blank" rel="noopener">AI4S-SDS: A Neuro-Symbolic Solvent Design System via Sparse MCTS and Differentiable Physics Alignment</a></h3>
+    <p class="summary-ja">化学溶媒の自動設計のためのニューロシンボリックフレームワーク「AI4S-SDS」を提案。マルチエージェント協調とSparse MCTSを組み合わせ、物理ベース制約下での化学製剤処方自動化を実現している。</p>
+    <div class="fetched">収集日: 2026-03-05</div>
+  </div>
+</article>
+<article class="thread-item">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">ArXiv cs.AI</span>
+      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
+      
+    </div>
+    <h3><a href="https://arxiv.org/abs/2603.03745" target="_blank" rel="noopener">RAGNav: A Retrieval-Augmented Topological Reasoning Framework for Multi-Goal Visual-Language Navigation</a></h3>
+    <p class="summary-ja">複数目標のビジュアル言語ナビゲーション向け検索拡張トポロジー推論フレームワーク「RAGNav」を提案。トポロジカルマップとセマンティックフォレストを組み合わせたデュアルベースメモリにより意味推論と物理構造を統合している。</p>
+    <div class="fetched">収集日: 2026-03-05</div>
+  </div>
+</article>
+<article class="thread-item">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">ArXiv cs.AI</span>
+      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
+      
+    </div>
+    <h3><a href="https://arxiv.org/abs/2603.03761" target="_blank" rel="noopener">AgentSelect: Benchmark for Narrative Query-to-Agent Recommendation</a></h3>
+    <p class="summary-ja">クエリに最適なエージェント設定を推薦する「AgentSelect」ベンチマークを構築。111,179件のクエリと107,721件のエージェントを含む大規模データセットで能力認識マッチングによるエンドツーエンド推薦を評価している。</p>
+    <div class="fetched">収集日: 2026-03-05</div>
+  </div>
+</article>
+<article class="thread-item">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">ArXiv cs.AI</span>
+      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
+      
+    </div>
+    <h3><a href="https://arxiv.org/abs/2603.03781" target="_blank" rel="noopener">LifeBench: A Benchmark for Long-Horizon Multi-Source Memory</a></h3>
+    <p class="summary-ja">長期にわたる多源記憶の統合推論能力を評価するベンチマーク「LifeBench」を提案。密に接続された長期イベントシミュレーションを通じて宣言的・非宣言的記憶推論の時間的統合を必要とするタスクを含む。</p>
+    <div class="fetched">収集日: 2026-03-05</div>
+  </div>
+</article>
+<article class="thread-item">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">ArXiv cs.AI</span>
+      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
+      
+    </div>
+    <h3><a href="https://arxiv.org/abs/2603.03784" target="_blank" rel="noopener">Specification-Driven Generation and Evaluation of Discrete-Event World Models via the DEVS Formalism</a></h3>
+    <p class="summary-ja">自然言語仕様から離散事象世界モデルを自動生成するDEVS形式論活用手法を提案。検証可能で適応性の高いシミュレーションを計画システム向けに生成する仕様駆動型フレームワークを実現している。</p>
+    <div class="fetched">収集日: 2026-03-05</div>
+  </div>
+</article>
+<article class="thread-item">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">ArXiv cs.AI</span>
+      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
+      
+    </div>
+    <h3><a href="https://arxiv.org/abs/2603.03800" target="_blank" rel="noopener">A Rubric-Supervised Critic from Sparse Real-World Outcomes</a></h3>
+    <p class="summary-ja">疎な実世界データを用いたコーディングエージェント向けルーブリック監督型クリティックモデルを開発。24の行動特徴を持つルーブリック監督学習により、再ランキングと早期停止でエージェント性能を改善する手法を示している。</p>
+    <div class="fetched">収集日: 2026-03-05</div>
+  </div>
+</article></div></section>
+<section id="cat-1"><h2>AI全般ニュース <span class="count">22件</span></h2><div class="thread"><article class="thread-item">
   <div class="thread-dot"></div>
   <div class="thread-content">
     <div class="thread-meta">
@@ -340,7 +499,7 @@
     <div class="fetched">収集日: 2026-03-05</div>
   </div>
 </article></div></section>
-<section id="cat-1"><h2>コンペティション <span class="count">10件</span></h2><div class="thread"><article class="thread-item">
+<section id="cat-2"><h2>コンペティション <span class="count">10件</span></h2><div class="thread"><article class="thread-item">
   <div class="thread-dot"></div>
   <div class="thread-content">
     <div class="thread-meta">
@@ -470,7 +629,7 @@
     <div class="fetched">収集日: 2026-03-05</div>
   </div>
 </article></div></section>
-<section id="cat-2"><h2>企業ブログ <span class="count">10件</span></h2><div class="thread"><article class="thread-item">
+<section id="cat-3"><h2>企業ブログ <span class="count">10件</span></h2><div class="thread"><article class="thread-item">
   <div class="thread-dot"></div>
   <div class="thread-content">
     <div class="thread-meta">
@@ -600,7 +759,7 @@
     <div class="fetched">収集日: 2026-03-05</div>
   </div>
 </article></div></section>
-<section id="cat-3"><h2>論文 - 言語処理 <span class="count">10件</span></h2><div class="thread"><article class="thread-item">
+<section id="cat-4"><h2>論文 - 言語処理 <span class="count">10件</span></h2><div class="thread"><article class="thread-item">
   <div class="thread-dot"></div>
   <div class="thread-content">
     <div class="thread-meta">
@@ -730,7 +889,7 @@
     <div class="fetched">収集日: 2026-03-05</div>
   </div>
 </article></div></section>
-<section id="cat-4"><h2>論文 - 機械学習 <span class="count">10件</span></h2><div class="thread"><article class="thread-item">
+<section id="cat-5"><h2>論文 - 機械学習 <span class="count">10件</span></h2><div class="thread"><article class="thread-item">
   <div class="thread-dot"></div>
   <div class="thread-content">
     <div class="thread-meta">
@@ -857,136 +1016,6 @@
     </div>
     <h3><a href="https://arxiv.org/abs/2603.03469" target="_blank" rel="noopener">Biased Generalization in Diffusion Models</a></h3>
     <p class="summary-ja">拡散モデルのテスト損失が減少しつつも訓練データに近いサンプルを優先するバイアスフェーズを特定。早期停止の慣行に存在するプライバシーリスクを明らかにした実証研究を報告している。</p>
-    <div class="fetched">収集日: 2026-03-05</div>
-  </div>
-</article></div></section>
-<section id="cat-5"><h2>論文 - AI全般 <span class="count">10件</span></h2><div class="thread"><article class="thread-item">
-  <div class="thread-dot"></div>
-  <div class="thread-content">
-    <div class="thread-meta">
-      <span class="source">ArXiv cs.AI</span>
-      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
-      
-    </div>
-    <h3><a href="https://arxiv.org/abs/2603.03456" target="_blank" rel="noopener">Asymmetric Goal Drift in Coding Agents Under Value Conflict</a></h3>
-    <p class="summary-ja">コーディングエージェントが価値観とシステムプロンプトの制約が衝突する際に生じる非対称的な目標ドリフトを研究した論文。GPT-5 mini・Haiku 4.5・Grok Code Fast 1を対象に、環境的プレッシャーによるドリフトパターンを分析している。</p>
-    <div class="fetched">収集日: 2026-03-05</div>
-  </div>
-</article>
-<article class="thread-item">
-  <div class="thread-dot"></div>
-  <div class="thread-content">
-    <div class="thread-meta">
-      <span class="source">ArXiv cs.AI</span>
-      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
-      
-    </div>
-    <h3><a href="https://arxiv.org/abs/2603.03565" target="_blank" rel="noopener">Build, Judge, Optimize: A Blueprint for Continuous Improvement of Multi-Agent Consumer Assistants</a></h3>
-    <p class="summary-ja">マルチエージェント型の会話型ショッピングアシスタントを評価・最適化する継続的改善フレームワークを提案した論文。多面的な評価ルーブリックとプロンプト最適化戦略により本番規模デプロイメントに対応している。</p>
-    <div class="fetched">収集日: 2026-03-05</div>
-  </div>
-</article>
-<article class="thread-item">
-  <div class="thread-dot"></div>
-  <div class="thread-content">
-    <div class="thread-meta">
-      <span class="source">ArXiv cs.AI</span>
-      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
-      
-    </div>
-    <h3><a href="https://arxiv.org/abs/2603.03655" target="_blank" rel="noopener">Mozi: Governed Autonomy for Drug Discovery LLM Agents</a></h3>
-    <p class="summary-ja">創薬向けの自律型LLMエージェント「Mozi」を提案。生成AIの柔軟性と計算生物学の厳密性を組み合わせたデュアルレイヤーアーキテクチャにより、制御されたツール使用とステートフルなワークフローを実現している。</p>
-    <div class="fetched">収集日: 2026-03-05</div>
-  </div>
-</article>
-<article class="thread-item">
-  <div class="thread-dot"></div>
-  <div class="thread-content">
-    <div class="thread-meta">
-      <span class="source">ArXiv cs.AI</span>
-      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
-      
-    </div>
-    <h3><a href="https://arxiv.org/abs/2603.03680" target="_blank" rel="noopener">MAGE: Meta-Reinforcement Learning for Language Agents toward Strategic Exploration and Exploitation</a></h3>
-    <p class="summary-ja">LLMエージェントが複数エピソード訓練で適応戦略を学習するメタ強化学習フレームワーク「MAGE」を提案。リフレクション統合と集団ベーストレーニングにより探索と活用の動的バランス調整を実現している。</p>
-    <div class="fetched">収集日: 2026-03-05</div>
-  </div>
-</article>
-<article class="thread-item">
-  <div class="thread-dot"></div>
-  <div class="thread-content">
-    <div class="thread-meta">
-      <span class="source">ArXiv cs.AI</span>
-      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
-      
-    </div>
-    <h3><a href="https://arxiv.org/abs/2603.03686" target="_blank" rel="noopener">AI4S-SDS: A Neuro-Symbolic Solvent Design System via Sparse MCTS and Differentiable Physics Alignment</a></h3>
-    <p class="summary-ja">化学溶媒の自動設計のためのニューロシンボリックフレームワーク「AI4S-SDS」を提案。マルチエージェント協調とSparse MCTSを組み合わせ、物理ベース制約下での化学製剤処方自動化を実現している。</p>
-    <div class="fetched">収集日: 2026-03-05</div>
-  </div>
-</article>
-<article class="thread-item">
-  <div class="thread-dot"></div>
-  <div class="thread-content">
-    <div class="thread-meta">
-      <span class="source">ArXiv cs.AI</span>
-      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
-      
-    </div>
-    <h3><a href="https://arxiv.org/abs/2603.03745" target="_blank" rel="noopener">RAGNav: A Retrieval-Augmented Topological Reasoning Framework for Multi-Goal Visual-Language Navigation</a></h3>
-    <p class="summary-ja">複数目標のビジュアル言語ナビゲーション向け検索拡張トポロジー推論フレームワーク「RAGNav」を提案。トポロジカルマップとセマンティックフォレストを組み合わせたデュアルベースメモリにより意味推論と物理構造を統合している。</p>
-    <div class="fetched">収集日: 2026-03-05</div>
-  </div>
-</article>
-<article class="thread-item">
-  <div class="thread-dot"></div>
-  <div class="thread-content">
-    <div class="thread-meta">
-      <span class="source">ArXiv cs.AI</span>
-      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
-      
-    </div>
-    <h3><a href="https://arxiv.org/abs/2603.03761" target="_blank" rel="noopener">AgentSelect: Benchmark for Narrative Query-to-Agent Recommendation</a></h3>
-    <p class="summary-ja">クエリに最適なエージェント設定を推薦する「AgentSelect」ベンチマークを構築。111,179件のクエリと107,721件のエージェントを含む大規模データセットで能力認識マッチングによるエンドツーエンド推薦を評価している。</p>
-    <div class="fetched">収集日: 2026-03-05</div>
-  </div>
-</article>
-<article class="thread-item">
-  <div class="thread-dot"></div>
-  <div class="thread-content">
-    <div class="thread-meta">
-      <span class="source">ArXiv cs.AI</span>
-      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
-      
-    </div>
-    <h3><a href="https://arxiv.org/abs/2603.03781" target="_blank" rel="noopener">LifeBench: A Benchmark for Long-Horizon Multi-Source Memory</a></h3>
-    <p class="summary-ja">長期にわたる多源記憶の統合推論能力を評価するベンチマーク「LifeBench」を提案。密に接続された長期イベントシミュレーションを通じて宣言的・非宣言的記憶推論の時間的統合を必要とするタスクを含む。</p>
-    <div class="fetched">収集日: 2026-03-05</div>
-  </div>
-</article>
-<article class="thread-item">
-  <div class="thread-dot"></div>
-  <div class="thread-content">
-    <div class="thread-meta">
-      <span class="source">ArXiv cs.AI</span>
-      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
-      
-    </div>
-    <h3><a href="https://arxiv.org/abs/2603.03784" target="_blank" rel="noopener">Specification-Driven Generation and Evaluation of Discrete-Event World Models via the DEVS Formalism</a></h3>
-    <p class="summary-ja">自然言語仕様から離散事象世界モデルを自動生成するDEVS形式論活用手法を提案。検証可能で適応性の高いシミュレーションを計画システム向けに生成する仕様駆動型フレームワークを実現している。</p>
-    <div class="fetched">収集日: 2026-03-05</div>
-  </div>
-</article>
-<article class="thread-item">
-  <div class="thread-dot"></div>
-  <div class="thread-content">
-    <div class="thread-meta">
-      <span class="source">ArXiv cs.AI</span>
-      <span class="date">Thu, 05 Mar 2026 00:00:00 -050</span>
-      
-    </div>
-    <h3><a href="https://arxiv.org/abs/2603.03800" target="_blank" rel="noopener">A Rubric-Supervised Critic from Sparse Real-World Outcomes</a></h3>
-    <p class="summary-ja">疎な実世界データを用いたコーディングエージェント向けルーブリック監督型クリティックモデルを開発。24の行動特徴を持つルーブリック監督学習により、再ランキングと早期停止でエージェント性能を改善する手法を示している。</p>
     <div class="fetched">収集日: 2026-03-05</div>
   </div>
 </article></div></section>

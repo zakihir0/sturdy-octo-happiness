@@ -1,0 +1,9 @@
+{
+  "title": "SkillNet: Create, Evaluate, and Connect AI Skills",
+  "link": "https://arxiv.org/abs/2603.04448",
+  "description": "Infrastructure platform designed to systematize accumulation and transfer of AI skills at scale. Features unified ontology for skill organization, repository of 200,000+ skills, and evaluation across safety, completeness, executability, maintainability, and cost dimensions. Improves average rewards by 40% and reduces execution steps by 30%.",
+  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.AI",
+  "category": "論文 - AI全般",
+  "fetched_at": "2026-03-07T03:20:00Z"
+}

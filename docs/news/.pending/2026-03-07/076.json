@@ -1,0 +1,9 @@
+{
+  "title": "Delta-Crosscoder: Robust Crosscoder Model Diffing in Narrow Fine-Tuning Regimes",
+  "link": "https://arxiv.org/abs/2603.04426",
+  "description": "Combines BatchTopK sparsity with a delta-based loss to identify latent directions responsible for fine-tuned behaviors in language models, tested on models from 1B-9B parameters.",
+  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.LG",
+  "category": "論文 - 機械学習",
+  "fetched_at": "2026-03-07T03:20:00Z"
+}

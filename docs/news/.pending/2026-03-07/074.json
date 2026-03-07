@@ -1,0 +1,9 @@
+{
+  "title": "When Agents Persuade: Propaganda Generation and Mitigation in LLMs",
+  "link": "https://arxiv.org/abs/2603.04636",
+  "description": "Study analyzing propaganda generation in LLMs when prompted with persuasion objectives. Tests mitigation via fine-tuning approaches, finding ORPO proving most effective at reducing propagandistic content production.",
+  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.AI",
+  "category": "論文 - AI全般",
+  "fetched_at": "2026-03-07T03:20:00Z"
+}

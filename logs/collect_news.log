@@ -54,9 +54,9 @@
 [2026-03-05 12:11:08 UTC] [INFO] OK   ArXiv cs.AI (724,942 bytes) <- https://arxiv.org/rss/cs.AI
 [2026-03-05 12:11:08 UTC] [INFO]   -> 10 件パース完了
 [2026-03-05 12:11:08 UTC] [INFO] 取得中: ArXiv cs.LG (https://arxiv.org/rss/cs.LG)
-[2026-03-05 12:11:08 UTC] [INFO] OK   ArXiv cs.LG (621,899 bytes) <- https://arxiv.org/rss/cs.LG
-[2026-03-05 12:11:08 UTC] [INFO]   -> 10 件パース完了
-[2026-03-05 12:11:08 UTC] [INFO] 取得中: ArXiv cs.CL (https://arxiv.org/rss/cs.CL)
+[2026-03-05 12:11:09 UTC] [INFO] OK   ArXiv cs.LG (621,899 bytes) <- https://arxiv.org/rss/cs.LG
+[2026-03-05 12:11:09 UTC] [INFO]   -> 10 件パース完了
+[2026-03-05 12:11:09 UTC] [INFO] 取得中: ArXiv cs.CL (https://arxiv.org/rss/cs.CL)
 [2026-03-05 12:11:09 UTC] [INFO] OK   ArXiv cs.CL (341,011 bytes) <- https://arxiv.org/rss/cs.CL
 [2026-03-05 12:11:09 UTC] [INFO]   -> 10 件パース完了
 [2026-03-05 12:11:09 UTC] [INFO] 取得中: Anthropic (https://www.anthropic.com/rss.xml)
@@ -72,34 +72,21 @@
 [2026-03-05 12:11:11 UTC] [INFO] 取得中: Kaggle Blog (https://medium.com/feed/kaggle-blog)
 [2026-03-05 12:11:11 UTC] [INFO] OK   Kaggle Blog (104,112 bytes) <- https://medium.com/feed/kaggle-blog
 [2026-03-05 12:11:11 UTC] [INFO]   -> 10 件パース完了
+[2026-03-05 12:11:11 UTC] [INFO] ANTHROPIC_API_KEY 未設定 — 日本語要約をスキップ
 [2026-03-05 12:11:11 UTC] [INFO] 保存完了: 合計 60 件 (今回追加 +0 件)
 [2026-03-05 12:11:11 UTC] [INFO] HTML生成: /home/runner/work/sturdy-octo-happiness/sturdy-octo-happiness/docs/news.html (53 KB)
 [2026-03-05 12:11:11 UTC] [INFO] === 収集終了: 成功 6 / 失敗 2 フィード ===
 
 [2026-03-05 12:22:00 UTC] [INFO] === 収集開始 2026-03-05 12:22:00 UTC ===
 [2026-03-05 12:22:00 UTC] [INFO] 既存記事: 60 件
-[2026-03-05 12:22:00 UTC] [INFO] 取得中: ArXiv cs.AI (https://arxiv.org/rss/cs.AI)
-[2026-03-05 12:22:00 UTC] [INFO] OK   ArXiv cs.AI (724,942 bytes) <- https://arxiv.org/rss/cs.AI
-[2026-03-05 12:22:00 UTC] [INFO]   -> 10 件パース完了
-[2026-03-05 12:22:00 UTC] [INFO] 取得中: ArXiv cs.LG (https://arxiv.org/rss/cs.LG)
-[2026-03-05 12:22:00 UTC] [INFO] OK   ArXiv cs.LG (621,899 bytes) <- https://arxiv.org/rss/cs.LG
-[2026-03-05 12:22:00 UTC] [INFO]   -> 10 件パース完了
-[2026-03-05 12:22:00 UTC] [INFO] 取得中: ArXiv cs.CL (https://arxiv.org/rss/cs.CL)
-[2026-03-05 12:22:01 UTC] [INFO] OK   ArXiv cs.CL (341,011 bytes) <- https://arxiv.org/rss/cs.CL
-[2026-03-05 12:22:01 UTC] [INFO]   -> 10 件パース完了
-[2026-03-05 12:22:01 UTC] [INFO] 取得中: Anthropic (https://www.anthropic.com/rss.xml)
+[2026-03-05 12:22:00 UTC] [INFO] OK   ArXiv cs.AI (724,942 bytes)
+[2026-03-05 12:22:00 UTC] [INFO] OK   ArXiv cs.LG (621,899 bytes)
+[2026-03-05 12:22:01 UTC] [INFO] OK   ArXiv cs.CL (341,011 bytes)
 [2026-03-05 12:22:04 UTC] [WARN] FAIL Anthropic <- https://www.anthropic.com/rss.xml | 原因: urllib.error.HTTPError: HTTP Error 404: Not Found
-[2026-03-05 12:22:04 UTC] [INFO] 取得中: Meta AI (https://ai.meta.com/blog/rss/)
 [2026-03-05 12:22:05 UTC] [WARN] FAIL Meta AI <- https://ai.meta.com/blog/rss/ | 原因: urllib.error.HTTPError: HTTP Error 404: Not Found
-[2026-03-05 12:22:05 UTC] [INFO] 取得中: Google DeepMind (https://deepmind.google/blog/rss.xml)
-[2026-03-05 12:22:06 UTC] [INFO] OK   Google DeepMind (84,238 bytes) <- https://deepmind.google/blog/rss.xml
-[2026-03-05 12:22:06 UTC] [INFO]   -> 10 件パース完了
-[2026-03-05 12:22:06 UTC] [INFO] 取得中: TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/feed/)
-[2026-03-05 12:22:06 UTC] [INFO] OK   TechCrunch AI (18,121 bytes) <- https://techcrunch.com/category/artificial-intelligence/feed/
-[2026-03-05 12:22:06 UTC] [INFO]   -> 10 件パース完了
-[2026-03-05 12:22:06 UTC] [INFO] 取得中: Kaggle Blog (https://medium.com/feed/kaggle-blog)
-[2026-03-05 12:22:06 UTC] [INFO] OK   Kaggle Blog (104,112 bytes) <- https://medium.com/feed/kaggle-blog
-[2026-03-05 12:22:06 UTC] [INFO]   -> 10 件パース完了
+[2026-03-05 12:22:06 UTC] [INFO] OK   Google DeepMind (84,238 bytes)
+[2026-03-05 12:22:06 UTC] [INFO] OK   TechCrunch AI (18,121 bytes)
+[2026-03-05 12:22:06 UTC] [INFO] OK   Kaggle Blog (104,112 bytes)
 [2026-03-05 12:22:06 UTC] [INFO] ANTHROPIC_API_KEY 未設定 — 日本語要約をスキップ
 [2026-03-05 12:22:06 UTC] [INFO] 保存完了: 合計 60 件 (今回追加 +0 件)
 [2026-03-05 12:22:06 UTC] [INFO] HTML生成: /home/runner/work/sturdy-octo-happiness/sturdy-octo-happiness/docs/news.html (53 KB)
@@ -156,7 +143,7 @@
 
 [2026-03-05 15:23:29 UTC] [INFO] === 収集開始 2026-03-05 15:23:29 UTC ===
 [2026-03-05 15:23:29 UTC] [INFO] 既存記事: 62 件
-[2026-03-05 15:23:29 UTC] [INFO] OK   ArXiv cs.AI (724,942 bytes)
+[2026-03-05 15:23:30 UTC] [INFO] OK   ArXiv cs.AI (724,942 bytes)
 [2026-03-05 15:23:30 UTC] [INFO] OK   ArXiv cs.LG (621,899 bytes)
 [2026-03-05 15:23:30 UTC] [INFO] OK   ArXiv cs.CL (341,011 bytes)
 [2026-03-05 15:23:32 UTC] [WARN] FAIL Anthropic | urllib.error.HTTPError: HTTP Error 404: Not Found
@@ -192,7 +179,7 @@
 
 [2026-03-05 23:09:56 UTC] [INFO] === 収集開始 2026-03-05 23:09:56 UTC ===
 [2026-03-05 23:09:56 UTC] [INFO] 既存記事: 62 件
-[2026-03-05 23:09:56 UTC] [INFO] OK   ArXiv cs.AI (724,942 bytes)
+[2026-03-05 23:09:57 UTC] [INFO] OK   ArXiv cs.AI (724,942 bytes)
 [2026-03-05 23:09:57 UTC] [INFO] OK   ArXiv cs.LG (621,899 bytes)
 [2026-03-05 23:09:57 UTC] [INFO] OK   ArXiv cs.CL (341,011 bytes)
 [2026-03-05 23:09:58 UTC] [WARN] FAIL Anthropic | urllib.error.HTTPError: HTTP Error 404: Not Found
@@ -211,7 +198,7 @@
 
 [2026-03-05 23:40:56 UTC] [INFO] === 収集開始 2026-03-05 23:40:56 UTC ===
 [2026-03-05 23:40:56 UTC] [INFO] 既存記事: 62 件
-[2026-03-05 23:40:56 UTC] [INFO] OK   ArXiv cs.AI (724,942 bytes)
+[2026-03-05 23:40:57 UTC] [INFO] OK   ArXiv cs.AI (724,942 bytes)
 [2026-03-05 23:40:57 UTC] [INFO] OK   ArXiv cs.LG (621,899 bytes)
 [2026-03-05 23:40:57 UTC] [INFO] OK   ArXiv cs.CL (341,011 bytes)
 [2026-03-05 23:40:58 UTC] [WARN] FAIL Anthropic | urllib.error.HTTPError: HTTP Error 404: Not Found
@@ -230,7 +217,7 @@
 
 [2026-03-06 00:24:30 UTC] [INFO] === 収集開始 2026-03-06 00:24:30 UTC ===
 [2026-03-06 00:24:30 UTC] [INFO] 既存記事: 62 件
-[2026-03-06 00:24:30 UTC] [INFO] OK   ArXiv cs.AI (724,942 bytes)
+[2026-03-06 00:24:31 UTC] [INFO] OK   ArXiv cs.AI (724,942 bytes)
 [2026-03-06 00:24:31 UTC] [INFO] OK   ArXiv cs.LG (621,899 bytes)
 [2026-03-06 00:24:31 UTC] [INFO] OK   ArXiv cs.CL (341,011 bytes)
 [2026-03-06 00:24:31 UTC] [WARN] FAIL Anthropic | urllib.error.HTTPError: HTTP Error 404: Not Found
@@ -247,9 +234,61 @@
 [2026-03-06 00:24:33 UTC] [INFO] index.html 生成: 55 KB
 [2026-03-06 00:24:33 UTC] [INFO] === 収集終了: 成功 6 / 失敗 2 フィード ===
 
+[2026-03-06 11:30:00 UTC] [INFO] === 収集開始 2026-03-06 11:30:00 UTC (Claude Code Step 1 URL収集) ===
+[2026-03-06 11:30:00 UTC] [INFO] 既存記事: 82 件 (docs/news/2026-03-05.jsonl: 72件, docs/news/2026-03-06.jsonl: 10件)
+[2026-03-06 11:30:00 UTC] [INFO] 取得中: ArXiv cs.AI (http://export.arxiv.org/rss/cs.AI via redirect)
+[2026-03-06 11:30:00 UTC] [INFO] OK   ArXiv cs.AI (WebFetch) -> 10 件取得, 10 件新着
+[2026-03-06 11:30:00 UTC] [INFO] 取得中: ArXiv cs.LG (http://export.arxiv.org/rss/cs.LG via redirect)
+[2026-03-06 11:30:00 UTC] [INFO] OK   ArXiv cs.LG (WebFetch) -> 10 件取得, 10 件新着
+[2026-03-06 11:30:00 UTC] [INFO] 取得中: ArXiv cs.CL (http://export.arxiv.org/rss/cs.CL via redirect)
+[2026-03-06 11:30:00 UTC] [INFO] OK   ArXiv cs.CL (WebFetch) -> 10 件取得, 10 件新着
+[2026-03-06 11:30:00 UTC] [WARN] FAIL Anthropic RSS <- https://www.anthropic.com/rss.xml | HTTP Error 404: Not Found
+[2026-03-06 11:30:00 UTC] [INFO] 代替取得: Anthropic (https://www.anthropic.com/news via WebFetch)
+[2026-03-06 11:30:00 UTC] [INFO] OK   Anthropic (WebFetch) -> 10 件取得, 10 件新着
+[2026-03-06 11:30:00 UTC] [WARN] FAIL Meta AI RSS <- https://ai.meta.com/blog/rss/ | HTTP Error 404: Not Found
+[2026-03-06 11:30:00 UTC] [INFO] 代替取得: Meta AI (https://ai.meta.com/blog/ via WebFetch)
+[2026-03-06 11:30:00 UTC] [INFO] OK   Meta AI (WebFetch) -> 10 件取得, 10 件新着
+[2026-03-06 11:30:00 UTC] [INFO] 取得中: Google DeepMind (https://deepmind.google/blog/rss.xml)
+[2026-03-06 11:30:00 UTC] [INFO] OK   Google DeepMind (WebFetch) -> 10 件取得, 0 件新着 (全て重複)
+[2026-03-06 11:30:00 UTC] [INFO] 取得中: TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/feed/)
+[2026-03-06 11:30:00 UTC] [INFO] OK   TechCrunch AI (WebFetch) -> 10 件取得, 1 件新着
+[2026-03-06 11:30:00 UTC] [INFO] 中間ファイル保存: docs/news/.pending/2026-03-06.jsonl (51 件)
+[2026-03-06 11:30:00 UTC] [INFO] === 収集終了 (Step 1完了): 成功 6 / 失敗 0 フィード (RSS代替WebFetch含む), 新着 51 件 ===
+
+[2026-03-07 02:36:16 UTC] [INFO] === 収集開始 2026-03-07 02:36:16 UTC ===
+[2026-03-07 02:36:16 UTC] [INFO] 既存記事: 0 件
+[2026-03-07 02:36:17 UTC] [INFO] OK   ArXiv cs.AI (736,240 bytes)
+[2026-03-07 02:36:17 UTC] [INFO] OK   ArXiv cs.LG (663,145 bytes)
+[2026-03-07 02:36:17 UTC] [INFO] OK   ArXiv cs.CL (350,779 bytes)
+[2026-03-07 02:36:20 UTC] [WARN] FAIL Anthropic | urllib.error.HTTPError: HTTP Error 404: Not Found
+[2026-03-07 02:36:22 UTC] [WARN] FAIL Meta AI | urllib.error.HTTPError: HTTP Error 404: Not Found
+[2026-03-07 02:36:23 UTC] [INFO] OK   Google DeepMind (84,238 bytes)
+[2026-03-07 02:36:23 UTC] [INFO] OK   TechCrunch AI (20,689 bytes)
+[2026-03-07 02:36:23 UTC] [INFO] OK   Kaggle Blog (104,112 bytes)
+[2026-03-07 02:36:23 UTC] [INFO] ANTHROPIC_API_KEY 未設定 — 要約スキップ（Claude Code が処理済みの想定）
+[2026-03-07 02:36:23 UTC] [INFO] 保存完了: 合計 60 件 (今回追加 +60 件)
+[2026-03-07 02:36:23 UTC] [INFO] JSONL保存: /home/runner/work/sturdy-octo-happiness/sturdy-octo-happiness/docs/news/2026-03-07.jsonl (60 件)
+[2026-03-07 02:36:23 UTC] [INFO] MD保存: /home/runner/work/sturdy-octo-happiness/sturdy-octo-happiness/docs/news/2026-03-07.md
+[2026-03-07 02:36:23 UTC] [INFO] 全JSONL統合: 110 件
+[2026-03-07 02:36:23 UTC] [INFO] news.html 生成: 82 KB
+[2026-03-07 02:36:23 UTC] [INFO] index.html 生成: 101 KB
+[2026-03-07 02:36:23 UTC] [INFO] === 収集終了: 成功 6 / 失敗 2 フィード ===
+
 [2026-03-07 13:24:29 UTC] [INFO] === HTML生成開始 ===
 [2026-03-07 13:24:29 UTC] [INFO] 全JSONL統合: 72 件
 [2026-03-07 13:24:29 UTC] [INFO] news.html 生成: 67 KB
 [2026-03-07 13:24:29 UTC] [INFO] index.html 生成: 68 KB
 [2026-03-07 13:24:29 UTC] [INFO] === HTML生成終了 ===
+
+[2026-03-07 13:39:06 UTC] [INFO] === HTML生成開始 ===
+[2026-03-07 13:39:06 UTC] [INFO] 全JSONL統合: 1 件
+[2026-03-07 13:39:06 UTC] [INFO] news.html 生成: 8 KB
+[2026-03-07 13:39:06 UTC] [INFO] index.html 生成: 9 KB
+[2026-03-07 13:39:06 UTC] [INFO] === HTML生成終了 ===
+
+[2026-03-07 13:40:26 UTC] [INFO] === HTML生成開始 ===
+[2026-03-07 13:40:26 UTC] [INFO] 全JSONL統合: 73 件
+[2026-03-07 13:40:26 UTC] [INFO] news.html 生成: 71 KB
+[2026-03-07 13:40:26 UTC] [INFO] index.html 生成: 73 KB
+[2026-03-07 13:40:26 UTC] [INFO] === HTML生成終了 ===
 

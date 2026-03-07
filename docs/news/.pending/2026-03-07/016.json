@@ -1,0 +1,9 @@
+{
+  "title": "Flowers: A Warp Drive for Neural PDE Solvers",
+  "link": "https://arxiv.org/abs/2603.04430",
+  "description": "Introduces Flowers, a neural architecture using multihead warps for PDE solution operators, achieving superior performance on 2D and 3D benchmarks compared to Fourier, convolution, and attention-based baselines.",
+  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.LG",
+  "category": "論文 - 機械学習",
+  "fetched_at": "2026-03-07T01:00:00Z"
+}

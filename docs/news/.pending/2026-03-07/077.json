@@ -1,0 +1,9 @@
+{
+  "title": "ASFL: An Adaptive Model Splitting and Resource Allocation Framework for Split Federated Learning",
+  "link": "https://arxiv.org/abs/2603.04437",
+  "description": "Framework optimizing split federated learning convergence and efficiency, reducing total delay and energy consumption by up to 75% and 80% respectively through adaptive splitting.",
+  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.LG",
+  "category": "論文 - 機械学習",
+  "fetched_at": "2026-03-07T03:20:00Z"
+}

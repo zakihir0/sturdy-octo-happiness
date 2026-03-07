@@ -5,6 +5,12 @@ on:
     workflows: ["Step 1 - Collect URLs"]
     types: [completed]
   workflow_dispatch:
+    inputs:
+      max_articles:
+        description: '処理する最大記事数（0 = 全件）'
+        required: false
+        default: '0'
+        type: string
 
 permissions:
   contents: write
@@ -32,7 +38,8 @@ jobs:
           PENDING_DIR="docs/news/.pending/${TODAY}"
 
           if [ -d "$PENDING_DIR" ] && ls "$PENDING_DIR"/*.json 2>/dev/null | head -1 | grep -q .; then
-            FILES=$(python3 -c "import glob,json; files=sorted(glob.glob('docs/news/.pending/${TODAY}/*.json')); print(json.dumps(files))")
+            MAX_ARTICLES="${{ github.event.inputs.max_articles || '0' }}"
+            FILES=$(python3 -c "import glob,json; files=sorted(glob.glob('docs/news/.pending/${TODAY}/*.json')); limit=int('${MAX_ARTICLES}'); print(json.dumps(files[:limit] if limit>0 else files))")
             echo "matrix=$FILES" >> "$GITHUB_OUTPUT"
             echo "has_articles=true" >> "$GITHUB_OUTPUT"
             echo "$FILES" | python3 -c "import json,sys; f=json.load(sys.stdin); print(f'{len(f)} 件の未処理記事を検出')"
@@ -85,7 +92,7 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          claude_args: "--allowedTools Read,Write,WebFetch,WebSearch"
+          allowed_tools: "Read,Write,WebFetch,WebSearch"
           prompt: ${{ steps.build_prompt.outputs.prompt }}
 
       # 処理済み pending ファイルを削除してコミット

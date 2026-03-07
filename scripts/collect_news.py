@@ -298,11 +298,18 @@ def render_card(item: dict, today: str) -> str:
         if summary_ja else
         f'<p class="desc">{desc}</p>'
     )
-    return f"""<article class="card{' card-new' if is_new else ''}">
-  <div class="card-meta"><span class="source">{source}</span><span class="date">{date}</span></div>
-  <h3>{new_badge}<a href="{link}" target="_blank" rel="noopener">{title}</a></h3>
-  {body}
-  <div class="fetched">収集日: {fetched_at}</div>
+    return f"""<article class="thread-item{' thread-item-new' if is_new else ''}">
+  <div class="thread-dot"></div>
+  <div class="thread-content">
+    <div class="thread-meta">
+      <span class="source">{source}</span>
+      <span class="date">{date}</span>
+      {new_badge}
+    </div>
+    <h3><a href="{link}" target="_blank" rel="noopener">{title}</a></h3>
+    {body}
+    <div class="fetched">収集日: {fetched_at}</div>
+  </div>
 </article>"""
 
 
@@ -347,7 +354,7 @@ def build_index_html(generated_at: str) -> str:
         cat_sections = ""
         for cat, items in categories.items():
             cards = "\n".join(render_card(a, today) for a in items)
-            cat_sections += f'<div class="cat-section"><h3 class="cat-title">{html.escape(cat)} <span class="count">{len(items)}件</span></h3><div class="grid">{cards}</div></div>\n'
+            cat_sections += f'<div class="cat-section"><h3 class="cat-title">{html.escape(cat)} <span class="count">{len(items)}件</span></h3><div class="thread">{cards}</div></div>\n'
 
         md_link = f'<a href="news/{d}.md" class="file-link">MD</a>' if (NEWS_DIR / f"{d}.md").exists() else ""
         jsonl_link = f'<a href="news/{d}.jsonl" class="file-link">JSONL</a>'
@@ -380,26 +387,30 @@ def build_index_html(generated_at: str) -> str:
     .tabs{{display:flex;flex-wrap:wrap;gap:.5rem;padding:.9rem 2rem;background:#1a1f2e;border-bottom:1px solid #2d3748;position:sticky;top:0;z-index:10}}
     .tab-btn{{padding:.35rem .85rem;border:1px solid #2d3748;border-radius:999px;background:transparent;color:#7dd3fc;font-size:.8rem;cursor:pointer;transition:all .2s}}
     .tab-btn:hover,.tab-btn.active{{background:#7c3aed;border-color:#7c3aed;color:#fff}}
-    main{{max-width:1200px;margin:0 auto;padding:2rem 1rem}}
+    main{{max-width:800px;margin:0 auto;padding:2rem 1rem}}
     .section-header{{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid #2d3748}}
     .section-header span{{color:#a78bfa;font-size:1.1rem;font-weight:600}}
     .file-link{{font-size:.8rem;color:#7dd3fc;text-decoration:none;margin-left:.6rem;padding:.2rem .5rem;border:1px solid #2d3748;border-radius:4px}}
     .file-link:hover{{background:#2d3748}}
     .cat-section{{margin-bottom:2.5rem}}
-    .cat-title{{font-size:1rem;color:#94a3b8;border-left:3px solid #7c3aed;padding-left:.65rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}}
+    .cat-title{{font-size:1rem;color:#94a3b8;border-left:3px solid #7c3aed;padding-left:.65rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}}
     .count{{font-size:.75rem;color:#64748b;font-weight:400}}
-    .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem}}
-    .card{{background:#1a1f2e;border:1px solid #2d3748;border-radius:10px;padding:1.1rem;transition:border-color .2s,transform .2s}}
-    .card:hover{{border-color:#7c3aed;transform:translateY(-2px)}}
-    .card-new{{border-color:#1d4ed8!important}}
-    .card-meta{{display:flex;justify-content:space-between;font-size:.73rem;color:#64748b;margin-bottom:.45rem}}
+    .thread{{position:relative;padding-left:1.5rem;border-left:2px solid #2d3748}}
+    .thread-item{{position:relative;padding:.9rem 1rem .9rem 1.2rem;margin-bottom:.5rem;background:#1a1f2e;border:1px solid #2d3748;border-radius:8px;transition:border-color .2s}}
+    .thread-item:hover{{border-color:#7c3aed}}
+    .thread-item-new{{border-color:#1d4ed8!important}}
+    .thread-dot{{position:absolute;left:-1.85rem;top:1.1rem;width:10px;height:10px;border-radius:50%;background:#7c3aed;border:2px solid #0f1117}}
+    .thread-item-new .thread-dot{{background:#1d4ed8}}
+    .thread-content{{}}
+    .thread-meta{{display:flex;align-items:center;gap:.6rem;font-size:.73rem;color:#64748b;margin-bottom:.4rem;flex-wrap:wrap}}
     .source{{color:#7dd3fc;font-weight:600}}
-    .badge-new{{background:#1d4ed8;color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:4px;margin-right:.4rem;vertical-align:middle}}
-    .card h3{{font-size:.93rem;line-height:1.45;margin-bottom:.5rem}}
-    .card h3 a{{color:#e2e8f0;text-decoration:none}}
-    .card h3 a:hover{{color:#a78bfa}}
-    .desc{{font-size:.81rem;color:#94a3b8;line-height:1.55;margin-bottom:.5rem}}
-    .summary-ja{{font-size:.84rem;color:#c4b5fd;line-height:1.6;margin-bottom:.5rem;background:#1e1b3a;border-left:2px solid #7c3aed;padding:.35rem .6rem;border-radius:0 6px 6px 0}}
+    .date{{color:#475569}}
+    .badge-new{{background:#1d4ed8;color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:4px}}
+    .thread-item h3{{font-size:.95rem;line-height:1.45;margin-bottom:.45rem}}
+    .thread-item h3 a{{color:#e2e8f0;text-decoration:none}}
+    .thread-item h3 a:hover{{color:#a78bfa}}
+    .desc{{font-size:.81rem;color:#94a3b8;line-height:1.55;margin-bottom:.4rem}}
+    .summary-ja{{font-size:.84rem;color:#c4b5fd;line-height:1.6;margin-bottom:.4rem;background:#1e1b3a;border-left:2px solid #7c3aed;padding:.35rem .6rem;border-radius:0 6px 6px 0}}
     .fetched{{font-size:.7rem;color:#475569;text-align:right}}
     .empty{{color:#64748b;padding:2rem 0;text-align:center}}
     footer{{text-align:center;padding:2rem;color:#475569;font-size:.78rem;border-top:1px solid #2d3748;margin-top:2rem}}
@@ -459,7 +470,7 @@ def build_html(articles: list[dict], generated_at: str, run_stats: dict) -> str:
     sections = ""
     for i, (cat, items) in enumerate(categories.items()):
         cards = "\n".join(render_card(a, today) for a in items)
-        sections += f'<section id="cat-{i}"><h2>{html.escape(cat)} <span class="count">{len(items)}件</span></h2><div class="grid">{cards}</div></section>\n'
+        sections += f'<section id="cat-{i}"><h2>{html.escape(cat)} <span class="count">{len(items)}件</span></h2><div class="thread">{cards}</div></section>\n'
 
     if not articles:
         sections = '<section><p class="empty">ニュースがまだありません。</p></section>'
@@ -488,22 +499,26 @@ def build_html(articles: list[dict], generated_at: str, run_stats: dict) -> str:
     nav a{{color:#7dd3fc;text-decoration:none;font-size:.8rem;padding:.3rem .7rem;border-radius:999px;border:1px solid #2d3748;transition:background .2s}}
     nav a:hover{{background:#2d3748}}
     nav a small{{color:#64748b}}
-    main{{max-width:1200px;margin:0 auto;padding:2rem 1rem}}
+    main{{max-width:800px;margin:0 auto;padding:2rem 1rem}}
     section{{margin-bottom:3rem}}
     section h2{{font-size:1.15rem;color:#a78bfa;border-left:3px solid #7c3aed;padding-left:.75rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:.6rem}}
     .count{{font-size:.75rem;color:#64748b;font-weight:400}}
-    .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem}}
-    .card{{background:#1a1f2e;border:1px solid #2d3748;border-radius:10px;padding:1.1rem;transition:border-color .2s,transform .2s}}
-    .card:hover{{border-color:#7c3aed;transform:translateY(-2px)}}
-    .card-new{{border-color:#1d4ed8!important}}
-    .card-meta{{display:flex;justify-content:space-between;font-size:.73rem;color:#64748b;margin-bottom:.45rem}}
+    .thread{{position:relative;padding-left:1.5rem;border-left:2px solid #2d3748}}
+    .thread-item{{position:relative;padding:.9rem 1rem .9rem 1.2rem;margin-bottom:.5rem;background:#1a1f2e;border:1px solid #2d3748;border-radius:8px;transition:border-color .2s}}
+    .thread-item:hover{{border-color:#7c3aed}}
+    .thread-item-new{{border-color:#1d4ed8!important}}
+    .thread-dot{{position:absolute;left:-1.85rem;top:1.1rem;width:10px;height:10px;border-radius:50%;background:#7c3aed;border:2px solid #0f1117}}
+    .thread-item-new .thread-dot{{background:#1d4ed8}}
+    .thread-content{{}}
+    .thread-meta{{display:flex;align-items:center;gap:.6rem;font-size:.73rem;color:#64748b;margin-bottom:.4rem;flex-wrap:wrap}}
     .source{{color:#7dd3fc;font-weight:600}}
-    .badge-new{{background:#1d4ed8;color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:4px;margin-right:.4rem;vertical-align:middle}}
-    .card h3{{font-size:.93rem;line-height:1.45;margin-bottom:.5rem}}
-    .card h3 a{{color:#e2e8f0;text-decoration:none}}
-    .card h3 a:hover{{color:#a78bfa}}
-    .desc{{font-size:.81rem;color:#94a3b8;line-height:1.55;margin-bottom:.5rem}}
-    .summary-ja{{font-size:.84rem;color:#c4b5fd;line-height:1.6;margin-bottom:.5rem;background:#1e1b3a;border-left:2px solid #7c3aed;padding:.35rem .6rem;border-radius:0 6px 6px 0}}
+    .date{{color:#475569}}
+    .badge-new{{background:#1d4ed8;color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:4px}}
+    .thread-item h3{{font-size:.95rem;line-height:1.45;margin-bottom:.45rem}}
+    .thread-item h3 a{{color:#e2e8f0;text-decoration:none}}
+    .thread-item h3 a:hover{{color:#a78bfa}}
+    .desc{{font-size:.81rem;color:#94a3b8;line-height:1.55;margin-bottom:.4rem}}
+    .summary-ja{{font-size:.84rem;color:#c4b5fd;line-height:1.6;margin-bottom:.4rem;background:#1e1b3a;border-left:2px solid #7c3aed;padding:.35rem .6rem;border-radius:0 6px 6px 0}}
     .fetched{{font-size:.7rem;color:#475569;text-align:right}}
     .empty{{text-align:center;padding:4rem 1rem;color:#64748b}}
     footer{{text-align:center;padding:2rem;color:#475569;font-size:.78rem;border-top:1px solid #2d3748;margin-top:2rem}}

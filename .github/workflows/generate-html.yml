@@ -1,4 +1,4 @@
-name: Generate HTML
+name: Step 3 - Generate HTML
 
 on:
   workflow_dispatch:

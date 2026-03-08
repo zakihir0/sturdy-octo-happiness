@@ -1,0 +1,9 @@
+{
+  "title": "Leveraging LLM Parametric Knowledge for Fact Checking without Retrieval",
+  "link": "https://arxiv.org/abs/2603.05471",
+  "description": "Proposes fact-checking method using internal model representations without external retrieval, introducing INTRA method for verification tasks.",
+  "date": "Mon, 09 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.CL",
+  "category": "論文 - 言語処理",
+  "fetched_at": "2026-03-08T01:00:00Z"
+}

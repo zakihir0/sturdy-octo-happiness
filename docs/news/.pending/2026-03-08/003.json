@@ -1,0 +1,9 @@
+{
+  "title": "FlashAttention-4: Algorithm and Kernel Pipelining Co-Design for Asymmetric Hardware Scaling",
+  "link": "https://arxiv.org/abs/2603.05450",
+  "description": "Optimizes attention mechanisms for Blackwell GPUs through redesigned pipelines and software-emulated operations, achieving 1.3x speedup over cuDNN.",
+  "date": "Mon, 09 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.LG",
+  "category": "論文 - 機械学習",
+  "fetched_at": "2026-03-08T01:00:00Z"
+}

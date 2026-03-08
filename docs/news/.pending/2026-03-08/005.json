@@ -1,0 +1,9 @@
+{
+  "title": "Censored LLMs as a Natural Testbed for Secret Knowledge Elicitation",
+  "link": "https://arxiv.org/abs/2603.05494",
+  "description": "Uses censored Chinese LLMs to study honesty elicitation and lie detection techniques, evaluating methods for retrieving suppressed information.",
+  "date": "Mon, 09 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.CL",
+  "category": "論文 - 言語処理",
+  "fetched_at": "2026-03-08T01:00:00Z"
+}

@@ -1,0 +1,9 @@
+{
+  "title": "Sparse-BitNet: 1.58-bit LLMs are Naturally Friendly to Semi-Structured Sparsity",
+  "link": "https://arxiv.org/abs/2603.05168",
+  "description": "Combines extremely low-bit quantization with N:M sparsification, achieving up to 1.30x speedups while maintaining performance across model scales.",
+  "date": "Mon, 09 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.LG",
+  "category": "論文 - 機械学習",
+  "fetched_at": "2026-03-08T01:00:00Z"
+}

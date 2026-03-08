@@ -1,0 +1,9 @@
+{
+  "title": "The Spike, the Sparse and the Sink: Anatomy of Massive Activations and Attention Sinks",
+  "link": "https://arxiv.org/abs/2603.05498",
+  "description": "Analyzes two recurring phenomena in Transformers - massive activations and attention sinks - revealing they serve distinct but related functions in language model architecture.",
+  "date": "Mon, 09 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.LG",
+  "category": "論文 - 機械学習",
+  "fetched_at": "2026-03-08T01:00:00Z"
+}

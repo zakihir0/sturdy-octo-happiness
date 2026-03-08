@@ -1,0 +1,9 @@
+{
+  "title": "NL2GDS: LLM-aided interface for Open Source Chip Design",
+  "link": "https://arxiv.org/abs/2603.05489",
+  "description": "Framework leveraging LLMs to translate natural language hardware descriptions into synthesizable RTL and complete chip layouts via automated design flow.",
+  "date": "Mon, 09 Mar 2026 00:00:00 -0500",
+  "source": "ArXiv cs.AI",
+  "category": "論文 - AI全般",
+  "fetched_at": "2026-03-08T01:00:00Z"
+}

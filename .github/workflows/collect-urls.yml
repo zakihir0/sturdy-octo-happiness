@@ -2,7 +2,7 @@ name: Step 1 - Collect URLs
 
 on:
   schedule:
-    - cron: '0 1 * * *'  # 毎日 JST 10:00 (UTC 01:00)
+    - cron: 
   workflow_dispatch:
 
 permissions:

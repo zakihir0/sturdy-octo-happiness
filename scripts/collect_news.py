@@ -13,11 +13,12 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT       = Path(__file__).parent.parent
-HTML_FILE  = ROOT / "docs" / "news.html"
-INDEX_FILE = ROOT / "docs" / "index.html"
-NEWS_DIR   = ROOT / "docs" / "news"
-LOG_FILE   = ROOT / "logs" / "collect_news.log"
+ROOT            = Path(__file__).parent.parent
+HTML_FILE       = ROOT / "docs" / "news.html"
+INDEX_FILE      = ROOT / "docs" / "index.html"
+NEWS_DATA_FILE  = ROOT / "docs" / "news_data.json"
+NEWS_DIR        = ROOT / "docs" / "news"
+LOG_FILE        = ROOT / "logs" / "collect_news.log"
 
 
 # ---------------------------------------------------------------------------
@@ -328,6 +329,9 @@ def main() -> None:
 
     INDEX_FILE.write_text(build_index_html(generated_at), encoding="utf-8")
     log("INFO", f"index.html 生成: {INDEX_FILE.stat().st_size // 1024} KB")
+
+    NEWS_DATA_FILE.write_text(json.dumps(articles, ensure_ascii=False, indent=2), encoding="utf-8")
+    log("INFO", f"news_data.json 再生成: {len(articles)} 件")
 
     log("INFO", "=== HTML生成終了 ===\n")
 

@@ -34,7 +34,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/news.html docs/index.html logs/
+          git add docs/news.html docs/index.html docs/news_data.json logs/
           git diff --cached --quiet && echo "変更なし" || (
             git commit -m "chore: regenerate HTML $(date -u '+%Y-%m-%d')" && git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git
             git push

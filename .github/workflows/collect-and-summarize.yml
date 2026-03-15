@@ -38,7 +38,7 @@ jobs:
           ")
           {
             echo 'prompt<<PROMPT_EOF'
-            sed "s|{{JSONL_FILE}}|${JSONL_FILE}|g" .github/prompts/collect-and-summarize.md
+            echo "出力先ファイル: ${JSONL_FILE}"
             if [ -n "$EXISTING_URLS" ]; then
               echo ""
               echo "## 収集済みURL（重複のためスキップすること）"

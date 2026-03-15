@@ -72,13 +72,14 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-2.0-flash
           GEMINI_YOLO: "true"
+          JSONL_FILE: ${{ steps.build_prompt.outputs.jsonl_file }}
         run: |
           mkdir -p docs/news
           gemini -p "${{ steps.build_prompt.outputs.prompt }}" 2>&1 | tee /tmp/gemini_raw.txt || true
-          python3 -c "
-import json, pathlib
+          python3 << 'PYEOF'
+import json, pathlib, os
 raw = pathlib.Path('/tmp/gemini_raw.txt').read_text(encoding='utf-8')
-jsonl_file = pathlib.Path('${{ steps.build_prompt.outputs.jsonl_file }}')
+jsonl_file = pathlib.Path(os.environ['JSONL_FILE'])
 jsonl_file.parent.mkdir(parents=True, exist_ok=True)
 lines = []
 for line in raw.splitlines():
@@ -96,7 +97,7 @@ if lines:
 else:
     print('No valid JSONL found. Gemini raw output:')
     print(raw[:3000])
-"
+PYEOF
 
       - name: Commit results
         run: |

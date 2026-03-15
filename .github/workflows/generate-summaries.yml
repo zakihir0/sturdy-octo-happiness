@@ -14,7 +14,6 @@ on:
 
 permissions:
   contents: write
-  id-token: write
 
 jobs:
   # ---------------------------------------------------------------
@@ -87,13 +86,21 @@ jobs:
             echo 'PROMPT_EOF'
           } >> "$GITHUB_OUTPUT"
 
-      # Claude Code が記事本文取得・日本語要約生成・最終ファイル保存を実行
-      - name: Generate summary with Claude Code
-        uses: anthropics/claude-code-action@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          allowed_tools: "Read,Write,WebFetch,WebSearch"
-          prompt: ${{ steps.build_prompt.outputs.prompt }}
+          node-version: '20'
+
+      - name: Install Gemini CLI
+        run: npm install -g @google/gemini-cli
+
+      # Gemini CLI が記事本文取得・日本語要約生成・最終ファイル保存を実行
+      - name: Generate summary with Gemini CLI
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-2.5-flash
+          GEMINI_YOLO: "true"
+        run: gemini -p "${{ steps.build_prompt.outputs.prompt }}"
 
       # 処理済み pending ファイルを削除してコミット
       - name: Commit result and remove pending file

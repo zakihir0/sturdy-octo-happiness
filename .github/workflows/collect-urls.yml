@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  id-token: write
 
 jobs:
   collect-urls:
@@ -25,13 +24,21 @@ jobs:
             echo 'PROMPT_EOF'
           } >> $GITHUB_OUTPUT
 
-      # Claude Code が RSS取得・重複排除・中間JSONL保存を実行
-      - name: Collect URLs with Claude Code
-        uses: anthropics/claude-code-action@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          claude_args: "--allowedTools Read,Write,WebFetch,WebSearch"
-          prompt: ${{ steps.read_prompt.outputs.prompt }}
+          node-version: '20'
+
+      - name: Install Gemini CLI
+        run: npm install -g @google/gemini-cli
+
+      # Gemini CLI が RSS取得・重複排除・中間JSONL保存を実行
+      - name: Collect URLs with Gemini CLI
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-2.5-flash
+          GEMINI_YOLO: "true"
+        run: gemini -p "${{ steps.read_prompt.outputs.prompt }}"
 
       # 中間ファイルとログをコミット
       - name: Commit pending URLs

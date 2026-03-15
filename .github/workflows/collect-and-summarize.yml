@@ -1,0 +1,85 @@
+name: Collect and Summarize
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  collect-and-summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # RSSフェッチ・重複排除・プロンプト構築（AI不使用）
+      - name: Fetch RSS and build prompt
+        id: build_prompt
+        run: |
+          python3 scripts/fetch_rss.py > /tmp/new_articles.json
+          ARTICLE_COUNT=$(python3 -c "import json; print(len(json.load(open('/tmp/new_articles.json'))))")
+          echo "article_count=$ARTICLE_COUNT" >> $GITHUB_OUTPUT
+          if [ "$ARTICLE_COUNT" = "0" ]; then
+            echo "has_articles=false" >> $GITHUB_OUTPUT
+            echo "新着記事なし（スキップ）"
+            exit 0
+          fi
+          echo "has_articles=true" >> $GITHUB_OUTPUT
+          echo "${ARTICLE_COUNT} 件の新着記事を検出"
+          {
+            echo 'prompt<<PROMPT_EOF'
+            python3 -c "
+import sys
+template = open('.github/prompts/collect-and-summarize.md').read()
+articles = open('/tmp/new_articles.json').read().strip()
+sys.stdout.write(template.replace('{{NEW_ARTICLES}}', articles))
+"
+            echo ''
+            echo 'PROMPT_EOF'
+          } >> $GITHUB_OUTPUT
+
+      - name: Setup Node.js
+        if: steps.build_prompt.outputs.has_articles == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache Gemini CLI
+        if: steps.build_prompt.outputs.has_articles == 'true'
+        id: cache-gemini
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm-global
+          key: gemini-cli-${{ runner.os }}-v1
+
+      - name: Install Gemini CLI
+        if: steps.build_prompt.outputs.has_articles == 'true' && steps.cache-gemini.outputs.cache-hit != 'true'
+        run: |
+          npm config set prefix ~/.npm-global
+          npm install -g @google/gemini-cli
+
+      - name: Add Gemini CLI to PATH
+        if: steps.build_prompt.outputs.has_articles == 'true'
+        run: echo "$HOME/.npm-global/bin" >> $GITHUB_PATH
+
+      # Gemini が興味領域に基づき記事を選択・要約・JSONL保存
+      - name: Collect and summarize with Gemini
+        if: steps.build_prompt.outputs.has_articles == 'true'
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-2.5-flash
+          GEMINI_YOLO: "true"
+        run: gemini -p "${{ steps.build_prompt.outputs.prompt }}"
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/news/ logs/
+          git diff --cached --quiet && echo "変更なし" || (
+            git commit -m "chore: collect and summarize $(date -u '+%Y-%m-%d')" &&
+            git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git &&
+            git push
+          )

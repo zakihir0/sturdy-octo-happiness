@@ -3,7 +3,7 @@ name: Step 3 - Generate HTML
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["Step 2 - Generate Summaries"]
+    workflows: ["Collect and Summarize"]
     types: [completed]
 
 permissions:

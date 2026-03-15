@@ -72,10 +72,13 @@ jobs:
         run: |
           mkdir -p ~/.gemini
           echo "${{ secrets.GEMINI_OAUTH_CREDS }}" | base64 -d > ~/.gemini/oauth_creds.json
+          echo '{}' > ~/.gemini/projects.json
+          echo '{"selectedAuthType":"oauth-personal"}' > ~/.gemini/settings.json
 
       # Gemini が調査・要約し、stdoutにJSONLを出力 → Pythonがファイルに保存
       - name: Collect and summarize with Gemini
         env:
+          GOOGLE_GENAI_USE_GCA: "true"
           GEMINI_MODEL: gemini-2.5-pro
           GEMINI_YOLO: "true"
           JSONL_FILE: ${{ steps.build_prompt.outputs.jsonl_file }}

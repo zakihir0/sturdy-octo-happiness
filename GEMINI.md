@@ -7,7 +7,7 @@
 | 項目 | 仕様 |
 |------|------|
 | 日本語要約 | **300字以内** |
-| 出力先 | `docs/news/YYYY-MM-DD.jsonl`（1行1記事、改行なし） |
+| 出力先 | `docs/news/YYYY-MM-DD_HHMM.jsonl`（実行ごとに新規作成、1行1記事、改行なし） |
 | ログ | `logs/collect_news.log` に追記 |
 
 ## JSONL 1レコードのフィールド定義

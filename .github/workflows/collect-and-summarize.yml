@@ -14,10 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 収集済みURLを抽出してプロンプトに注入（重複排除用）
+      # 日時ファイル名生成・収集済みURL抽出・プロンプト構築
       - name: Build prompt
         id: build_prompt
         run: |
+          JSONL_FILE="docs/news/$(date -u '+%Y-%m-%d_%H%M').jsonl"
+          echo "jsonl_file=$JSONL_FILE" >> $GITHUB_OUTPUT
+
           EXISTING_URLS=$(python3 -c "
           import glob, json
           urls = set()
@@ -35,7 +38,7 @@ jobs:
           ")
           {
             echo 'prompt<<PROMPT_EOF'
-            cat .github/prompts/collect-and-summarize.md
+            sed "s|{{JSONL_FILE}}|${JSONL_FILE}|g" .github/prompts/collect-and-summarize.md
             if [ -n "$EXISTING_URLS" ]; then
               echo ""
               echo "## 収集済みURL（重複のためスキップすること）"

@@ -1,4 +1,4 @@
-name: Step 3 - Generate HTML
+name: Generate HTML and Deploy
 
 on:
   workflow_dispatch:
@@ -7,17 +7,24 @@ on:
     types: [completed]
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  generate:
+  deploy:
     runs-on: ubuntu-latest
-    # collect-news が失敗した場合はスキップ（workflow_run 経由のみ）
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
         with:
-          # workflow_run 経由では最新コミットを取得するため pull が必要
           ref: main
 
       - name: Set up Python
@@ -25,17 +32,15 @@ jobs:
         with:
           python-version: '3.11'
 
-      # Python スクリプトで news.html / index.html を生成
       - name: Generate HTML
         run: python scripts/collect_news.py
 
-      # HTML ファイルをコミット
-      - name: Commit and push
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/news.html docs/index.html docs/news_data.json logs/
-          git diff --cached --quiet && echo "変更なし" || (
-            git commit -m "chore: regenerate HTML $(date -u '+%Y-%m-%d')" && git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git
-            git push
-          )
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

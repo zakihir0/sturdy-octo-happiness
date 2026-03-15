@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Step 3: HTML生成スクリプト
+"""HTML生成スクリプト
 
 docs/news/*.jsonl から全記事を読み込み、
 docs/news.html と docs/index.html を再生成します。
@@ -13,12 +12,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT            = Path(__file__).parent.parent
-HTML_FILE       = ROOT / "docs" / "news.html"
-INDEX_FILE      = ROOT / "docs" / "index.html"
-NEWS_DATA_FILE  = ROOT / "docs" / "news_data.json"
-NEWS_DIR        = ROOT / "docs" / "news"
-LOG_FILE        = ROOT / "logs" / "collect_news.log"
+ROOT       = Path(__file__).parent.parent
+HTML_FILE  = ROOT / "docs" / "news.html"
+INDEX_FILE = ROOT / "docs" / "index.html"
+NEWS_DIR   = ROOT / "docs" / "news"
 
 
 # ---------------------------------------------------------------------------
@@ -26,13 +23,10 @@ LOG_FILE        = ROOT / "logs" / "collect_news.log"
 # ---------------------------------------------------------------------------
 
 def log(level: str, msg: str) -> None:
-    LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     line = f"[{now}] [{level}] {msg}"
     stream = sys.stderr if level in ("WARN", "ERROR") else sys.stdout
     print(line, file=stream)
-    with LOG_FILE.open("a", encoding="utf-8") as f:
-        f.write(line + "\n")
 
 
 # ---------------------------------------------------------------------------
@@ -146,12 +140,11 @@ def build_index_html(generated_at: str) -> str:
             cards = "\n".join(render_card(a, today) for a in items)
             cat_sections += f'<div class="cat-section"><h3 class="cat-title">{html.escape(cat)} <span class="count">{len(items)}件</span></h3><div class="thread">{cards}</div></div>\n'
 
-        md_link = f'<a href="news/{d}.md" class="file-link">MD</a>' if (NEWS_DIR / f"{d}.md").exists() else ""
         jsonl_link = f'<a href="news/{d}.jsonl" class="file-link">JSONL</a>'
         sections += f"""<section id="tab-{d}" style="display:{display}">
   <div class="section-header">
     <span>📅 {d} &nbsp;·&nbsp; {len(articles)}件</span>
-    <div>{md_link}{jsonl_link}</div>
+    <div>{jsonl_link}</div>
   </div>
   {cat_sections if cat_sections else '<p class="empty">記事なし</p>'}
 </section>\n"""
@@ -217,7 +210,7 @@ def build_index_html(generated_at: str) -> str:
   </header>
   <nav class="tabs">{tab_buttons}</nav>
   <main>{sections}</main>
-  <footer>Powered by Claude Code + GitHub Actions &nbsp;|&nbsp; <code>docs/news/YYYY-MM-DD.jsonl</code></footer>
+  <footer>Powered by Gemini CLI + GitHub Actions &nbsp;|&nbsp; <code>docs/news/YYYY-MM-DD_HHMM.jsonl</code></footer>
   <script>
     function showTab(d, btn) {{
       document.querySelectorAll('main > section').forEach(s => s.style.display = 'none');
@@ -301,12 +294,12 @@ def build_html(articles: list[dict], generated_at: str) -> str:
 <body>
   <header>
     <h1>AI/LLM ニュースダッシュボード</h1>
-    <p>最終更新: {html.escape(generated_at)} &nbsp;|&nbsp; ArXiv / GAFA企業ブログ / Kaggle などから自動収集</p>
+    <p>最終更新: {html.escape(generated_at)} &nbsp;|&nbsp; Gemini CLI により自動収集</p>
     <a href="index.html" class="archive-link">← 日付別アーカイブ</a>
   </header>
   <nav>{nav}</nav>
   <main>{sections}</main>
-  <footer>Powered by Claude Code + GitHub Actions &nbsp;|&nbsp; データ: <code>docs/news/YYYY-MM-DD.jsonl</code></footer>
+  <footer>Powered by Gemini CLI + GitHub Actions &nbsp;|&nbsp; データ: <code>docs/news/YYYY-MM-DD_HHMM.jsonl</code></footer>
 </body>
 </html>"""
 
@@ -329,9 +322,6 @@ def main() -> None:
 
     INDEX_FILE.write_text(build_index_html(generated_at), encoding="utf-8")
     log("INFO", f"index.html 生成: {INDEX_FILE.stat().st_size // 1024} KB")
-
-    NEWS_DATA_FILE.write_text(json.dumps(articles, ensure_ascii=False, indent=2), encoding="utf-8")
-    log("INFO", f"news_data.json 再生成: {len(articles)} 件")
 
     log("INFO", "=== HTML生成終了 ===\n")
 

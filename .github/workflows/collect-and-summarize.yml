@@ -38,9 +38,7 @@ jobs:
           ")
           {
             echo 'prompt<<PROMPT_EOF'
-            echo "出力先ファイル: ${JSONL_FILE}"
             if [ -n "$EXISTING_URLS" ]; then
-              echo ""
               echo "## 収集済みURL（重複のためスキップすること）"
               echo "$EXISTING_URLS"
             fi
@@ -68,19 +66,43 @@ jobs:
       - name: Add Gemini CLI to PATH
         run: echo "$HOME/.npm-global/bin" >> $GITHUB_PATH
 
-      # Gemini が調査・要約・JSONL書き出しまで一括実行
+      # Gemini が調査・要約し、stdoutにJSONLを出力 → Pythonがファイルに保存
       - name: Collect and summarize with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-2.5-flash
+          GEMINI_MODEL: gemini-2.0-flash
           GEMINI_YOLO: "true"
-        run: gemini -p "${{ steps.build_prompt.outputs.prompt }}"
+        run: |
+          mkdir -p docs/news
+          gemini -p "${{ steps.build_prompt.outputs.prompt }}" 2>&1 | tee /tmp/gemini_raw.txt || true
+          python3 -c "
+import json, pathlib
+raw = pathlib.Path('/tmp/gemini_raw.txt').read_text(encoding='utf-8')
+jsonl_file = pathlib.Path('${{ steps.build_prompt.outputs.jsonl_file }}')
+jsonl_file.parent.mkdir(parents=True, exist_ok=True)
+lines = []
+for line in raw.splitlines():
+    line = line.strip()
+    try:
+        obj = json.loads(line)
+        link = obj.get('link', '')
+        if isinstance(obj, dict) and 'title' in obj and link and 'example.com' not in link:
+            lines.append(json.dumps(obj, ensure_ascii=False))
+    except:
+        pass
+if lines:
+    jsonl_file.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    print(f'Wrote {len(lines)} articles to {jsonl_file}')
+else:
+    print('No valid JSONL found. Gemini raw output:')
+    print(raw[:3000])
+"
 
       - name: Commit results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/news/ logs/
+          git add docs/news/ 2>/dev/null || true
           git diff --cached --quiet && echo "変更なし" || (
             git commit -m "chore: collect and summarize $(date -u '+%Y-%m-%d')" &&
             git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git &&

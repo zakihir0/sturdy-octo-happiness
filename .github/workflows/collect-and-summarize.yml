@@ -68,10 +68,14 @@ jobs:
       - name: Add Gemini CLI to PATH
         run: echo "$HOME/.npm-global/bin" >> $GITHUB_PATH
 
+      - name: Restore Gemini credentials
+        run: |
+          mkdir -p ~/.gemini
+          echo "${{ secrets.GEMINI_OAUTH_CREDS }}" | base64 -d > ~/.gemini/oauth_creds.json
+
       # Gemini が調査・要約し、stdoutにJSONLを出力 → Pythonがファイルに保存
       - name: Collect and summarize with Gemini
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-2.5-pro
           GEMINI_YOLO: "true"
           JSONL_FILE: ${{ steps.build_prompt.outputs.jsonl_file }}

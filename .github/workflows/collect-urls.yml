@@ -49,8 +49,21 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Cache Gemini CLI
+        id: cache-gemini
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm-global
+          key: gemini-cli-${{ runner.os }}-v1
+
       - name: Install Gemini CLI
-        run: npm install -g @google/gemini-cli
+        if: steps.cache-gemini.outputs.cache-hit != 'true'
+        run: |
+          npm config set prefix ~/.npm-global
+          npm install -g @google/gemini-cli
+
+      - name: Add Gemini CLI to PATH
+        run: echo "$HOME/.npm-global/bin" >> $GITHUB_PATH
 
       # Gemini CLI が RSS取得・重複排除・中間JSONL保存を実行
       - name: Collect URLs with Gemini CLI

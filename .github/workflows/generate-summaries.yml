@@ -91,8 +91,21 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Cache Gemini CLI
+        id: cache-gemini
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm-global
+          key: gemini-cli-${{ runner.os }}-v1
+
       - name: Install Gemini CLI
-        run: npm install -g @google/gemini-cli
+        if: steps.cache-gemini.outputs.cache-hit != 'true'
+        run: |
+          npm config set prefix ~/.npm-global
+          npm install -g @google/gemini-cli
+
+      - name: Add Gemini CLI to PATH
+        run: echo "$HOME/.npm-global/bin" >> $GITHUB_PATH
 
       # Gemini CLI が記事本文取得・日本語要約生成・最終ファイル保存を実行
       - name: Generate summary with Gemini CLI
@@ -112,7 +125,7 @@ jobs:
           rm -f '${{ matrix.article_file }}'
 
           ARTICLE_NAME=$(basename '${{ matrix.article_file }}' .json)
-          git add docs/news/ docs/news_data.json logs/ docs/news/.pending/
+          git add docs/news/ logs/ docs/news/.pending/
           git diff --cached --quiet && echo "変更なし" || (
             git commit -m "chore: summary ${ARTICLE_NAME} $(date -u '+%Y-%m-%d')" &&
             git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git &&

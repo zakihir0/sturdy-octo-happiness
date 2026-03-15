@@ -1,9 +1,0 @@
-{
-  "title": "Thin Keys, Full Values: Reducing KV Cache via Low-Dimensional Attention Selection",
-  "link": "https://arxiv.org/abs/2603.04427",
-  "description": "Demonstrates that attention key dimensionality can be reduced to O(log N) without significant quality loss, enabling 75% key cache savings at less than 2% residual quality cost for large language model inference.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.LG",
-  "category": "論文 - 機械学習",
-  "fetched_at": "2026-03-07T01:00:00Z"
-}

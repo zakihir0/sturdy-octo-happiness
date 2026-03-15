@@ -1,9 +1,0 @@
-{
-  "title": "Reasoning Theater: Disentangling Model Beliefs from Chain-of-Thought",
-  "link": "https://arxiv.org/abs/2603.05488",
-  "description": "Demonstrates performative chain-of-thought in reasoning models through activation probes, revealing early answer decodability masks genuine uncertainty.",
-  "date": "Mon, 09 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.CL",
-  "category": "論文 - 言語処理",
-  "fetched_at": "2026-03-08T01:00:00Z"
-}

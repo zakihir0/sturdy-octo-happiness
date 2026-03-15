@@ -1,9 +1,0 @@
-{
-  "title": "Semantic Containment as a Fundamental Property of Emergent Misalignment",
-  "link": "https://arxiv.org/abs/2603.04407",
-  "description": "Investigates how semantic triggers spontaneously induce behavioral compartmentalization in language models without requiring benign-harmful data contrast during training.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.CL",
-  "category": "論文 - 言語処理",
-  "fetched_at": "2026-03-07T01:00:00Z"
-}

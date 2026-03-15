@@ -1,9 +1,0 @@
-{
-  "title": "CTRL-RAG: Contrastive Likelihood Reward Based Reinforcement Learning for Context-Faithful RAG Models",
-  "link": "https://arxiv.org/abs/2603.04406",
-  "description": "Proposes a hybrid reward framework using Contrastive Likelihood Reward to optimize retrieval-augmented generation models, improving faithfulness and context-sensitive reasoning across various benchmarks.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.CL",
-  "category": "論文 - 言語処理",
-  "fetched_at": "2026-03-07T01:00:00Z"
-}

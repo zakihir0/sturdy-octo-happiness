@@ -1,9 +1,0 @@
-{
-  "title": "Simulating Meaning, Nevermore! Introducing ICR Metric for LLM Summaries",
-  "link": "https://arxiv.org/abs/2603.04413",
-  "description": "Proposes Inductive Conceptual Rating (ICR) metric grounded in inductive content analysis and reflexive thematic analysis for more robust evaluation of LLM-generated summaries.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.CL",
-  "category": "論文 - 言語処理",
-  "fetched_at": "2026-03-07T03:20:00Z"
-}

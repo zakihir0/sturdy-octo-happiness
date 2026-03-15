@@ -1,9 +1,0 @@
-{
-  "title": "Using Vision + Language Models to Predict Item Difficulty",
-  "link": "https://arxiv.org/abs/2603.04670",
-  "description": "Multimodal approach using GPT-4.1-nano to predict visualization literacy test difficulty. Combining visual and text features achieves lowest mean absolute error (0.224), outperforming unimodal approaches.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.AI",
-  "category": "論文 - AI全般",
-  "fetched_at": "2026-03-07T03:20:00Z"
-}

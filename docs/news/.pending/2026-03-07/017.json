@@ -1,9 +1,0 @@
-{
-  "title": "Uncertainty-Calibrated Spatiotemporal Field Diffusion with Sparse Supervision",
-  "link": "https://arxiv.org/abs/2603.04431",
-  "description": "Presents SOLID, a mask-conditioned diffusion framework trained end-to-end with sparse sensor observations, achieving calibrated uncertainty estimates and up to an order-of-magnitude improvement in probabilistic error.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.LG",
-  "category": "論文 - 機械学習",
-  "fetched_at": "2026-03-07T01:00:00Z"
-}

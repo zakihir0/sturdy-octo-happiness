@@ -1,9 +1,0 @@
-{
-  "title": "CONE: Embeddings for Complex Numerical Data Preserving Unit and Variable Semantics",
-  "link": "https://arxiv.org/abs/2603.04741",
-  "description": "Hybrid transformer model encoding numbers with their units and attributes into embedding vectors. Achieves 87.28% F1 on DROP benchmark, substantially improving numerical reasoning in language models.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.AI",
-  "category": "論文 - AI全般",
-  "fetched_at": "2026-03-07T01:00:00Z"
-}

@@ -1,9 +1,0 @@
-{
-  "title": "Self-Attribution Bias: When AI Monitors Go Easy on Themselves",
-  "link": "https://arxiv.org/abs/2603.04582",
-  "description": "Identifies tendency of language models to evaluate actions more favorably when implicitly framed as self-generated. Shows monitors fail to report risks more often in deployment than in evaluation.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.AI",
-  "category": "論文 - AI全般",
-  "fetched_at": "2026-03-07T01:00:00Z"
-}

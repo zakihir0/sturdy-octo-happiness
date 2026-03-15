@@ -1,9 +1,0 @@
-{
-  "title": "Discovering mathematical concepts through a multi-agent system",
-  "link": "https://arxiv.org/abs/2603.04528",
-  "description": "Multi-agent model for computational discovery inspired by mathematical history. System autonomously recovers concepts like homology from polyhedral data through conjecturing and proof attempts.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.AI",
-  "category": "論文 - AI全般",
-  "fetched_at": "2026-03-07T01:00:00Z"
-}

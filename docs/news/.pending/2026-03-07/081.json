@@ -1,9 +1,0 @@
-{
-  "title": "The Thinking Boundary: Quantifying Reasoning Suitability",
-  "link": "https://arxiv.org/abs/2603.04415",
-  "description": "Proposes Dual Tuning framework to assess whether reasoning yields positive gains for target tasks across multimodal scenarios, helping determine when extended reasoning chains are beneficial.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.CL",
-  "category": "論文 - 言語処理",
-  "fetched_at": "2026-03-07T03:20:00Z"
-}

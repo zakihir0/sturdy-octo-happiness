@@ -1,9 +1,0 @@
-{
-  "title": "WavSLM: Single-Stream Speech Language Modeling via WavLM Distillation",
-  "link": "https://arxiv.org/abs/2603.05299",
-  "description": "Speech language model using autoregressive training on distilled WavLM representations, achieving competitive performance with fewer parameters than alternatives.",
-  "date": "Mon, 09 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.CL",
-  "category": "論文 - 言語処理",
-  "fetched_at": "2026-03-08T01:00:00Z"
-}

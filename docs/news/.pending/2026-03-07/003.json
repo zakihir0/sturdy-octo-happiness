@@ -1,9 +1,0 @@
-{
-  "title": "Progressive Refinement Regulation for Accelerating Diffusion Language Model Decoding",
-  "link": "https://arxiv.org/abs/2603.04514",
-  "description": "Framework for controlling token refinement in diffusion language models. Uses temperature-based distribution shaping to accelerate decoding while maintaining generation quality through progressive training.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.AI",
-  "category": "論文 - AI全般",
-  "fetched_at": "2026-03-07T01:00:00Z"
-}

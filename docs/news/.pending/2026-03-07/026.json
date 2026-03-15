@@ -1,9 +1,0 @@
-{
-  "title": "One Size Does Not Fit All: Token-Wise Adaptive Compression for KV Cache",
-  "link": "https://arxiv.org/abs/2603.04411",
-  "description": "Proposes DynaKV, a post-training framework for dynamic token-wise KV cache compression that maintains performance while achieving significant memory reduction.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.CL",
-  "category": "論文 - 言語処理",
-  "fetched_at": "2026-03-07T01:00:00Z"
-}

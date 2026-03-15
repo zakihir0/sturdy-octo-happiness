@@ -1,9 +1,0 @@
-{
-  "title": "Med-V1: Small Language Models for Zero-shot and Scalable Biomedical Evidence Attribution",
-  "link": "https://arxiv.org/abs/2603.05308",
-  "description": "Three-billion-parameter models trained for evidence attribution and hallucination detection in biomedical contexts, matching frontier model performance efficiently.",
-  "date": "Mon, 09 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.CL",
-  "category": "論文 - 言語処理",
-  "fetched_at": "2026-03-08T01:00:00Z"
-}

@@ -1,9 +1,0 @@
-{
-  "title": "Machine Learning for Complex Systems Dynamics: Detecting Bifurcations in Dynamical Systems with Deep Neural Networks",
-  "link": "https://arxiv.org/abs/2603.04420",
-  "description": "Introduces equilibrium-informed neural networks (EINNs) to identify critical thresholds in dynamical systems by analyzing parameter landscapes, offering alternatives to computationally intensive bifurcation analyses.",
-  "date": "Fri, 06 Mar 2026 00:00:00 -0500",
-  "source": "ArXiv cs.LG",
-  "category": "論文 - 機械学習",
-  "fetched_at": "2026-03-07T01:00:00Z"
-}

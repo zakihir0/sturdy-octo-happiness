@@ -38,7 +38,9 @@ jobs:
           ")
           {
             echo 'prompt<<PROMPT_EOF'
+            echo "最新のAI/LLMニュースを収集・要約してください。"
             if [ -n "$EXISTING_URLS" ]; then
+              echo ""
               echo "## 収集済みURL（重複のためスキップすること）"
               echo "$EXISTING_URLS"
             fi

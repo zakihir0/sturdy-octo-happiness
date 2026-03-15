@@ -76,28 +76,7 @@ jobs:
         run: |
           mkdir -p docs/news
           gemini -p "${{ steps.build_prompt.outputs.prompt }}" 2>&1 | tee /tmp/gemini_raw.txt || true
-          python3 << 'PYEOF'
-import json, pathlib, os
-raw = pathlib.Path('/tmp/gemini_raw.txt').read_text(encoding='utf-8')
-jsonl_file = pathlib.Path(os.environ['JSONL_FILE'])
-jsonl_file.parent.mkdir(parents=True, exist_ok=True)
-lines = []
-for line in raw.splitlines():
-    line = line.strip()
-    try:
-        obj = json.loads(line)
-        link = obj.get('link', '')
-        if isinstance(obj, dict) and 'title' in obj and link and 'example.com' not in link:
-            lines.append(json.dumps(obj, ensure_ascii=False))
-    except:
-        pass
-if lines:
-    jsonl_file.write_text('\n'.join(lines) + '\n', encoding='utf-8')
-    print(f'Wrote {len(lines)} articles to {jsonl_file}')
-else:
-    print('No valid JSONL found. Gemini raw output:')
-    print(raw[:3000])
-PYEOF
+          python3 scripts/extract_jsonl.py
 
       - name: Commit results
         run: |

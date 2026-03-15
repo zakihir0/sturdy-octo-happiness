@@ -76,22 +76,19 @@ jobs:
           echo '{"projects":{}}' > ~/.gemini/projects.json
           echo '{"selectedAuthType":"oauth-personal"}' > ~/.gemini/settings.json
 
-      # Gemini が調査・要約し、stdoutにJSONLを出力 → Pythonがファイルに保存
+      # Gemini が調査・要約し、write_fileでJSONLを書き出す
       - name: Collect and summarize with Gemini
         env:
           GOOGLE_GENAI_USE_GCA: "true"
-          GEMINI_MODEL: gemini-2.5-flash
-          GEMINI_YOLO: "true"
           JSONL_FILE: ${{ steps.build_prompt.outputs.jsonl_file }}
         run: |
           mkdir -p docs/news
           gemini -p "${{ steps.build_prompt.outputs.prompt }}" -y -o stream-json 2>/dev/null | tee /tmp/gemini_raw.txt || true
-          # Geminiがファイルに書き出した場合はそのまま使用、stdoutキャプチャから抽出も試みる
-          if [ ! -s "$JSONL_FILE" ]; then
-            python3 scripts/extract_jsonl.py
+          if [ -s "$JSONL_FILE" ]; then
+            echo "Gemini wrote $(wc -l < "$JSONL_FILE") articles to $JSONL_FILE"
           else
-            echo "Gemini wrote directly to $JSONL_FILE"
-            wc -l < "$JSONL_FILE"
+            echo "File not written by Gemini, trying stream-json extraction..."
+            python3 scripts/extract_jsonl.py
           fi
 
       - name: Commit results

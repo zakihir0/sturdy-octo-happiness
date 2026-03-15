@@ -79,7 +79,6 @@ jobs:
       - name: Collect and summarize with Gemini
         env:
           GOOGLE_GENAI_USE_GCA: "true"
-          GEMINI_MODEL: gemini-2.5-pro
           GEMINI_YOLO: "true"
           JSONL_FILE: ${{ steps.build_prompt.outputs.jsonl_file }}
         run: |

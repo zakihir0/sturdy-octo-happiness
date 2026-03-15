@@ -39,6 +39,7 @@ jobs:
           {
             echo 'prompt<<PROMPT_EOF'
             echo "最新のAI/LLMニュースを収集・要約してください。"
+            echo "出力先ファイル: ${JSONL_FILE}"
             if [ -n "$EXISTING_URLS" ]; then
               echo ""
               echo "## 収集済みURL（重複のためスキップすること）"
@@ -79,12 +80,19 @@ jobs:
       - name: Collect and summarize with Gemini
         env:
           GOOGLE_GENAI_USE_GCA: "true"
+          GEMINI_MODEL: gemini-2.5-flash
           GEMINI_YOLO: "true"
           JSONL_FILE: ${{ steps.build_prompt.outputs.jsonl_file }}
         run: |
           mkdir -p docs/news
-          gemini -p "${{ steps.build_prompt.outputs.prompt }}" 2>&1 | tee /tmp/gemini_raw.txt || true
-          python3 scripts/extract_jsonl.py
+          gemini -p "${{ steps.build_prompt.outputs.prompt }}" -y -o stream-json 2>/dev/null | tee /tmp/gemini_raw.txt || true
+          # Geminiがファイルに書き出した場合はそのまま使用、stdoutキャプチャから抽出も試みる
+          if [ ! -s "$JSONL_FILE" ]; then
+            python3 scripts/extract_jsonl.py
+          else
+            echo "Gemini wrote directly to $JSONL_FILE"
+            wc -l < "$JSONL_FILE"
+          fi
 
       - name: Commit results
         run: |

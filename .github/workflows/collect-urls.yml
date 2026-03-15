@@ -14,13 +14,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # プロンプトファイルを読み込んで出力変数に格納（多行対応）
+      # 既存URLをJSONLから抽出してプロンプトに注入（Geminiのファイル読み込みを排除）
       - name: Read prompt file
         id: read_prompt
         run: |
+          EXISTING_URLS=$(python3 -c "
+          import glob, json
+          urls = set()
+          for f in glob.glob('docs/news/*.jsonl') + glob.glob('docs/news/.pending/*/*.json'):
+              try:
+                  with open(f) as fp:
+                      for line in fp:
+                          line = line.strip()
+                          if line:
+                              d = json.loads(line)
+                              if 'link' in d:
+                                  urls.add(d['link'])
+              except: pass
+          print('\n'.join(sorted(urls)))
+          ")
           {
             echo 'prompt<<PROMPT_EOF'
             cat .github/prompts/collect-urls.md
+            if [ -n "$EXISTING_URLS" ]; then
+              echo ""
+              echo "## 収集済みURL（重複のためスキップすること）"
+              echo "$EXISTING_URLS"
+            fi
             echo 'PROMPT_EOF'
           } >> $GITHUB_OUTPUT
 

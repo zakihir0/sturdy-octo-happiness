@@ -4,10 +4,9 @@
 
 ## ユーザーの興味領域
 
-- LLM・基盤モデルの論文・研究動向
-- GAFA（Google / Amazon / Meta / Apple）および主要AI企業の動向
+- arixiv等に掲載されるLLM・基盤モデルの論文・研究動向
+- NVIDIA / Google / Amazon / Meta / Apple および主要AI企業の動向
 - AIエージェント（LangChain / LangGraph / AutoGen / CrewAI等）
-- Kaggle・MLコンペティションの手法・最新情報
 
 ## 収集・要約ルール
 

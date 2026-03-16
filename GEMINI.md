@@ -21,8 +21,10 @@
 ## JSONL フィールド定義
 
 ```json
-{"title": "記事タイトル", "link": "URL", "description": "概要", "date": "公開日", "source": "ソース名", "category": "カテゴリ", "fetched_at": "収集日時ISO8601", "summary_ja": "600字以内の日本語要約"}
+{"title": "記事タイトル", "link": "URL", "description": "概要", "date": "公開日", "source": "ソース名", "category": "カテゴリ", "fetched_at": "収集日時ISO8601", "summary_ja": "600字以内の日本語要約", "url_status": 200}
 ```
+
+`url_status` には `google_web_search` で確認したHTTPステータスコード（整数）を記録すること。**200番台のもののみ** `link` および `url_status` フィールドに値を設定してJSONLに出力すること。それ以外のステータスコードの記事は出力しないこと。
 
 ## 実行指示
 
@@ -40,6 +42,6 @@
 
 ## 品質チェック
 
-- 記事をJSONLに書き出す前に、`google_web_search` で各URLを検索し、**実際にアクセス可能なページ（200番台）であることを確認**すること
-- 確認できないURLの記事は出力しないこと
+- 記事をJSONLに書き出す前に、`google_web_search` でそのURLを直接検索し、**検索結果にそのURLが実際に表示されること**を確認すること
+- URLは検索結果から得たものをそのままコピーすること。推測・補完・生成は禁止
 - `run_shell_command` は使用しないこと

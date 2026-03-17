@@ -108,12 +108,18 @@ HN_CSS = """
     .date-bar select{font-size:9pt;border:1px solid #ccc;padding:2px 4px;background:#fff;cursor:pointer}
     .date-bar label{white-space:nowrap}
 
+    /* sort buttons */
+    .sort-bar{display:flex;align-items:center;gap:4px;margin-left:auto;font-size:8pt;white-space:nowrap}
+    .sort-bar span{color:#828282}
+    .sort-btn{color:#828282;cursor:pointer;padding:0 2px;background:none;border:none;font:inherit;font-size:8pt}
+    .sort-btn:hover{text-decoration:underline;color:#000}
+    .sort-btn.active{color:#ff6600;font-weight:bold}
+
     /* category nav */
     .cat-nav{padding:6px 12px;font-size:8pt;color:#828282;border-bottom:1px solid #e8e8e8;display:flex;flex-wrap:wrap;align-items:center;gap:4px;line-height:2}
     .cat-nav a{color:#828282;margin:0 2px}
     .cat-nav a:hover{text-decoration:underline}
     .cat-nav .sort-ctrl{margin-left:auto;display:flex;align-items:center;gap:4px;white-space:nowrap}
-    .cat-nav .sort-ctrl select{font-size:8pt;border:1px solid #ccc;padding:1px 4px;background:#fff;cursor:pointer}
 
     /* item list */
     .item-list{max-width:900px;margin:0 auto;padding:8px 12px}
@@ -138,6 +144,7 @@ HN_CSS = """
 """
 
 SORT_JS = """
+  var currentSort = 'fetched';
   function sortItems(key, asc) {
     var sections = document.querySelectorAll('.item-list section[style*="block"], .item-list section:not([style])');
     if (!sections.length) sections = document.querySelectorAll('.cat-section');
@@ -155,11 +162,14 @@ SORT_JS = """
       });
     });
   }
-  function applySort(sel) {
-    var v = sel.value;
-    if (v === 'title')   sortItems('title', true);
-    if (v === 'date')    sortItems('date', false);
-    if (v === 'fetched') sortItems('fetched', false);
+  function setSort(key) {
+    currentSort = key;
+    document.querySelectorAll('.sort-btn').forEach(function(b) {
+      b.classList.toggle('active', b.getAttribute('data-sort') === key);
+    });
+    if (key === 'title')   sortItems('title', true);
+    if (key === 'date')    sortItems('date', false);
+    if (key === 'fetched') sortItems('fetched', false);
   }
 """
 
@@ -280,12 +290,14 @@ def build_index_html(generated_at: str) -> str:
   <div class="date-bar">
     <label for="date-select">日付:</label>
     <select id="date-select" onchange="showTab(this.value)">{options}</select>
-    <label for="sort-select" style="margin-left:8px">並び替え:</label>
-    <select id="sort-select" onchange="applySort(this)">
-      <option value="fetched">取得日 (新しい順)</option>
-      <option value="date">記事日付 (新しい順)</option>
-      <option value="title">タイトル (A-Z)</option>
-    </select>
+    <div class="sort-bar">
+      <span>Sort:</span>
+      <button class="sort-btn active" data-sort="fetched" onclick="setSort('fetched')">Updated</button>
+      <span>·</span>
+      <button class="sort-btn" data-sort="date" onclick="setSort('date')">Date</button>
+      <span>·</span>
+      <button class="sort-btn" data-sort="title" onclick="setSort('title')">Title</button>
+    </div>
   </div>
   <div class="item-list">{sections}</div>
   <footer>Powered by Gemini CLI + GitHub Actions</footer>
@@ -294,7 +306,7 @@ def build_index_html(generated_at: str) -> str:
       document.querySelectorAll('.item-list > section').forEach(s => s.style.display = 'none');
       const s = document.getElementById('tab-' + d);
       if (s) s.style.display = 'block';
-      applySort(document.getElementById('sort-select'));
+      setSort(currentSort);
     }}
     {SORT_JS}
   </script>
@@ -331,12 +343,12 @@ def build_html(articles: list[dict], generated_at: str) -> str:
         sections = '<p class="empty">ニュースがまだありません。</p>'
 
     sort_ctrl = """<span class="sort-ctrl">
-      <label for="sort-select-all">並び替え:</label>
-      <select id="sort-select-all" onchange="applySort(this)">
-        <option value="fetched">取得日 (新しい順)</option>
-        <option value="date">記事日付 (新しい順)</option>
-        <option value="title">タイトル (A-Z)</option>
-      </select>
+      <span style="color:#828282">Sort:</span>
+      <button class="sort-btn active" data-sort="fetched" onclick="setSort('fetched')">Updated</button>
+      <span style="color:#828282">·</span>
+      <button class="sort-btn" data-sort="date" onclick="setSort('date')">Date</button>
+      <span style="color:#828282">·</span>
+      <button class="sort-btn" data-sort="title" onclick="setSort('title')">Title</button>
     </span>"""
 
     return f"""<!DOCTYPE html>

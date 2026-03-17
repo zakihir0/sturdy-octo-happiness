@@ -30,6 +30,33 @@ def log(level: str, msg: str) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Category normalization
+# ---------------------------------------------------------------------------
+
+VALID_CATEGORIES = {"LLM", "Agents", "Business", "Infrastructure", "Safety"}
+
+# 旧カテゴリ名からの移行マップ（フォールバック用）
+CATEGORY_MAP: dict[str, str] = {
+    "LLM Release": "LLM", "LLM Research": "LLM", "LLM/Software": "LLM",
+    "Research": "LLM", "Interpretability": "LLM",
+    "AIエージェント": "Agents", "AI Agent": "Agents", "AI Agents": "Agents",
+    "AI Frameworks": "Agents", "AI/Tech": "Agents", "AI/OpenSource": "Agents",
+    "ビジネス": "Business", "企業動向": "Business", "E-commerce": "Business",
+    "AI/Business": "Business", "AI/Funding": "Business", "AI/Finance": "Business",
+    "Enterprise AI": "Business", "Apple/Google AI": "Business", "Meta AI": "Business",
+    "Product": "Business", "Healthcare AI": "Business", "Event": "Business",
+    "Hardware/AI": "Infrastructure", "AI/Cloud": "Infrastructure",
+    "AI Safety / Alignment": "Safety", "Lawsuit": "Safety",
+}
+
+
+def normalize_category(raw: str) -> str:
+    if raw in VALID_CATEGORIES:
+        return raw
+    return CATEGORY_MAP.get(raw, "Business")
+
+
+# ---------------------------------------------------------------------------
 # Storage
 # ---------------------------------------------------------------------------
 
@@ -76,14 +103,17 @@ HN_CSS = """
     .hn-header .header-nav a:hover{text-decoration:underline}
     .hn-sub{background:#ff6600;height:2px;margin-bottom:8px}
 
-    /* date selector */
-    .date-bar{padding:6px 12px;background:#f6f6ef;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;gap:8px;font-size:9pt;color:#828282;position:sticky;top:0;z-index:10;background:#f6f6ef}
+    /* date selector + sort bar */
+    .date-bar{padding:6px 12px;background:#f6f6ef;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;gap:12px;font-size:9pt;color:#828282;position:sticky;top:0;z-index:10}
     .date-bar select{font-size:9pt;border:1px solid #ccc;padding:2px 4px;background:#fff;cursor:pointer}
+    .date-bar label{white-space:nowrap}
 
     /* category nav */
-    .cat-nav{padding:6px 12px;font-size:8pt;color:#828282;border-bottom:1px solid #e8e8e8;line-height:2}
-    .cat-nav a{color:#828282;margin:0 4px}
+    .cat-nav{padding:6px 12px;font-size:8pt;color:#828282;border-bottom:1px solid #e8e8e8;display:flex;flex-wrap:wrap;align-items:center;gap:4px;line-height:2}
+    .cat-nav a{color:#828282;margin:0 2px}
     .cat-nav a:hover{text-decoration:underline}
+    .cat-nav .sort-ctrl{margin-left:auto;display:flex;align-items:center;gap:4px;white-space:nowrap}
+    .cat-nav .sort-ctrl select{font-size:8pt;border:1px solid #ccc;padding:1px 4px;background:#fff;cursor:pointer}
 
     /* item list */
     .item-list{max-width:900px;margin:0 auto;padding:8px 12px}
@@ -107,6 +137,32 @@ HN_CSS = """
     .empty{color:#828282;padding:20px 0;text-align:center;font-size:9pt}
 """
 
+SORT_JS = """
+  function sortItems(key, asc) {
+    var sections = document.querySelectorAll('.item-list section[style*="block"], .item-list section:not([style])');
+    if (!sections.length) sections = document.querySelectorAll('.cat-section');
+    sections.forEach(function(sec) {
+      var cats = sec.querySelectorAll('.cat-section');
+      var targets = cats.length ? cats : [sec];
+      targets.forEach(function(cat) {
+        var items = Array.from(cat.querySelectorAll('.item'));
+        items.sort(function(a, b) {
+          var va = a.getAttribute('data-' + key) || '';
+          var vb = b.getAttribute('data-' + key) || '';
+          return asc ? va.localeCompare(vb) : vb.localeCompare(va);
+        });
+        items.forEach(function(el) { cat.appendChild(el); });
+      });
+    });
+  }
+  function applySort(sel) {
+    var v = sel.value;
+    if (v === 'title')   sortItems('title', true);
+    if (v === 'date')    sortItems('date', false);
+    if (v === 'fetched') sortItems('fetched', false);
+  }
+"""
+
 
 # ---------------------------------------------------------------------------
 # HTML: article item helper
@@ -125,7 +181,7 @@ def render_item(item: dict, today: str, rank: int) -> str:
     desc       = html.escape(strip_tags(item.get("description", "")))
     date       = html.escape((item.get("date") or "")[:10])
     source     = html.escape(item.get("source", ""))
-    category   = html.escape(item.get("category", ""))
+    category   = html.escape(normalize_category(item.get("category", "")))
     fetched_at = item.get("fetched_at", "")[:10]
     is_new     = fetched_at == today
 
@@ -137,7 +193,7 @@ def render_item(item: dict, today: str, rank: int) -> str:
     meta_parts = [p for p in [date, category] if p]
     subtext    = '<span class="sep">|</span>'.join(f'<span>{p}</span>' for p in meta_parts)
 
-    return f"""<div class="item">
+    return f"""<div class="item" data-title="{title}" data-date="{date}" data-fetched="{html.escape(fetched_at)}">
   <span class="rank">{rank}.</span>
   <div class="item-body">
     <div class="title-line">
@@ -183,7 +239,8 @@ def build_index_html(generated_at: str) -> str:
 
         categories: dict[str, list[dict]] = {}
         for a in articles:
-            categories.setdefault(a.get("category", "その他"), []).append(a)
+            cat = normalize_category(a.get("category", ""))
+            categories.setdefault(cat, []).append(a)
 
         display = "block" if d == dates[0] else "none"
         rank = 1
@@ -223,6 +280,12 @@ def build_index_html(generated_at: str) -> str:
   <div class="date-bar">
     <label for="date-select">日付:</label>
     <select id="date-select" onchange="showTab(this.value)">{options}</select>
+    <label for="sort-select" style="margin-left:8px">並び替え:</label>
+    <select id="sort-select" onchange="applySort(this)">
+      <option value="fetched">取得日 (新しい順)</option>
+      <option value="date">記事日付 (新しい順)</option>
+      <option value="title">タイトル (A-Z)</option>
+    </select>
   </div>
   <div class="item-list">{sections}</div>
   <footer>Powered by Gemini CLI + GitHub Actions</footer>
@@ -231,7 +294,9 @@ def build_index_html(generated_at: str) -> str:
       document.querySelectorAll('.item-list > section').forEach(s => s.style.display = 'none');
       const s = document.getElementById('tab-' + d);
       if (s) s.style.display = 'block';
+      applySort(document.getElementById('sort-select'));
     }}
+    {SORT_JS}
   </script>
 </body>
 </html>"""
@@ -245,9 +310,10 @@ def build_html(articles: list[dict], generated_at: str) -> str:
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     categories: dict[str, list[dict]] = {}
     for a in articles:
-        categories.setdefault(a.get("category", "その他"), []).append(a)
+        cat = normalize_category(a.get("category", ""))
+        categories.setdefault(cat, []).append(a)
 
-    cat_nav = " | ".join(
+    cat_links = " | ".join(
         f'<a href="#cat-{i}">{html.escape(cat)} ({len(items)})</a>'
         for i, (cat, items) in enumerate(categories.items())
     )
@@ -263,6 +329,15 @@ def build_html(articles: list[dict], generated_at: str) -> str:
 
     if not articles:
         sections = '<p class="empty">ニュースがまだありません。</p>'
+
+    sort_ctrl = """<span class="sort-ctrl">
+      <label for="sort-select-all">並び替え:</label>
+      <select id="sort-select-all" onchange="applySort(this)">
+        <option value="fetched">取得日 (新しい順)</option>
+        <option value="date">記事日付 (新しい順)</option>
+        <option value="title">タイトル (A-Z)</option>
+      </select>
+    </span>"""
 
     return f"""<!DOCTYPE html>
 <html lang="ja">
@@ -282,9 +357,12 @@ def build_html(articles: list[dict], generated_at: str) -> str:
     </div>
   </div>
   <div class="hn-sub"></div>
-  <div class="cat-nav">{cat_nav}</div>
+  <div class="cat-nav">{cat_links}{sort_ctrl}</div>
   <div class="item-list">{sections}</div>
   <footer>Powered by Gemini CLI + GitHub Actions</footer>
+  <script>
+    {SORT_JS}
+  </script>
 </body>
 </html>"""
 

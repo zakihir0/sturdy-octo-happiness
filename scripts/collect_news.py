@@ -196,7 +196,8 @@ def build_index_html(generated_at: str) -> str:
             jsonl_link = f'<a href="news/{d}.jsonl" style="float:right;color:#828282;font-size:8pt">JSONL</a>'
             cat_sections += f'<div class="cat-section"><div class="cat-heading">{html.escape(cat)} ({len(items)}) {jsonl_link}</div>{cards}</div>\n'
 
-        sections += f'<section id="tab-{d}" style="display:{display}">{cat_sections if cat_sections else "<p class=\'empty\'>記事なし</p>"}</section>\n'
+        empty_msg = '<p class="empty">記事なし</p>'
+        sections += f'<section id="tab-{d}" style="display:{display}">{cat_sections if cat_sections else empty_msg}</section>\n'
 
     if not dates:
         sections = '<p class="empty">まだデータがありません。ワークフローを実行してください。</p>'

@@ -85,7 +85,8 @@ jobs:
           mkdir -p docs/news
           gemini -p "${{ steps.build_prompt.outputs.prompt }}" -y -o stream-json 2>/dev/null | tee /tmp/gemini_raw.txt || true
           if [ -s "$JSONL_FILE" ]; then
-            echo "Gemini wrote $(wc -l < "$JSONL_FILE") articles to $JSONL_FILE"
+            echo "Gemini wrote $(wc -l < "$JSONL_FILE") articles, verifying URLs..."
+            python3 scripts/extract_jsonl.py --verify-only
           else
             echo "File not written by Gemini, trying stream-json extraction..."
             python3 scripts/extract_jsonl.py
